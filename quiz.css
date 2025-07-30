@@ -1,6 +1,8 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #1e1e2f;
+      background-color: #327949;
+      background-image: url('assets/img/logo.png');
+      background-repeat: no-repeat;
       color: #ffffff;
       padding: 20px;
       max-width: 800px;
@@ -12,7 +14,7 @@
     }
     .question {
       margin-bottom: 20px;
-      background: #2a2a3f;
+      background: #03351c;
       padding: 15px;
       border-radius: 10px;
     }
@@ -22,9 +24,9 @@
     .option {
       margin: 5px 0;
       display: block;
-      background: #3a3a5a;
+      background: #0dad30;
       border: none;
-      color: white;
+      color: rgb(0, 0, 0);
       padding: 10px;
       border-radius: 5px;
       cursor: pointer;
@@ -51,3 +53,49 @@
       border-radius: 10px;
       margin-top: 30px;
     }
+
+    #result-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #result-modal-content {
+            background: #1e1e2e;
+            color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+        }
+        #close-modal {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;}
+#back-btn, #next-btn {
+  padding: 12px;
+  font-size: 16px;
+  background: #00ffcc;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#back-btn:disabled {
+  background: #444;
+  color: #999;
+  cursor: not-allowed;
+}
+

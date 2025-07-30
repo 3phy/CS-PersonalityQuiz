@@ -80,7 +80,7 @@ const personalities = {
   stack: {
     name: "The StackOverflow Summoner",
     desc: "You conjure answers out of thin air—aka, copy-paste. Who needs understanding when the spell works?",
-    img: "img/stack.png"
+    img: "assets/img/stack.png"
   },
   wizard: {
     name: "The Debugging Wizard",
@@ -125,61 +125,161 @@ const personalities = {
 };
 
 const form = document.getElementById("quiz-form");
+const container = document.getElementById("question-container");
+const nextBtn = document.getElementById("next-btn");
+const backBtn = document.getElementById("back-btn");
+const progress = document.getElementById("progress");
 
-questions.forEach((item, index) => {
+let currentQuestion = 0;
+const userAnswers = [];
+
+function renderQuestion(index) {
+  const q = questions[index];
+  container.innerHTML = '';
+  progress.innerText = `Question ${index + 1} of ${questions.length}`;
+
   const qDiv = document.createElement("div");
   qDiv.className = "question";
-  qDiv.innerHTML = `<h3>${index + 1}. ${item.q}</h3>`;
+  qDiv.innerHTML = `<h3>${index + 1}. ${q.q}</h3>`;
 
-  item.a.forEach((option, i) => {
+  q.a.forEach((text, i) => {
     const btn = document.createElement("button");
     btn.className = "option";
-    btn.innerText = option;
-    btn.setAttribute("data-type", item.type[i]);
-    btn.setAttribute("type", "button");
-    btn.onclick = function () {
-      const siblings = qDiv.querySelectorAll("button");
-      siblings.forEach(b => b.style.background = "#3a3a5a");
-      this.style.background = "#00ffcc";
-      this.style.color = "#000";
-      this.classList.add("selected");
-      this.classList.add("answered");
-      qDiv.setAttribute("data-answer", this.getAttribute("data-type"));
-    };
+    btn.innerText = text;
+    btn.setAttribute("data-type", q.type[i]);
+    btn.type = "button";
+
+    btn.onclick = () => {
+  userAnswers[index] = q.type[i];
+
+  const allOptions = qDiv.querySelectorAll("button");
+  allOptions.forEach(b => {
+    b.style.background = "#3a3a5a";
+    b.style.color = "#fff";
+  });
+
+  btn.style.background = "#00ffcc";
+  btn.style.color = "#000";
+
+  setTimeout(() => {
+    if (currentQuestion < questions.length - 1) {
+      currentQuestion++;
+      renderQuestion(currentQuestion);
+    } else {
+      showResult();
+    }
+  }, 300); // 300ms delay for user to see their choice
+};
+
+
     qDiv.appendChild(btn);
   });
 
-  form.appendChild(qDiv);
-});
+  container.appendChild(qDiv);
 
-document.getElementById("submit-btn").onclick = () => {
-  const answers = Array.from(document.querySelectorAll(".question"))
-    .map(q => q.getAttribute("data-answer"))
-    .filter(Boolean);
+  // If user already selected answer, show it
+  if (userAnswers[index]) {
+    const selectedBtn = Array.from(container.querySelectorAll(".option"))
+      .find(btn => btn.getAttribute("data-type") === userAnswers[index]);
 
-  if (answers.length < questions.length) {
-    alert("Please answer all questions!");
+    if (selectedBtn) {
+      selectedBtn.style.background = "#00ffcc";
+      selectedBtn.style.color = "#000";
+    }
+  }
+
+  nextBtn.innerText = (index === questions.length - 1) ? "Get My Result" : "Next";
+  backBtn.disabled = (index === 0);
+}
+
+nextBtn.addEventListener("click", () => {
+  if (!userAnswers[currentQuestion]) {
+    container.querySelector('.question').style.border = "2px solid #ff4444";
+    alert("⚠️ Please select an answer before proceeding.");
     return;
   }
 
+  container.querySelector('.question').style.border = "none"; // clear red border
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    renderQuestion(currentQuestion);
+  } else {
+    showResult();
+  }
+});
+
+
+
+backBtn.addEventListener("click", () => {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    renderQuestion(currentQuestion);
+  }
+});
+
+function showResult() {
   const counts = {};
-  answers.forEach(type => {
+  userAnswers.forEach(type => {
     counts[type] = (counts[type] || 0) + 1;
+
+    
   });
 
   const topType = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
   const result = personalities[topType];
 
-  document.getElementById("result").innerHTML = `
-  <div style="display: flex; align-items: center; gap: 20px;">
-    <img src="${result.img}" alt="${result.name}" style="width:100px; border-radius: 8px;">
+document.getElementById("result").innerHTML = `
+  <div id="result-wrapper" style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px; padding: 20px; background: #2a2a40; border-radius: 12px; max-width: 600px; margin: auto;">
+    
+    <img src="${result.img || ''}" alt="${result.name}" style="width:100px; border-radius: 8px;">
+    
     <div>
-      <h2>You are: ${result.name}</h2>
+      <h2 style="color: #00ffcc;">You are: ${result.name}</h2>
       <p>${result.desc}</p>
+    </div>
+
+    <div id="result-branding" style="margin-top: 30px; display: flex; flex-direction: column; align-items: center;">
+      <img src="assets/img/logo.png" alt="Logo" style="width: 60px; height: auto;">
+      <span style="margin-top: 8px; font-size: 12px; color: #aaa;">Created with COMSA</span>
     </div>
   </div>
 `;
 
-  document.getElementById("result").style.display = "block";
-  window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+
+
+  document.getElementById("result-modal").style.display = "flex";
+}
+
+// Modal behavior
+const resultModal = document.getElementById('result-modal');
+const closeModalBtn = document.getElementById('close-modal');
+closeModalBtn.onclick = () => resultModal.style.display = 'none';
+
+const restartBtn = document.getElementById('restart-btn');
+
+restartBtn.onclick = () => {
+  resultModal.style.display = 'none';
+  currentQuestion = 0;
+  userAnswers.length = 0;
+  renderQuestion(currentQuestion);
+  window.scrollTo(0, 0);
 };
+const downloadBtn = document.getElementById('download-btn');
+
+downloadBtn.onclick = () => {
+  const target = document.getElementById("result-wrapper");
+
+  html2canvas(target, {
+    backgroundColor: null // keeps background transparent if needed
+  }).then(canvas => {
+    const link = document.createElement("a");
+    link.download = "programmer-personality.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+};
+
+
+// Start quiz
+renderQuestion(currentQuestion);
+
