@@ -79,7 +79,8 @@ const questions = [
 const personalities = {
   stack: {
     name: "The StackOverflow Summoner",
-    desc: "You conjure answers out of thin air—aka, copy-paste. Who needs understanding when the spell works?"
+    desc: "You conjure answers out of thin air—aka, copy-paste. Who needs understanding when the spell works?",
+    img: "img/stack.png"
   },
   wizard: {
     name: "The Debugging Wizard",
@@ -170,9 +171,15 @@ document.getElementById("submit-btn").onclick = () => {
   const result = personalities[topType];
 
   document.getElementById("result").innerHTML = `
-    <h2>You are: ${result.name}</h2>
-    <p>${result.desc}</p>
-  `;
+  <div style="display: flex; align-items: center; gap: 20px;">
+    <img src="${result.img}" alt="${result.name}" style="width:100px; border-radius: 8px;">
+    <div>
+      <h2>You are: ${result.name}</h2>
+      <p>${result.desc}</p>
+    </div>
+  </div>
+`;
+
   document.getElementById("result").style.display = "block";
   window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 };
