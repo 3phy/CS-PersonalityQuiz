@@ -140,7 +140,11 @@ function renderQuestion(index) {
 
   const qDiv = document.createElement("div");
   qDiv.className = "question";
-  qDiv.innerHTML = `<h3>${index + 1}. ${q.q}</h3>`;
+  qDiv.style.display = "flex";
+  qDiv.style.flexDirection = "column";
+  qDiv.style.alignItems = "center";
+  qDiv.style.textAlign = "center";
+  qDiv.innerHTML = `<h3 style="margin-bottom: 24px;">${index + 1}. ${q.q}</h3>`;
 
   q.a.forEach((text, i) => {
     const btn = document.createElement("button");
@@ -150,27 +154,26 @@ function renderQuestion(index) {
     btn.type = "button";
 
     btn.onclick = () => {
-  userAnswers[index] = q.type[i];
+      userAnswers[index] = q.type[i];
 
-  const allOptions = qDiv.querySelectorAll("button");
-  allOptions.forEach(b => {
-    b.style.background = "#3a3a5a";
-    b.style.color = "#fff";
-  });
+      const allOptions = qDiv.querySelectorAll("button");
+      allOptions.forEach(b => {
+        b.style.background = "#3a3a5a";
+        b.style.color = "#fff";
+      });
 
-  btn.style.background = "#00ffcc";
-  btn.style.color = "#000";
+      btn.style.background = "#00ffcc";
+      btn.style.color = "#000";
 
-  setTimeout(() => {
-    if (currentQuestion < questions.length - 1) {
-      currentQuestion++;
-      renderQuestion(currentQuestion);
-    } else {
-      showResult();
-    }
-  }, 300); // 300ms delay for user to see their choice
-};
-
+      setTimeout(() => {
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          renderQuestion(currentQuestion);
+        } else {
+          showResult();
+        }
+      }, 300); // 300ms delay for user to see their choice
+    };
 
     qDiv.appendChild(btn);
   });
