@@ -7,34 +7,43 @@
     <link rel="stylesheet" href="quiz.css">
 </head>
 <body>
-  <h1>What Kind of Programmer Are You?</h1>
+ <div class="container">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="assets/img/logo.png" alt="COMSA Logo">
+            </div>
+            <div class="brand-text">COMSA</div>
+        </div>
+        
+        <h1>What Kind of <br> Programmer Are You?</h1>
 
-  <form id="quiz-form">
-  <div id="progress" style="text-align: center; margin-bottom: 20px;"></div>
-  <div id="question-container"></div>
-  <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-    <button type="button" id="back-btn" style="flex: 1;">Back</button>
-    <button type="button" id="next-btn" style="flex: 1;">Next</button>
-  </div>
-</form>
+        <form id="quiz-form">
+            <div class="progress-container">
+                <div class="progress-text" id="progress">Question 1 of 15</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
 
+            <div class="quiz-card">
+                <div id="question-container"></div>
+                
+                <div class="navigation">
+                    <button type="button" id="back-btn" class="nav-btn">← Back</button>
+                    <button type="button" id="next-btn" class="nav-btn">Next →</button>
+                </div>
+            </div>
+        </form>
 
-  <div id="result-modal">
-    <div id="result-modal-content">
-      <button id="close-modal" title="Close">&times;</button>
-      <div id="result"></div>
-      <button id="restart-btn" style="margin-top: 20px; padding: 12px 20px; background: #00ffcc; color: #000; border: none; border-radius: 8px; cursor: pointer;">
-    🔄 Start Again
-  </button>
-  <button id="download-btn" style="margin-top: 10px; padding: 12px 20px; background: #0077ff; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
-  ⬇️ Download Result
-</button>
-
+        <div id="result-modal">
+            <div id="result-modal-content">
+                <button id="close-modal" title="Close">&times;</button>
+                <div id="result"></div>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <script src="quiz.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="quiz.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </body>
 
 </html>
