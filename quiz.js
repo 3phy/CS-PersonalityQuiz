@@ -1,4 +1,4 @@
- const questions = [
+const questions = [
             {
                 q: "What time do you usually code best?",
                 a: ["Morning with coffee ☕", "Late at night 🌙", "During panic mode 😱", "All day every day 🚀"],
@@ -80,67 +80,67 @@
             stack: {
                 name: "The StackOverflow Summoner",
                 desc: "You conjure answers out of thin air—aka, copy-paste from StackOverflow. Who needs deep understanding when the magical spells work perfectly?",
-                emoji: "🔍",
+                img: "assets/img/stack.png",
                 color: "#ff6b35"
             },
             wizard: {
                 name: "The Debugging Wizard",
                 desc: "You're the Gandalf of bugs, wielding console logs and developer intuition like ancient magic wands. 'You shall not pass!' you tell each error.",
-                emoji: "🧙‍♂️",
+                img: "assets/img/stack.png",
                 color: "#4ecdc4"
             },
             coffee: {
                 name: "The Coffee Compiler",
                 desc: "Your entire system runs on premium espresso and pure hope. Without caffeine flowing through your veins, both your code and soul refuse to execute.",
-                emoji: "☕",
+                img: "assets/img/coffee.png",
                 color: "#8b4513"
             },
             midnight: {
                 name: "The Midnight Coder",
                 desc: "You rise with the moon and deploy at dawn, coding in the shadows like a digital vampire. Sunlight is your kryptonite, dark mode is your sanctuary.",
-                emoji: "🌙",
+                img: "assets/img/midnight.png",
                 color: "#6a5acd"
             },
             gambler: {
                 name: "The Git Gambler",
                 desc: "Every commit is a high-stakes bet, every merge is beautiful chaos. You live dangerously on the bleeding edge of version control madness.",
-                emoji: "🎲",
+                img: "assets/img/gambler.png",
                 color: "#ff1744"
             },
             vandal: {
                 name: "The Variable Vandal",
                 desc: "Your code reads like abstract art—beautiful to you, incomprehensible to others. Future maintainers will either worship or curse your creative genius.",
-                emoji: "🎨",
+                img: "assets/img/vandal.png",
                 color: "#9c27b0"
             },
             error: {
                 name: "The Error Whisperer",
                 desc: "You don't just fix bugs—you communicate with them on a spiritual level. Through tears, caffeine, and raw determination, you speak their ancient language.",
-                emoji: "👁️",
+                img: "assets/img/error.png",
                 color: "#f44336"
             },
             refactor: {
                 name: "The Infinite Refactorer",
                 desc: "You're trapped in an endless cycle of 'making it better.' Your code sparkles like a diamond, but somehow still manages to crash spectacularly.",
-                emoji: "♻️",
+                img: "assets/img/refactor.png",
                 color: "#4caf50"
             },
             meme: {
                 name: "The Meme Developer",
                 desc: "You code for laughs, vibes, and internet points. Your GitHub repositories are 50% functional code, 50% hilarious comments and memes.",
-                emoji: "😂",
+                img: "assets/img/meme.png",
                 color: "#ff9800"
             },
             hacker: {
                 name: "The Hacker Wannabe",
                 desc: "You rock a hoodie, run Kali Linux, and tell everyone you're 'in cybersecurity.' You definitely know at least three WiFi password jokes.",
-                emoji: "🕵️",
+                img: "assets/img/hacker.png",
                 color: "#2196f3"
             },
             philosopher: {
                 name: "The Frontend Philosopher",
                 desc: "You make interfaces beautiful until CSS breaks your soul. Every styling bug becomes an existential crisis about the nature of digital reality.",
-                emoji: "🎭",
+                img: "assets/img/philosopher.png",
                 color: "#e91e63"
             }
         };
@@ -268,7 +268,7 @@
             document.getElementById("result").innerHTML = `
                 <div class="result-container">
                     <div class="result-avatar" style="background: linear-gradient(45deg, ${result.color}, #4bc88b);">
-                        ${result.emoji}
+                        <img src="${result.img}" alt="${result.name}" onerror="this.style.display='none'; this.parentNode.innerHTML='🤖';">
                     </div>
                     
                     <h2 class="result-title">You are: ${result.name}</h2>
@@ -288,7 +288,7 @@
                     
                     <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
                         <div class="logo" style="width: 50px; height: 50px; margin: 0 auto 0.5rem;">
-                            <img src="assets/img/logo.png" alt="COMSA Logo" style="height: 30px; width: auto;">
+                            <img src="assets/img/logo.png" alt="COMSA Logo" style="height: 80px; width: auto;">
                         </div>
                         <div style="font-size: 0.8rem; color: #4bc88b;">Created with COMSA</div>
                     </div>
@@ -321,61 +321,48 @@
             };
 
             downloadBtn.onclick = () => {
-                const resultContainer = document.querySelector('.result-container');
-                if (typeof html2canvas !== 'undefined') {
-                    html2canvas(resultContainer, {
-                        backgroundColor: '#0f4c3a',
-                        scale: 2,
-                        width: 600,
-                        height: 800
-                    }).then(canvas => {
-                        const link = document.createElement("a");
-                        link.download = "my-programmer-personality.png";
-                        link.href = canvas.toDataURL("image/png");
-                        link.click();
-                    });
-                } else {
-                    alert('Screenshot feature is loading... Please try again in a moment!');
-                }
-            };
+    const resultContainer = document.querySelector('.result-container');
 
-            facebookBtn.onclick = () => {
-                const resultContainer = document.querySelector('.result-container');
-                const resultTitle = document.querySelector('.result-title').textContent;
-                const resultDesc = document.querySelector('.result-description').textContent;
-                
-                if (typeof html2canvas !== 'undefined') {
-                    html2canvas(resultContainer, {
-                        backgroundColor: '#0f4c3a',
-                        scale: 2,
-                        width: 600,
-                        height: 800
-                    }).then(canvas => {
-                        // Convert to blob and create a temporary URL
-                        canvas.toBlob((blob) => {
-                            // For now, we'll show a share dialog with Facebook URL
-                            const shareText = encodeURIComponent(`${resultTitle}\n\n${resultDesc}\n\nTake the quiz: ${window.location.href}`);
-                            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${shareText}`;
-                            
-                            // Open Facebook share dialog
-                            window.open(facebookUrl, 'facebook-share', 'width=626,height=436,toolbar=no,menubar=no,scrollbars=no,resizable=yes');
-                            
-                            // Also download the image for manual sharing
-                            const link = document.createElement("a");
-                            link.download = "programmer-quiz-result.png";
-                            link.href = canvas.toDataURL("image/png");
-                            link.click();
-                            
-                            alert('🎉 Image downloaded! You can now upload it to your Facebook post.');
-                        }, 'image/png');
-                    });
-                } else {
-                    // Fallback text sharing
-                    const shareText = encodeURIComponent(`${resultTitle}\n\n${resultDesc}\n\nTake the quiz: ${window.location.href}`);
-                    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}&quote=${shareText}`;
-                    window.open(facebookUrl, 'facebook-share', 'width=626,height=436,toolbar=no,menubar=no,scrollbars=no,resizable=yes');
-                }
-            };
+    // Temporarily add background and padding
+    resultContainer.style.backgroundColor = '#0f4c3a';
+    resultContainer.style.padding = '20px';
+    resultContainer.style.borderRadius = '20px';
+
+    if (typeof html2canvas !== 'undefined') {
+        html2canvas(resultContainer, {
+            scale: 2
+        }).then(canvas => {
+            const link = document.createElement("a");
+            link.download = "my-programmer-personality.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+
+            // Optional: remove the styles after saving
+            resultContainer.style.backgroundColor = '';
+            resultContainer.style.padding = '';
+            resultContainer.style.borderRadius = '';
+        });
+    } else {
+        alert('Screenshot feature is loading... Please try again in a moment!');
+    }
+};
+
+
+facebookBtn.onclick = () => {
+    const resultTitle = document.querySelector('.result-title').textContent;
+    const resultDesc = document.querySelector('.result-description').textContent;
+
+    // Customize your link and message
+    const shareURL = window.location.href; // The quiz page URL
+    const message = `${resultTitle}\n\n${resultDesc}\n\nTake the quiz now!`;
+
+    // Encode for URL
+    const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareURL)}&quote=${encodeURIComponent(message)}`;
+
+    // Open Facebook share dialog
+    window.open(facebookShareURL, 'facebook-share', 'width=626,height=436');
+};
+
         }
 
         // Add shake animation keyframes
