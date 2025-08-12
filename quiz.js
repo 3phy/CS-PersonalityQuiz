@@ -635,18 +635,20 @@ async function shareToFacebook(personalityType, result) {
         return;
     }
 
-    // 1️⃣ Capture the result modal as PNG
-    const canvas = await html2canvas(resultElement, {
-        backgroundColor: null,
-        scale: 2,
-        useCORS: true
-    });
-    const imageBase64 = canvas.toDataURL('image/png').split(',')[1]; // remove "data:image/png;base64,"
-
-    // 2️⃣ Upload the image to Imgur (public hosting)
-    const clientId = "430ce0a89344e4b7ee12bce2541f1de5"; // Get free from https://api.imgur.com
-    let imageUrl;
     try {
+        // 1️⃣ Capture the result modal as PNG
+        const canvas = await html2canvas(resultElement, {
+            backgroundColor: null,
+            scale: 2,
+            useCORS: true
+        });
+
+        const imageBase64 = canvas.toDataURL('image/png').split(',')[1]; // Remove "data:image/png;base64,"
+
+        // 2️⃣ Upload the image to Imgur (public hosting)
+        const clientId = "38112d6d0d6762305504f48bc102ee2e"; // Replace this with your valid Imgur Client ID
+        let imageUrl;
+
         const res = await fetch("https://api.imgur.com/3/image", {
             method: "POST",
             headers: {
@@ -655,27 +657,25 @@ async function shareToFacebook(personalityType, result) {
             },
             body: JSON.stringify({ image: imageBase64, type: "base64" })
         });
+
         const data = await res.json();
-        if (data.success) {
+        console.log("Imgur response:", data);
+
+        if (data.success && data.data && data.data.link) {
             imageUrl = data.data.link;
         } else {
-            alert("Image upload failed");
+            alert(`Image upload failed: ${data.data?.error || 'Unknown error'}`);
             return;
         }
-    } catch (err) {
-        console.error(err);
-        alert("Image upload error");
-        return;
-    }
 
-    // 3️⃣ Build share text
-    const personalityCode = document.querySelector('.personality-code')?.textContent || personalityType;
-    const personalityName = document.querySelector('.result-title')?.textContent || result.name;
-    const personalityDesc = document.querySelector('.result-subtitle')?.textContent || result.desc;
-    const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
-    const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
+        // 3️⃣ Build share text
+        const personalityCode = document.querySelector('.personality-code')?.textContent || personalityType;
+        const personalityName = document.querySelector('.result-title')?.textContent || result.name;
+        const personalityDesc = document.querySelector('.result-subtitle')?.textContent || result.desc;
+        const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
+        const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
 
-    const shareText = `🎯 I just discovered my ComsaPeeps Personality!
+        const shareText = `🎯 I just discovered my ComsaPeeps Personality!
 
 🏷️ TYPE: "${personalityName}"
 🔤 CODE: ${personalityCode}
@@ -693,9 +693,14 @@ ${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 
 #EARISTCS #DeveloperPersonality`;
 
-    // 4️⃣ Open Facebook share with hosted image
-    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}&quote=${encodeURIComponent(shareText)}`;
-    window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
+        // 4️⃣ Open Facebook share with hosted image URL
+        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}&quote=${encodeURIComponent(shareText)}`;
+        window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
+
+    } catch (err) {
+        console.error("Error in shareToFacebook:", err);
+        alert("An error occurred while preparing to share. Please try again.");
+    }
 }
 
 
