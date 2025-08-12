@@ -4,7 +4,7 @@ const questions = [
         q: "Mas gusto ko mag-code sa bahay kasama tropa… kahit ending chikahan lang.",
         dimension: "EI",
         type: "E"
-    },
+    }/*,
     {
         q: "Mas okay sakin magpasa ng idea sa group chat bago mag-code (kahit seen-zoned minsan).",
         dimension: "EI",
@@ -100,7 +100,7 @@ const questions = [
         dimension: "SD",
         type: "D"
     }
-];
+*/];
 
 
 const personalities = {
@@ -482,34 +482,149 @@ function setupModalButtons(personalityType, result) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    downloadBtn.onclick = () => {
-        downloadResultImage(result);
-    };
+// Alternative approach using html2canvas with a visible container
+downloadBtn.onclick = () => {
+    // Get personality data
+    const personalityCode = document.querySelector('.personality-code')?.textContent || 'XXXX';
+    const personalityName = document.querySelector('.result-title')?.textContent || 'Unknown';
+    const personalityDesc = document.querySelector('.result-subtitle')?.textContent || '';
+    const personalityFullDesc = document.querySelector('.result-description')?.textContent || '';
+    const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
+    
+    // Create visible container (this helps html2canvas work better)
+    const downloadContainer = document.createElement('div');
+    downloadContainer.id = 'download-container';
+    downloadContainer.innerHTML = `
+        <div style="
+            width: 600px;
+            min-height: 700px;
+            padding: 40px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #35b173ff 0%, #18663bff 100%);
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            position: relative;
+        ">
+            <div style="
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 30px;
+                background: rgba(255,255,255,0.2);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 28px;
+                font-weight: bold;
+            ">${personalityCode}</div>
+            
+            <h1 style="
+                margin: 0 0 15px; 
+                font-size: 2.5rem; 
+                font-weight: bold;
+                line-height: 1.2;
+            ">${personalityName}</h1>
+            
+            <p style="
+                margin: 0 0 25px; 
+                font-size: 1.2rem; 
+                opacity: 0.9;
+                line-height: 1.4;
+            ">${personalityDesc}</p>
+            
+            <p style="
+                margin: 0 0 35px; 
+                font-size: 1rem; 
+                line-height: 1.6; 
+                opacity: 0.8;
+                max-width: 500px;
+                margin-left: auto;
+                margin-right: auto;
+            ">${personalityFullDesc}</p>
+            
+            <div style="margin-bottom: 40px;">
+                <h3 style="
+                    margin: 0 0 20px; 
+                    font-size: 1.4rem;
+                    font-weight: bold;
+                ">Key Traits:</h3>
+                <div style="
+                    display: flex; 
+                    flex-wrap: wrap; 
+                    justify-content: center; 
+                    gap: 12px;
+                    max-width: 500px;
+                    margin: 0 auto;
+                ">
+                    ${traits.map(trait => `
+                        <span style="
+                            background: rgba(255,255,255,0.2);
+                            padding: 10px 20px;
+                            border-radius: 25px;
+                            font-size: 0.95rem;
+                            font-weight: 500;
+                            white-space: nowrap;
+                        ">${trait}</span>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <div style="
+                margin-top: 40px;
+                padding-top: 25px;
+                border-top: 1px solid rgba(255,255,255,0.2);
+                font-size: 1rem;
+                opacity: 0.7;
+                font-weight: 500;
+            ">
+                COMSA Personality Test
+            </div>
+        </div>
+    `;
+    
+    // Add to page temporarily
+    document.body.appendChild(downloadContainer);
+    
+    // Force layout calculation
+    downloadContainer.offsetHeight;
+    
+    // Wait a moment then capture
+    setTimeout(() => {
+        html2canvas(downloadContainer.firstElementChild, {
+            backgroundColor: null,
+            scale: 2,
+            logging: false,
+            useCORS: true,
+            allowTaint: true,
+            height: downloadContainer.firstElementChild.offsetHeight,
+            width: downloadContainer.firstElementChild.offsetWidth,
+            scrollX: 0,
+            scrollY: 0
+        }).then(canvas => {
+            // Download the image
+            const link = document.createElement('a');
+            link.download = `EARIST-CS-${personalityCode}-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+            
+            // Remove temporary container
+            document.body.removeChild(downloadContainer);
+            console.log('Download successful with html2canvas!');
+            
+        }).catch(error => {
+            console.error('html2canvas failed:', error);
+            document.body.removeChild(downloadContainer);
+            alert('Download failed. Please try the other method.');
+        });
+    }, 500);
+};
 
     facebookBtn.onclick = () => {
         shareToFacebook(personalityType, result);
     };
-}
-
-function downloadResultImage(result) {
-    const resultElement = document.querySelector('.result-container');
-    
-    // Create a canvas for the result image
-    html2canvas(resultElement, {
-        backgroundColor: '#0f4c3a',
-        scale: 2,
-        logging: false,
-        useCORS: true
-    }).then(canvas => {
-        // Create download link
-        const link = document.createElement('a');
-        link.download = `earist-cs-personality-${result.code.toLowerCase()}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-    }).catch(error => {
-        console.error('Error generating image:', error);
-        alert('Sorry, there was an error generating the image. Please try again.');
-    });
 }
 
 function shareToFacebook(personalityType, result) {
