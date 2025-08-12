@@ -626,7 +626,9 @@
           shareToFacebook(personalityType, result);
       };
 
-      function shareToFacebook(personalityType, result) {
+      // Replace your existing Facebook sharing code with this optimized version
+
+function shareToFacebook(personalityType, result) {
     // Get personality data from the current result display
     const personalityCode = document.querySelector('.personality-code')?.textContent || personalityType;
     const personalityName = document.querySelector('.result-title')?.textContent || result.name;
@@ -634,35 +636,164 @@
     const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
     const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
     
-    // Create enhanced share text for Facebook
+    // Create a comprehensive, visually appealing share text
     const shareText = `🎯 I just discovered my EARIST-CS Developer Personality!
 
-🏷️ Type: "${personalityName}" (${personalityType})
-📝 ${personalityDesc}
+━━━━━━━━━━━━━━━━━━━━
+🏷️ TYPE: "${personalityName}"
+🔤 CODE: ${personalityType}
+━━━━━━━━━━━━━━━━━━━━
 
+📝 DESCRIPTION:
+${personalityDesc}
+
+💡 WHAT THIS MEANS:
 ${personalityFullDesc}
 
-✨ My Key Traits:
-${traits.map((trait, i) => `${i + 1}. ${trait}`).join('\n')}
+✨ MY KEY TRAITS:
+${traits.map((trait, i) => `   ${i + 1}. ${trait}`).join('\n')}
 
-Want to discover YOUR developer personality? Take the test here! 👇`;
-    
+━━━━━━━━━━━━━━━━━━━━
+🎮 Want to discover YOUR developer personality?
+👇 Take the EARIST-CS Personality Test here!
+${window.location.href}
+
+#EARISTCS #DeveloperPersonality #CodingLife #ProgrammerTest #TechPersonality`;
+
+    // Use Facebook's share dialog
     const shareUrl = encodeURIComponent(window.location.href);
     const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${encodeURIComponent(shareText)}`;
     
     // Open Facebook share dialog
-    window.open(facebookShareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+    const shareWindow = window.open(facebookShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
+    
+    // Optional: Show additional sharing options
+    showAdditionalShareOptions(personalityType, result, shareText);
 }
 
-// Alternative version with visual preview (requires html2canvas)
-function shareToFacebookWithImage(personalityType, result) {
-    // Check if html2canvas is available
-    if (typeof html2canvas === 'undefined') {
-        console.log('html2canvas not available, using text-only share');
-        shareToFacebook(personalityType, result);
-        return;
-    }
+function showAdditionalShareOptions(personalityType, result, shareText) {
+    // Create a popup with additional sharing options including image download
+    const popup = document.createElement('div');
+    popup.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-in;
+        " id="share-options-popup">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                max-width: 450px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                position: relative;
+            ">
+                <h3 style="
+                    margin: 0 0 20px; 
+                    color: #333;
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                ">📤 Share Your Result</h3>
+                
+                <p style="
+                    margin: 0 0 25px; 
+                    color: #666; 
+                    font-size: 14px;
+                    line-height: 1.4;
+                ">
+                    Your Facebook post is ready! Want to make it even more engaging? 
+                    Download the visual result card to attach to your post.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button onclick="generateAndDownloadImage('${personalityType}', ${JSON.stringify(result).replace(/"/g, '&quot;')})" style="
+                        padding: 15px 25px;
+                        background: linear-gradient(45deg, #35b173ff, #4bc88b);
+                        color: white;
+                        border: none;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(53, 177, 115, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        🖼️ Download Visual Result Card
+                    </button>
+                    
+                    <button onclick="copyShareText()" style="
+                        padding: 15px 25px;
+                        background: linear-gradient(45deg, #4267B2, #5578c4);
+                        color: white;
+                        border: none;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 15px rgba(66, 103, 178, 0.3);
+                    " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        📋 Copy Share Text
+                    </button>
+                    
+                    <button onclick="closeSharePopup()" style="
+                        padding: 12px 25px;
+                        background: #f8f9fa;
+                        color: #666;
+                        border: 1px solid #dee2e6;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#e9ecef'" onmouseout="this.style.background='#f8f9fa'">
+                        Done
+                    </button>
+                </div>
+                
+                <div style="
+                    margin-top: 20px;
+                    padding-top: 15px;
+                    border-top: 1px solid #eee;
+                    font-size: 12px;
+                    color: #999;
+                ">
+                    💡 Tip: Attach the downloaded image to your Facebook post for maximum engagement!
+                </div>
+            </div>
+        </div>
+    `;
     
+    // Add fade-in animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(popup);
+    
+    // Store share text globally for copying
+    window.currentShareText = shareText;
+    
+    // Auto-close after 15 seconds
+    setTimeout(() => {
+        if (document.getElementById('share-options-popup')) {
+            closeSharePopup();
+        }
+    }, 15000);
+}
+
+function generateAndDownloadImage(personalityType, result) {
     // Get personality data
     const personalityCode = document.querySelector('.personality-code')?.textContent || personalityType;
     const personalityName = document.querySelector('.result-title')?.textContent || result.name;
@@ -670,236 +801,256 @@ function shareToFacebookWithImage(personalityType, result) {
     const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
     const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
     
-    // Create visual share card
+    // Create optimized visual card for Facebook sharing
     const shareContainer = document.createElement('div');
     shareContainer.style.position = 'absolute';
-    shareContainer.style.left = '-9999px'; // Hide off-screen
+    shareContainer.style.left = '-9999px';
     shareContainer.innerHTML = `
         <div style="
-            width: 500px;
-            min-height: 600px;
-            padding: 30px;
-            background: linear-gradient(135deg, ${result.color} 0%, #35b173ff 100%);
+            width: 600px;
+            height: 600px;
+            padding: 40px;
+            background: linear-gradient(135deg, ${result.color} 0%, #35b173ff 50%, #18663bff 100%);
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-radius: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         ">
-            <!-- Personality Badge -->
+            <!-- Background Pattern -->
             <div style="
-                width: 100px;
-                height: 100px;
-                margin: 0 auto 25px;
-                background: rgba(255,255,255,0.2);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 24px;
-                font-weight: bold;
-            ">${personalityCode}</div>
+                position: absolute;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                                  radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
+            "></div>
             
-            <!-- Title -->
-            <h1 style="
-                margin: 0 0 12px; 
-                font-size: 2.2rem; 
-                font-weight: bold;
-                line-height: 1.2;
-            ">${personalityName}</h1>
-            
-            <!-- Subtitle -->
-            <p style="
-                margin: 0 0 20px; 
-                font-size: 1.1rem; 
-                opacity: 0.9;
-                line-height: 1.4;
-            ">${personalityDesc}</p>
-            
-            <!-- Description -->
-            <p style="
-                margin: 0 0 30px; 
-                font-size: 0.95rem; 
-                line-height: 1.5; 
-                opacity: 0.8;
-                max-width: 400px;
-                margin-left: auto;
-                margin-right: auto;
-            ">${personalityFullDesc}</p>
-            
-            <!-- Traits -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="
-                    margin: 0 0 15px; 
-                    font-size: 1.2rem;
-                    font-weight: bold;
-                ">Key Traits:</h3>
+            <!-- Content -->
+            <div style="position: relative; z-index: 2;">
+                <!-- Personality Badge -->
                 <div style="
-                    display: flex; 
-                    flex-wrap: wrap; 
-                    justify-content: center; 
-                    gap: 10px;
-                    max-width: 400px;
-                    margin: 0 auto;
-                ">
-                    ${traits.map(trait => `
-                        <span style="
-                            background: rgba(255,255,255,0.2);
-                            padding: 8px 16px;
-                            border-radius: 20px;
-                            font-size: 0.85rem;
-                            font-weight: 500;
-                            white-space: nowrap;
-                        ">${trait}</span>
-                    `).join('')}
+                    width: 120px;
+                    height: 120px;
+                    margin: 0 auto 25px;
+                    background: rgba(255,255,255,0.15);
+                    border: 3px solid rgba(255,255,255,0.3);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 28px;
+                    font-weight: bold;
+                    letter-spacing: 2px;
+                ">${personalityCode}</div>
+                
+                <!-- Title -->
+                <h1 style="
+                    margin: 0 0 15px; 
+                    font-size: 2.5rem; 
+                    font-weight: bold;
+                    line-height: 1.1;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+                ">${personalityName}</h1>
+                
+                <!-- Subtitle -->
+                <p style="
+                    margin: 0 0 25px; 
+                    font-size: 1.2rem; 
+                    opacity: 0.9;
+                    line-height: 1.3;
+                    font-weight: 500;
+                ">${personalityDesc}</p>
+                
+                <!-- Key Traits -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="
+                        margin: 0 0 18px; 
+                        font-size: 1.3rem;
+                        font-weight: bold;
+                    ">✨ Key Traits</h3>
+                    <div style="
+                        display: flex; 
+                        flex-wrap: wrap; 
+                        justify-content: center; 
+                        gap: 12px;
+                        max-width: 500px;
+                        margin: 0 auto;
+                    ">
+                        ${traits.slice(0, 4).map(trait => `
+                            <span style="
+                                background: rgba(255,255,255,0.2);
+                                backdrop-filter: blur(10px);
+                                padding: 10px 18px;
+                                border-radius: 25px;
+                                font-size: 0.9rem;
+                                font-weight: 600;
+                                white-space: nowrap;
+                                border: 1px solid rgba(255,255,255,0.1);
+                            ">${trait}</span>
+                        `).join('')}
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Footer -->
-            <div style="
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid rgba(255,255,255,0.2);
-                font-size: 0.9rem;
-                opacity: 0.7;
-                font-weight: 500;
-            ">
-                Take the EARIST-CS Personality Test<br>
-                <span style="font-size: 0.8rem; opacity: 0.6;">${window.location.hostname}</span>
+                
+                <!-- Call to Action -->
+                <div style="
+                    margin-top: 35px;
+                    padding: 20px;
+                    background: rgba(255,255,255,0.1);
+                    backdrop-filter: blur(10px);
+                    border-radius: 15px;
+                    border: 1px solid rgba(255,255,255,0.2);
+                ">
+                    <div style="
+                        font-size: 1.1rem;
+                        font-weight: bold;
+                        margin-bottom: 8px;
+                    ">🎯 Discover Your Developer Personality!</div>
+                    <div style="
+                        font-size: 0.9rem;
+                        opacity: 0.8;
+                        font-weight: 500;
+                    ">EARIST-CS Personality Test</div>
+                </div>
             </div>
         </div>
     `;
     
-    // Add to page temporarily
     document.body.appendChild(shareContainer);
     
-    // Generate image and share
+    // Generate and download image
     setTimeout(() => {
-        html2canvas(shareContainer.firstElementChild, {
-            backgroundColor: null,
-            scale: 1.5,
-            logging: false,
-            useCORS: true,
-            allowTaint: true,
-            scrollX: 0,
-            scrollY: 0
-        }).then(canvas => {
-            // Convert to blob and try to share with image
-            canvas.toBlob(blob => {
-                // Create enhanced text for Facebook post
-                const shareText = `🎯 I just discovered my EARIST-CS Developer Personality: "${personalityName}" (${personalityType})!
-
-${personalityFullDesc}
-
-✨ My key traits: ${traits.join(' • ')}
-
-Discover YOUR developer personality! 👇`;
+        if (typeof html2canvas !== 'undefined') {
+            html2canvas(shareContainer.firstElementChild, {
+                backgroundColor: null,
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                width: 600,
+                height: 600
+            }).then(canvas => {
+                // Download the image
+                const link = document.createElement('a');
+                link.download = `EARIST-CS-${personalityCode}-Facebook-Share.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
                 
-                // For now, we'll use the regular Facebook share since Facebook's API 
-                // doesn't easily support image uploads from web apps
-                const shareUrl = encodeURIComponent(window.location.href);
-                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}&quote=${encodeURIComponent(shareText)}`;
+                // Show success message
+                showSuccessMessage('✅ Image downloaded! Attach it to your Facebook post for maximum engagement.');
                 
-                window.open(facebookShareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
-                
-                // Optionally: Offer to download the image for manual sharing
-                showImageDownloadOption(canvas, personalityCode);
-                
-                // Clean up
                 document.body.removeChild(shareContainer);
-            }, 'image/png', 0.9);
-        }).catch(error => {
-            console.error('Image generation failed:', error);
+            }).catch(error => {
+                console.error('Image generation failed:', error);
+                document.body.removeChild(shareContainer);
+                showErrorMessage('❌ Image generation failed. Try using the text-only share instead.');
+            });
+        } else {
             document.body.removeChild(shareContainer);
-            // Fallback to text-only share
-            shareToFacebook(personalityType, result);
-        });
-    }, 300);
+            showErrorMessage('❌ Image generation not available. Make sure html2canvas is loaded.');
+        }
+    }, 100);
 }
 
-function showImageDownloadOption(canvas, personalityCode) {
-    // Show a small popup asking if user wants to download the image for manual sharing
-    const popup = document.createElement('div');
-    popup.innerHTML = `
+function copyShareText() {
+    if (window.currentShareText) {
+        navigator.clipboard.writeText(window.currentShareText).then(() => {
+            showSuccessMessage('✅ Share text copied! You can paste it directly into your Facebook post.');
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = window.currentShareText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            showSuccessMessage('✅ Share text copied to clipboard!');
+        });
+    }
+}
+
+function closeSharePopup() {
+    const popup = document.getElementById('share-options-popup');
+    if (popup) {
+        popup.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            document.body.removeChild(popup);
+        }, 300);
+    }
+    delete window.currentShareText;
+}
+
+function showSuccessMessage(message) {
+    const toast = document.createElement('div');
+    toast.innerHTML = `
         <div style="
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-        " id="image-download-popup">
-            <div style="
-                background: white;
-                padding: 25px;
-                border-radius: 15px;
-                max-width: 350px;
-                text-align: center;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            ">
-                <h3 style="margin: 0 0 15px; color: #333;">📱 Download Your Result Image</h3>
-                <p style="margin: 0 0 20px; color: #666; font-size: 14px;">
-                    Want to share the visual result too? Download the image and attach it to your Facebook post!
-                </p>
-                <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="downloadResultImage()" style="
-                        padding: 10px 20px;
-                        background: #35b173ff;
-                        color: white;
-                        border: none;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-size: 14px;
-                        font-weight: 500;
-                    ">📥 Download</button>
-                    <button onclick="closeImagePopup()" style="
-                        padding: 10px 20px;
-                        background: #ddd;
-                        color: #333;
-                        border: none;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-size: 14px;
-                    ">Skip</button>
-                </div>
-            </div>
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            z-index: 10001;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 4px 20px rgba(40, 167, 69, 0.3);
+        ">
+            ${message}
         </div>
     `;
     
-    document.body.appendChild(popup);
+    document.body.appendChild(toast);
     
-    // Store canvas for download
-    window.shareCanvas = canvas;
-    window.sharePersonalityCode = personalityCode;
-    
-    // Auto-close after 8 seconds
     setTimeout(() => {
-        if (document.getElementById('image-download-popup')) {
-            closeImagePopup();
-        }
-    }, 8000);
+        document.body.removeChild(toast);
+    }, 4000);
 }
 
-function downloadResultImage() {
-    if (window.shareCanvas) {
-        const link = document.createElement('a');
-        link.download = `EARIST-CS-${window.sharePersonalityCode}-${Date.now()}.png`;
-        link.href = window.shareCanvas.toDataURL('image/png', 1.0);
-        link.click();
-    }
-    closeImagePopup();
+function showErrorMessage(message) {
+    const toast = document.createElement('div');
+    toast.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #dc3545;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            z-index: 10001;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+        ">
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        document.body.removeChild(toast);
+    }, 4000);
 }
 
-function closeImagePopup() {
-    const popup = document.getElementById('image-download-popup');
-    if (popup) {
-        document.body.removeChild(popup);
+// Add necessary CSS animations
+const shareAnimations = document.createElement('style');
+shareAnimations.textContent = `
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
-    // Clean up
-    delete window.shareCanvas;
-    delete window.sharePersonalityCode;
-}
+    
+    @keyframes fadeOut {
+        from { opacity: 1; transform: scale(1); }
+        to { opacity: 0; transform: scale(0.9); }
+    }
+`;
+document.head.appendChild(shareAnimations);
   }
 
 
