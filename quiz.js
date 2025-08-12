@@ -4,7 +4,7 @@ const questions = [
         q: "Mas gusto ko mag-code sa bahay kasama tropa… kahit ending chikahan lang.",
         dimension: "EI",
         type: "E"
-    }/*,
+    },
     {
         q: "Mas okay sakin magpasa ng idea sa group chat bago mag-code (kahit seen-zoned minsan).",
         dimension: "EI",
@@ -100,7 +100,7 @@ const questions = [
         dimension: "SD",
         type: "D"
     }
-*/];
+  ];
 
 
 const personalities = {
