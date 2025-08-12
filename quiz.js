@@ -641,30 +641,26 @@ async function shareToFacebook(personalityType, result) {
         scale: 2,
         useCORS: true
     });
-    const imageBase64 = canvas.toDataURL('image/png').split(',')[1]; // remove "data:image/png;base64,"
 
-    // 2️⃣ Upload the image to Imgur (public hosting)
-    const clientId = "YOUR_IMGUR_CLIENT_ID"; // Get free from https://api.imgur.com
+    // Convert to Blob for upload
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+    // 2️⃣ Upload to 0x0.st (anonymous hosting)
     let imageUrl;
     try {
-        const res = await fetch("https://api.imgur.com/3/image", {
+        const formData = new FormData();
+        formData.append("file", blob, "result.png");
+
+        const res = await fetch("https://0x0.st", {
             method: "POST",
-            headers: {
-                Authorization: `Client-ID ${clientId}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ image: imageBase64, type: "base64" })
+            body: formData
         });
-        const data = await res.json();
-        if (data.success) {
-            imageUrl = data.data.link;
-        } else {
-            alert("Image upload failed");
-            return;
-        }
+
+        imageUrl = (await res.text()).trim();
+        if (!imageUrl.startsWith("http")) throw new Error("Invalid image URL");
     } catch (err) {
         console.error(err);
-        alert("Image upload error");
+        alert("Image upload failed");
         return;
     }
 
@@ -693,10 +689,11 @@ ${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 
 #EARISTCS #DeveloperPersonality`;
 
-    // 4️⃣ Open Facebook share with hosted image
+    // 4️⃣ Open Facebook share with uploaded image as preview
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}&quote=${encodeURIComponent(shareText)}`;
     window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
 }
+
 
 
 // Add necessary CSS animations
