@@ -1,162 +1,107 @@
 const questions = [
-    // Social Energy (E vs I) - 8 questions
+    // Social Energy (E vs I) - 4 questions 
     {
-        q: "I prefer working on coding projects in group settings rather than alone.",
+        q: "Mas gusto ko mag-code sa bahay kasama tropa… kahit ending chikahan lang.",
         dimension: "EI",
         type: "E"
     },
     {
-        q: "I feel energized after participating in hackathons and coding competitions.",
-        dimension: "EI", 
-        type: "E"
-    },
-    {
-        q: "I enjoy explaining my code and technical solutions to others.",
+        q: "Mas okay sakin magpasa ng idea sa group chat bago mag-code (kahit seen-zoned minsan).",
         dimension: "EI",
         type: "E"
     },
     {
-        q: "I prefer to discuss problems out loud before coding solutions.",
-        dimension: "EI",
-        type: "E"
-    },
-    {
-        q: "I work more effectively when wearing headphones in a quiet space.",
+        q: "Mas productive ako sa lab kapag walang ibang tao at tahimik (walang nag-ML).",
         dimension: "EI",
         type: "I"
     },
     {
-        q: "I prefer to think through problems internally before sharing ideas.",
+        q: "Mas gusto ko magpasa ng PDF or PPT sa gclass kaysa mag-present sa harap ng class.",
         dimension: "EI",
         type: "I"
     },
-    {
-        q: "I find large team meetings draining and prefer smaller discussions.",
-        dimension: "EI",
-        type: "I"
-    },
-    {
-        q: "I prefer written communication over verbal discussions for technical topics.",
+    
+      {
+        q: "Nakakapagod ang 3-hour meeting na wala namang napagkasunduan.",
         dimension: "EI",
         type: "I"
     },
 
-    // Work Style (P vs R) - 8 questions
+    // Work Style (P vs R) - 4 questions
     {
-        q: "I prefer to quickly build a working prototype rather than plan extensively first.",
+        q: "Mas trip ko gumawa agad ng prototype kahit walang flowchart (bahala na si Batman).",
         dimension: "PR",
         type: "P"
     },
     {
-        q: "I'm comfortable with 'messy' code as long as it works initially.",
+        q: "Okay lang sakin yung medyo sabog ang code basta ‘Hello World’ gumagana.",
         dimension: "PR",
         type: "P"
     },
     {
-        q: "I like to test ideas rapidly through trial and error.",
+        q: "Mas gusto ko subok-subok muna kahit magulo kaysa magplano nang matagal.",
         dimension: "PR",
         type: "P"
     },
     {
-        q: "I enjoy the excitement of seeing immediate results from my code.",
-        dimension: "PR",
-        type: "P"
-    },
-    {
-        q: "I spend significant time refining and optimizing my code after it works.",
+        q: "Inaayos ko pa rin ang code kahit pasado na kay sir Arjo (para dagdag points).",
         dimension: "PR",
         type: "R"
     },
     {
-        q: "I prefer to write clean, well-documented code from the beginning.",
+        q: "Sinusulat ko ng malinis at may comments ang code para maintindihan ni classmate(ChatGPT daw).",
         dimension: "PR",
         type: "R"
     },
+    
+
+    // Problem Approach (T vs C) - 4 questions
     {
-        q: "I thoroughly review and test my code before considering it complete.",
-        dimension: "PR",
-        type: "R"
+        q: "Hilig ko ang algorithm problems pag si sir Bungay (may halong love advice).",
+        dimension: "TC",
+        type: "T"
     },
     {
-        q: "I focus on code quality and maintainability over quick delivery.",
-        dimension: "PR",
-        type: "R"
+        q: "Mas gusto ko backend at database kaysa mag-ayos ng kulay sa CSS.",
+        dimension: "TC",
+        type: "T"
     },
 
-    // Problem Approach (T vs C) - 7 questions
     {
-        q: "I'm drawn to algorithmic challenges and data structure problems.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "I prefer backend development and system architecture over frontend work.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "I find satisfaction in optimizing code performance and efficiency.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "I'm more interested in how things work than how they look.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "I enjoy working on user interfaces and visual design elements.",
+        q: "Enjoy ako kapag gumagawa ng UI na mas maganda pa sa school website.",
         dimension: "TC",
         type: "C"
     },
     {
-        q: "I'm passionate about creating engaging user experiences.",
-        dimension: "TC",
-        type: "C"
-    },
-    {
-        q: "I like adding animations and interactive elements to my projects.",
+        q: "Masaya ako maglagay ng animations kahit di naman kailangan, basta aesthetic.",
         dimension: "TC",
         type: "C"
     },
 
-    // Workflow Preference (S vs D) - 7 questions
+    // Workflow Preference (S vs D) - 4 questions
     {
-        q: "I work well under last-minute pressure and tight deadlines.",
+        q: "Kayang-kaya ko gumawa ng buong system isang gabi bago defense (with energy drink).",
         dimension: "SD",
         type: "S"
     },
     {
-        q: "I'm flexible with changing requirements and pivot easily.",
+        q: "Mas gusto ko open lang options kaysa planado lahat (kasi madalas nababago ni sir Jovel).",
         dimension: "SD",
         type: "S"
     },
+
+  {
+    q: "Gumagamit ako ng GitHub/Git kahit minsan ako lang ang nagco-commit.",
+    dimension: "SD",
+    type: "D"
+},
     {
-        q: "I prefer to keep my options open rather than commit to detailed plans.",
-        dimension: "SD",
-        type: "S"
-    },
-    {
-        q: "I thrive in unpredictable, fast-paced development environments.",
-        dimension: "SD",
-        type: "S"
-    },
-    {
-        q: "I prefer to plan my coding tasks and stick to a structured approach.",
-        dimension: "SD",
-        type: "D"
-    },
-    {
-        q: "I use project management tools and maintain organized workflows.",
-        dimension: "SD",
-        type: "D"
-    },
-    {
-        q: "I prefer to complete tasks well before deadlines to avoid stress.",
+        q: "Mas gusto ko tapusin ang tasks way before deadline para chill habang cramming sila.",
         dimension: "SD",
         type: "D"
     }
 ];
+
 
 const personalities = {
     EPTS: {
