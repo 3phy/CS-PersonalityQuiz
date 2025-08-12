@@ -629,7 +629,7 @@
       // Replace your existing Facebook sharing code with this optimized version
 
 async function shareToFacebook(personalityType, result) {
-    const resultElement = document.querySelector('.result-modal');
+    const resultElement = document.getElementById('result-modal');
     if (!resultElement) {
         alert("Result not found!");
         return;
