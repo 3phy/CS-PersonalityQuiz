@@ -641,26 +641,30 @@ async function shareToFacebook(personalityType, result) {
         scale: 2,
         useCORS: true
     });
+    const imageBase64 = canvas.toDataURL('image/png').split(',')[1]; // remove "data:image/png;base64,"
 
-    // Convert to Blob for upload
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-
-    // 2️⃣ Upload to 0x0.st (anonymous hosting)
+    // 2️⃣ Upload the image to Imgur (public hosting)
+    const clientId = "430ce0a89344e4b7ee12bce2541f1de5"; // Get free from https://api.imgur.com
     let imageUrl;
     try {
-        const formData = new FormData();
-        formData.append("file", blob, "result.png");
-
-        const res = await fetch("https://0x0.st", {
+        const res = await fetch("https://api.imgur.com/3/image", {
             method: "POST",
-            body: formData
+            headers: {
+                Authorization: `Client-ID ${clientId}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ image: imageBase64, type: "base64" })
         });
-
-        imageUrl = (await res.text()).trim();
-        if (!imageUrl.startsWith("http")) throw new Error("Invalid image URL");
+        const data = await res.json();
+        if (data.success) {
+            imageUrl = data.data.link;
+        } else {
+            alert("Image upload failed");
+            return;
+        }
     } catch (err) {
         console.error(err);
-        alert("Image upload failed");
+        alert("Image upload error");
         return;
     }
 
@@ -671,7 +675,7 @@ async function shareToFacebook(personalityType, result) {
     const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
     const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
 
-    const shareText = `🎯 I just discovered my EARIST-CS Developer Personality!
+    const shareText = `🎯 I just discovered my ComsaPeeps Personality!
 
 🏷️ TYPE: "${personalityName}"
 🔤 CODE: ${personalityCode}
@@ -689,11 +693,10 @@ ${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 
 #EARISTCS #DeveloperPersonality`;
 
-    // 4️⃣ Open Facebook share with uploaded image as preview
+    // 4️⃣ Open Facebook share with hosted image
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}&quote=${encodeURIComponent(shareText)}`;
     window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
 }
-
 
 
 // Add necessary CSS animations
