@@ -175,7 +175,7 @@ const questions = [
                 qDiv.innerHTML = `<h3>${index + 1}. ${q.q}</h3>`;
 
                 const optionsContainer = document.createElement("div");
-                optionsContainer.className = "options-container";
+                optionsContainer.className = "options-container five-columns";
 
                 q.a.forEach((text, i) => {
                     const btn = document.createElement("button");
@@ -206,6 +206,25 @@ const questions = [
                 container.classList.remove('loading');
             }, 150);
         }
+
+        // Add CSS for 5-column options
+        const fiveColStyle = document.createElement('style');
+        fiveColStyle.textContent = `
+            .options-container.five-columns {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 1rem;
+                justify-items: stretch;
+                align-items: stretch;
+            }
+            .options-container.five-columns .option {
+                min-width: 80px;
+                max-width: 180px;
+                margin: 0;
+                width: 100%;
+            }
+        `;
+        document.head.appendChild(fiveColStyle);
 
         function selectOption(selectedBtn, type, questionIndex, optionsContainer) {
             // Remove selection from all options
@@ -320,49 +339,6 @@ const questions = [
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             };
 
-            downloadBtn.onclick = () => {
-    const resultContainer = document.querySelector('.result-container');
-
-    // Temporarily add background and padding
-    resultContainer.style.backgroundColor = '#0f4c3a';
-    resultContainer.style.padding = '20px';
-    resultContainer.style.borderRadius = '20px';
-
-    if (typeof html2canvas !== 'undefined') {
-        html2canvas(resultContainer, {
-            scale: 2
-        }).then(canvas => {
-            const link = document.createElement("a");
-            link.download = "my-programmer-personality.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-
-            // Optional: remove the styles after saving
-            resultContainer.style.backgroundColor = '';
-            resultContainer.style.padding = '';
-            resultContainer.style.borderRadius = '';
-        });
-    } else {
-        alert('Screenshot feature is loading... Please try again in a moment!');
-    }
-};
-
-
-facebookBtn.onclick = () => {
-    const resultTitle = document.querySelector('.result-title').textContent;
-    const resultDesc = document.querySelector('.result-description').textContent;
-
-    // Customize your link and message
-    const shareURL = window.location.href; // The quiz page URL
-    const message = `${resultTitle}\n\n${resultDesc}\n\nTake the quiz now!`;
-
-    // Encode for URL
-    const facebookShareURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareURL)}&quote=${encodeURIComponent(message)}`;
-
-    // Open Facebook share dialog
-    window.open(facebookShareURL, 'facebook-share', 'width=626,height=436');
-};
-
         }
 
         // Add shake animation keyframes
@@ -378,3 +354,8 @@ facebookBtn.onclick = () => {
 
         // Start the quiz
         renderQuestion(currentQuestion);
+        
+        window.onclick = e => {
+    const modal = document.getElementById('result-modal');
+    if (e.target === modal) modal.style.display = 'none';
+};
