@@ -78,12 +78,12 @@ h1 {
     text-align: center;
     font-size: 2.5rem;
     font-weight: 700;
-    background: linear-gradient(45deg, #4bc88b, #2d8a65);
+    background: linear-gradient(45deg, #4bc88b, #bbf0db);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin-bottom: 2rem;
-    text-shadow: 0 4px 20px rgba(75, 200, 139, 0.3);
+    text-shadow: 0 4px 20px rgba(2, 2, 2, 0.3);
     animation: fadeInDown 0.8s ease-out;
 }
 
