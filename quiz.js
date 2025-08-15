@@ -4,7 +4,7 @@
           q: "Mas gusto ko mag-code sa bahay kasama tropa… kahit ending chikahan lang.",
           dimension: "EI",
           type: "E"
-      }/*,
+      },
       {
           q: "Mas okay sakin magpasa ng idea sa group chat bago mag-code (kahit seen-zoned minsan).",
           dimension: "EI",
@@ -99,7 +99,7 @@
           q: "Mas gusto ko tapusin ang tasks way before deadline para chill habang cramming sila.",
           dimension: "SD",
           type: "D"
-      }*/
+      }
     ];
 
 
