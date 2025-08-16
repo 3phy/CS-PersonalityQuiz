@@ -412,454 +412,440 @@
         showResult(personality);
     }
 
-    // NEW: Enhanced OG image update function with URL parameter support
-    function updateOGImageAndURL(personalityType) {
-        // Update the Open Graph image meta tag
-        let ogImage = document.querySelector('meta[property="og:image"]');
-        if (!ogImage) {
-            ogImage = document.createElement('meta');
-            ogImage.setAttribute('property', 'og:image');
-            document.head.appendChild(ogImage);
-        }
-        ogImage.content = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
-        
-        // Update the URL to include personality type for better sharing
-        const newURL = `${window.location.origin}/?result=${personalityType}`;
-        
-        // Update OG URL meta tag
-        let ogURL = document.querySelector('meta[property="og:url"]');
-        if (!ogURL) {
-            ogURL = document.createElement('meta');
-            ogURL.setAttribute('property', 'og:url');
-            document.head.appendChild(ogURL);
-        }
-        ogURL.content = newURL;
-        
-        // Update page title and OG title to include personality type
-        const result = personalities[personalityType];
-        if (result) {
-            const newTitle = `I'm ${result.name} - EARIST-CS Developer Personality Test`;
-            document.title = newTitle;
-            
-            let ogTitle = document.querySelector('meta[property="og:title"]');
-            if (ogTitle) {
-                ogTitle.content = newTitle;
-            }
-            
-            // Update OG description with personality info
-            let ogDescription = document.querySelector('meta[property="og:description"]');
-            if (ogDescription) {
-                ogDescription.content = `${result.desc} - ${result.fullDesc.substring(0, 100)}...`;
-            }
-        }
-        
-        // Update browser URL without page reload (for better sharing experience)
-        if (window.history && window.history.pushState) {
-            window.history.pushState({personalityType}, '', newURL);
-        }
-        
-        console.log(`Updated OG image to: /assets/thumbnails/${personalityType}.png`);
-        console.log(`Updated URL to: ${newURL}`);
+    // REPLACE your existing updateOGImageAndURL function with this enhanced version
+function updateOGImageAndURL(personalityType) {
+    const result = personalities[personalityType];
+    if (!result) return;
+
+    // Create timestamp to force Facebook to treat as new URL
+    const timestamp = Date.now();
+    const newURL = `${window.location.origin}/?result=${personalityType}&t=${timestamp}`;
+
+    // Update all necessary OG tags
+    const imageUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
+    const title = `I'm ${result.name} - EARIST-CS Developer Personality Test`;
+    const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
+
+    // Remove existing and add new OG tags
+    removeExistingOGTags();
+    addOGTag('og:title', title);
+    addOGTag('og:description', description);
+    addOGTag('og:image', imageUrl);
+    addOGTag('og:image:width', '1200');
+    addOGTag('og:image:height', '630');
+    addOGTag('og:image:type', 'image/png');
+    addOGTag('og:url', newURL);
+    addOGTag('og:type', 'website');
+    addOGTag('og:site_name', 'EARIST-CS Personality Test');
+    
+    // Twitter Card tags for better fallback
+    addOGTag('twitter:card', 'summary_large_image', 'name');
+    addOGTag('twitter:title', title, 'name');
+    addOGTag('twitter:description', description, 'name');
+    addOGTag('twitter:image', imageUrl, 'name');
+
+    // Update page title
+    document.title = title;
+
+    // Update URL for better sharing
+    if (window.history && window.history.pushState) {
+        window.history.pushState({personalityType}, '', newURL);
     }
 
-    function showResult(personalityType) {
-        const result = personalities[personalityType];
+    console.log(`Updated OG tags for ${personalityType}`);
+    console.log(`Image URL: ${imageUrl}`);
+    console.log(`Share URL: ${newURL}`);
+}
+
+// ADD these new helper functions
+function removeExistingOGTags() {
+    const ogTags = document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]');
+    ogTags.forEach(tag => tag.remove());
+}
+
+function addOGTag(property, content, attributeType = 'property') {
+    const meta = document.createElement('meta');
+    meta.setAttribute(attributeType, property);
+    meta.content = content;
+    document.head.appendChild(meta);
+}
+
+// REPLACE your existing shareToFacebook function with this enhanced version
+function shareToFacebook(personalityType, result) {
+    // Ensure OG tags are updated first
+    updateOGImageAndURL(personalityType);
+    
+    // Wait a moment for tags to be processed
+    setTimeout(() => {
+        const shareUrl = window.location.href;
+        const shareText = buildShareText(personalityType, result);
         
-        // NEW: Update OG tags and URL before showing result
-        updateOGImageAndURL(personalityType);
+        // Method 1: Facebook Share Dialog
+        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
         
-        document.getElementById("result").innerHTML = `
-            <div class="result-container">
-                <div class="result-avatar" style="background: linear-gradient(45deg, ${result.color}, #4bc88b);">
-                    <div class="personality-code">${result.code}</div>
-                </div>
+        // Open Facebook share
+        const popup = window.open(fbShareUrl, 'facebookShare', 'width=600,height=450,scrollbars=yes,resizable=yes');
+        
+        // Fallback: If popup blocked or fails
+        if (!popup || popup.closed) {
+            // Show manual sharing instructions
+            showSharingInstructions(shareUrl, shareText);
+        }
+        
+        // Alternative method: Try to refresh Facebook cache
+        setTimeout(() => {
+            refreshFacebookCacheManually(shareUrl);
+        }, 2000);
+        
+        console.log(`Sharing to Facebook with URL: ${shareUrl}`);
+    }, 500);
+}
+
+// ADD these new functions for enhanced sharing experience
+function showSharingInstructions(url, text) {
+    const instructionModal = document.createElement('div');
+    instructionModal.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: Arial, sans-serif;
+        ">
+            <div style="
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                max-width: 500px;
+                text-align: center;
+                color: #333;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            ">
+                <h3 style="margin-top: 0; color: #1877f2;">Share Your Result! 🎯</h3>
+                <p style="margin: 20px 0; line-height: 1.5;">
+                    Copy this link and paste it in your Facebook post:
+                </p>
                 
-                <h2 class="result-title">${result.name}</h2>
-                <p class="result-subtitle">${result.desc}</p>
-                <p class="result-description">${result.fullDesc}</p>
+                <div style="
+                    background: #f8f9fa;
+                    padding: 15px;
+                    border-radius: 8px;
+                    margin: 15px 0;
+                    border: 1px solid #dee2e6;
+                    word-break: break-all;
+                    font-size: 14px;
+                    color: #495057;
+                ">${url}</div>
                 
-                <div class="traits-container">
-                    <h3>Your Key Traits:</h3>
-                    <div class="traits-grid">
-                        ${result.traits.map(trait => `<span class="trait-tag">${trait}</span>`).join('')}
+                <button onclick="copyToClipboardAndClose('${url}', this)" style="
+                    background: #1877f2;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 10px 5px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                ">📋 Copy Link</button>
+                
+                <button onclick="openFacebookPost()" style="
+                    background: #42a5f5;
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    margin: 10px 5px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                ">📘 Open Facebook</button>
+                
+                <br>
+                
+                <button onclick="this.closest('div').parentElement.remove()" style="
+                    background: #6c757d;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                    margin-top: 15px;
+                ">Close</button>
+                
+                <p style="
+                    margin-top: 20px;
+                    font-size: 12px;
+                    color: #6c757d;
+                    line-height: 1.4;
+                ">
+                    💡 Tip: After pasting the link, wait for Facebook to load the preview with your result image!
+                </p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(instructionModal);
+}
+
+function copyToClipboardAndClose(text, button) {
+    navigator.clipboard.writeText(text).then(() => {
+        button.textContent = '✅ Copied!';
+        button.style.background = '#28a745';
+        
+        setTimeout(() => {
+            button.closest('div').parentElement.remove();
+        }, 1500);
+    }).catch(err => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        button.textContent = '✅ Copied!';
+        button.style.background = '#28a745';
+        
+        setTimeout(() => {
+            button.closest('div').parentElement.remove();
+        }, 1500);
+    });
+}
+
+function openFacebookPost() {
+    const facebookUrl = `https://www.facebook.com/`;
+    window.open(facebookUrl, '_blank');
+}
+
+function refreshFacebookCacheManually(url) {
+    // Open Facebook's sharing debugger to refresh cache
+    const debugUrl = `https://developers.facebook.com/tools/debug/sharing/?q=${encodeURIComponent(url)}`;
+    console.log(`To refresh Facebook cache, visit: ${debugUrl}`);
+    
+    // Optionally auto-open debugger (uncomment if you want automatic cache refresh)
+    // setTimeout(() => {
+    //     window.open(debugUrl, 'fbDebugger', 'width=800,height=600,scrollbars=yes');
+    // }, 3000);
+}
+
+// REPLACE your existing setupModalButtons function with this updated version
+function setupModalButtons(personalityType, result) {
+    const resultModal = document.getElementById('result-modal');
+    const closeModalBtn = document.getElementById('close-modal');
+    const restartBtn = document.getElementById('restart-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const facebookBtn = document.getElementById('facebook-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+
+    closeModalBtn.onclick = () => {
+        resultModal.style.display = 'none';
+    };
+
+    restartBtn.onclick = () => {
+        resultModal.style.display = 'none';
+        currentQuestion = 0;
+        userAnswers.length = 0;
+        Object.keys(scores).forEach(key => scores[key] = 0);
+        
+        // Reset URL and OG tags to default
+        const defaultURL = window.location.origin;
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', defaultURL);
+        }
+        document.title = "What Kind of Programmer Are You?";
+        
+        // Reset OG tags to default
+        removeExistingOGTags();
+        addOGTag('og:title', 'EARIST-CS Developer Personality Test');
+        addOGTag('og:description', 'Discover your unique programming personality with this fun quiz designed for EARIST Computer Science students!');
+        addOGTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
+        addOGTag('og:url', defaultURL);
+        addOGTag('og:type', 'website');
+        
+        renderQuestion(currentQuestion);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Keep your existing download button functionality
+    downloadBtn.onclick = () => {
+        // Your existing download code here
+        const personalityCode = document.querySelector('.personality-code')?.textContent || 'XXXX';
+        const personalityName = document.querySelector('.result-title')?.textContent || 'Unknown';
+        const personalityDesc = document.querySelector('.result-subtitle')?.textContent || '';
+        const personalityFullDesc = document.querySelector('.result-description')?.textContent || '';
+        const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
+
+        // Create visible container for html2canvas
+        const downloadContainer = document.createElement('div');
+        downloadContainer.id = 'download-container';
+        downloadContainer.innerHTML = `
+            <div style="
+                width: 600px;
+                min-height: 700px;
+                padding: 40px;
+                margin: 20px auto;
+                background: linear-gradient(135deg, #35b173ff 0%, #18663bff 100%);
+                color: white;
+                font-family: Arial, sans-serif;
+                text-align: center;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                position: relative;
+            ">
+                <div style="
+                    width: 120px;
+                    height: 120px;
+                    margin: 0 auto 30px;
+                    background: rgba(255,255,255,0.2);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 28px;
+                    font-weight: bold;
+                ">${personalityCode}</div>
+                
+                <h1 style="
+                    margin: 0 0 15px;
+                    font-size: 2.5rem;
+                    font-weight: bold;
+                    line-height: 1.2;
+                ">${personalityName}</h1>
+                
+                <p style="
+                    margin: 0 0 25px;
+                    font-size: 1.2rem;
+                    opacity: 0.9;
+                    line-height: 1.4;
+                ">${personalityDesc}</p>
+                
+                <p style="
+                    margin: 0 0 35px;
+                    font-size: 1rem;
+                    line-height: 1.6;
+                    opacity: 0.8;
+                    max-width: 500px;
+                    margin-left: auto;
+                    margin-right: auto;
+                ">${personalityFullDesc}</p>
+                
+                <div style="margin-bottom: 40px;">
+                    <h3 style="
+                        margin: 0 0 20px;
+                        font-size: 1.4rem;
+                        font-weight: bold;
+                    ">Key Traits:</h3>
+                    
+                    <div style="
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: center;
+                        gap: 12px;
+                        max-width: 500px;
+                        margin: 0 auto;
+                    ">
+                        ${traits.map(trait => `
+                            <span style="
+                                background: rgba(255,255,255,0.2);
+                                padding: 10px 20px;
+                                border-radius: 25px;
+                                font-size: 0.95rem;
+                                font-weight: 500;
+                                white-space: nowrap;
+                            ">${trait}</span>
+                        `).join('')}
                     </div>
                 </div>
                 
-                <div class="result-actions">
-                    <button id="restart-btn" class="result-btn">
-                        🔄 Take Quiz Again
-                    </button>
-                    <button id="download-btn" class="result-btn">
-                        📱 Download Result
-                    </button>
-                    <button id="facebook-btn" class="result-btn">
-                        📘 Share on Facebook
-                    </button>
-                    <button id="copy-link-btn" class="result-btn">
-                        🔗 Copy Link
-                    </button>
-                </div>
-                
-                <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <div class="logo" style="width: 50px; height: 50px; margin: 0 auto 0.5rem;">
-                        <img src="assets/img/logo.png" alt="EARIST Logo" style="height: 60px; width: auto;">
-                    </div>
-                    <div style="font-size: 0.8rem; color: #4bc88b;">EARIST-CS Personality Test</div>
-                    <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 0.5rem;">
-                        Share URL: ${window.location.href}
-                    </div>
+                <div style="
+                    margin-top: 40px;
+                    padding-top: 25px;
+                    border-top: 1px solid rgba(255,255,255,0.2);
+                    font-size: 1rem;
+                    opacity: 0.7;
+                    font-weight: 500;
+                ">
+                    EARIST-CS Personality Test
                 </div>
             </div>
         `;
 
-        document.getElementById("result-modal").style.display = "flex";
-        setupModalButtons(personalityType, result);
-    }
+        // Add to page temporarily
+        document.body.appendChild(downloadContainer);
+        downloadContainer.offsetHeight;
 
-    // Helper function to check if image exists
-    async function checkImageExists(imageUrl) {
-        try {
-            const response = await fetch(imageUrl, { method: 'HEAD' });
-            return response.ok;
-        } catch (error) {
-            console.error("Error checking image:", error);
-            return false;
-        }
-    }
+        // Wait a moment then capture
+        setTimeout(() => {
+            html2canvas(downloadContainer.firstElementChild, {
+                backgroundColor: null,
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                height: downloadContainer.firstElementChild.offsetHeight,
+                width: downloadContainer.firstElementChild.offsetWidth,
+                scrollX: 0,
+                scrollY: 0
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `EARIST-CS-${personalityCode}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
 
-    // Helper function to convert image URL to base64
-    async function imageUrlToBase64(imageUrl) {
-        try {
-            const response = await fetch(imageUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const blob = await response.blob();
-            
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const base64String = reader.result.split(',')[1];
-                    resolve(base64String);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
+                document.body.removeChild(downloadContainer);
+                console.log('Download successful with html2canvas!');
+            }).catch(error => {
+                console.error('html2canvas failed:', error);
+                document.body.removeChild(downloadContainer);
+                alert('Download failed. Please try again.');
             });
-        } catch (error) {
-            console.error("Error converting image to base64:", error);
-            return null;
-        }
-    }
+        }, 500);
+    };
 
-    // Helper function to build share text (extracted for reusability)
-    function buildShareText(personalityType, result) {
-        const personalityCode = document.querySelector('.personality-code')?.textContent || personalityType;
-        const personalityName = document.querySelector('.result-title')?.textContent || result.name;
-        const personalityDesc = document.querySelector('.result-subtitle')?.textContent || result.desc;
-        const personalityFullDesc = document.querySelector('.result-description')?.textContent || result.fullDesc;
-        const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
+    // UPDATED: Enhanced Facebook button with new sharing method
+    facebookBtn.onclick = () => {
+        shareToFacebook(personalityType, result);
+    };
 
-        return `🎯 I just discovered my ComsaPeeps Personality!
-
-    🏷️ TYPE: "${personalityName}"
-    🔤 CODE: ${personalityCode}
-
-    📝 DESCRIPTION:
-    ${personalityDesc}
-
-    💡 WHAT THIS MEANS:
-    ${personalityFullDesc}
-
-    ✨ MY KEY TRAITS:
-    ${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
-
-    🎮 Try it yourself here: ${window.location.href}
-
-    #EARISTCS #DeveloperPersonality #${personalityCode}`;
-    }
-
-    // NEW: Enhanced Facebook sharing with dynamic OG image
-    function shareToFacebook(personalityType, result) {
-        // The OG tags are already updated, so Facebook will pick up the correct image
-        const shareUrl = window.location.href; // This now includes the personality type parameter
-        const shareText = buildShareText(personalityType, result);
-
-        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-        
-        // Open Facebook share dialog
-        window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
-        
-        console.log(`Sharing to Facebook with thumbnail: /assets/thumbnails/${personalityType}.png`);
-    }
-
-    // Alternative: Upload thumbnail to Imgur for guaranteed sharing
-    async function shareToFacebookWithImgur(personalityType, result) {
-        try {
-            console.log("Preparing Facebook share via Imgur...");
-            
-            // Get thumbnail from your assets folder
-            const thumbnailUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
-            
-            // Convert image to base64
-            const imageBase64 = await imageUrlToBase64(thumbnailUrl);
-            
-            if (!imageBase64) {
-                alert("Could not load thumbnail image. Please check if the file exists.");
-                return;
+    // Enhanced copy link button
+    if (copyLinkBtn) {
+        copyLinkBtn.onclick = async () => {
+            const shareUrl = window.location.href;
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                copyLinkBtn.textContent = '✅ Copied!';
+                copyLinkBtn.style.background = '#28a745';
+                setTimeout(() => {
+                    copyLinkBtn.textContent = '🔗 Copy Link';
+                    copyLinkBtn.style.background = '';
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = shareUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyLinkBtn.textContent = '✅ Copied!';
+                copyLinkBtn.style.background = '#28a745';
+                setTimeout(() => {
+                    copyLinkBtn.textContent = '🔗 Copy Link';
+                    copyLinkBtn.style.background = '';
+                }, 2000);
             }
-            
-            // Upload to Imgur (replace with your Client ID)
-            const clientId = "38112d6d0d6762305504f48bc102ee2e";
-            
-            console.log("Uploading thumbnail to Imgur...");
-            const res = await fetch("https://api.imgur.com/3/image", {
-                method: "POST",
-                headers: {
-                    Authorization: `Client-ID ${clientId}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ 
-                    image: imageBase64, 
-                    type: "base64",
-                    title: `${personalityType} Personality Result`,
-                    description: `EARIST-CS Personality Test Result: ${result.name}`
-                })
-            });
-
-            if (!res.ok) {
-                const text = await res.text();
-                console.error("Imgur upload failed:", res.status, text);
-                alert(`Image upload failed with status ${res.status}`);
-                return;
-            }
-
-            const data = await res.json();
-            
-            if (!data.success || !data.data?.link) {
-                alert(`Image upload failed: ${data.data?.error || 'Unknown error'}`);
-                return;
-            }
-
-            const uploadedImageUrl = data.data.link;
-            console.log("Thumbnail uploaded to Imgur:", uploadedImageUrl);
-            
-            // Build share text and open Facebook
-            const shareText = buildShareText(personalityType, result);
-            const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(uploadedImageUrl)}&quote=${encodeURIComponent(shareText)}`;
-            
-            window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
-            
-        } catch (err) {
-            console.error("Error in shareToFacebookWithImgur:", err);
-            alert("An error occurred while sharing. Please try again.");
-        }
-    }
-
-    function setupModalButtons(personalityType, result) {
-        const resultModal = document.getElementById('result-modal');
-        const closeModalBtn = document.getElementById('close-modal');
-        const restartBtn = document.getElementById('restart-btn');
-        const downloadBtn = document.getElementById('download-btn');
-        const facebookBtn = document.getElementById('facebook-btn');
-        const copyLinkBtn = document.getElementById('copy-link-btn');
-
-        closeModalBtn.onclick = () => {
-            resultModal.style.display = 'none';
         };
-
-        restartBtn.onclick = () => {
-            resultModal.style.display = 'none';
-            currentQuestion = 0;
-            userAnswers.length = 0;
-            Object.keys(scores).forEach(key => scores[key] = 0);
-            
-            // NEW: Reset URL and OG tags to default
-            const defaultURL = window.location.origin;
-            if (window.history && window.history.pushState) {
-                window.history.pushState({}, '', defaultURL);
-            }
-            document.title = "What Kind of Programmer Are You?";
-            
-            let ogImage = document.querySelector('meta[property="og:image"]');
-            if (ogImage) {
-                ogImage.content = `${window.location.origin}/assets/thumbnails/default.png`;
-            }
-            
-            renderQuestion(currentQuestion);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        // Download button using html2canvas for creating result image
-        downloadBtn.onclick = () => {
-            // Get personality data
-            const personalityCode = document.querySelector('.personality-code')?.textContent || 'XXXX';
-            const personalityName = document.querySelector('.result-title')?.textContent || 'Unknown';
-            const personalityDesc = document.querySelector('.result-subtitle')?.textContent || '';
-            const personalityFullDesc = document.querySelector('.result-description')?.textContent || '';
-            const traits = Array.from(document.querySelectorAll('.trait-tag')).map(tag => tag.textContent);
-            
-            // Create visible container for html2canvas
-            const downloadContainer = document.createElement('div');
-            downloadContainer.id = 'download-container';
-            downloadContainer.innerHTML = `
-                <div style="
-                    width: 600px;
-                    min-height: 700px;
-                    padding: 40px;
-                    margin: 20px auto;
-                    background: linear-gradient(135deg, #35b173ff 0%, #18663bff 100%);
-                    color: white;
-                    font-family: Arial, sans-serif;
-                    text-align: center;
-                    border-radius: 20px;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-                    position: relative;
-                ">
-                    <div style="
-                        width: 120px;
-                        height: 120px;
-                        margin: 0 auto 30px;
-                        background: rgba(255,255,255,0.2);
-                        border-radius: 50%;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 28px;
-                        font-weight: bold;
-                    ">${personalityCode}</div>
-                    
-                    <h1 style="
-                        margin: 0 0 15px; 
-                        font-size: 2.5rem; 
-                        font-weight: bold;
-                        line-height: 1.2;
-                    ">${personalityName}</h1>
-                    
-                    <p style="
-                        margin: 0 0 25px; 
-                        font-size: 1.2rem; 
-                        opacity: 0.9;
-                        line-height: 1.4;
-                    ">${personalityDesc}</p>
-                    
-                    <p style="
-                        margin: 0 0 35px; 
-                        font-size: 1rem; 
-                        line-height: 1.6; 
-                        opacity: 0.8;
-                        max-width: 500px;
-                        margin-left: auto;
-                        margin-right: auto;
-                    ">${personalityFullDesc}</p>
-                    
-                    <div style="margin-bottom: 40px;">
-                        <h3 style="
-                            margin: 0 0 20px; 
-                            font-size: 1.4rem;
-                            font-weight: bold;
-                        ">Key Traits:</h3>
-                        <div style="
-                            display: flex; 
-                            flex-wrap: wrap; 
-                            justify-content: center; 
-                            gap: 12px;
-                            max-width: 500px;
-                            margin: 0 auto;
-                        ">
-                            ${traits.map(trait => `
-                                <span style="
-                                    background: rgba(255,255,255,0.2);
-                                    padding: 10px 20px;
-                                    border-radius: 25px;
-                                    font-size: 0.95rem;
-                                    font-weight: 500;
-                                    white-space: nowrap;
-                                ">${trait}</span>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div style="
-                        margin-top: 40px;
-                        padding-top: 25px;
-                        border-top: 1px solid rgba(255,255,255,0.2);
-                        font-size: 1rem;
-                        opacity: 0.7;
-                        font-weight: 500;
-                    ">
-                        EARIST-CS Personality Test
-                    </div>
-                </div>
-            `;
-            
-            // Add to page temporarily
-            document.body.appendChild(downloadContainer);
-            
-            // Force layout calculation
-            downloadContainer.offsetHeight;
-            
-            // Wait a moment then capture
-            setTimeout(() => {
-                html2canvas(downloadContainer.firstElementChild, {
-                    backgroundColor: null,
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true,
-                    height: downloadContainer.firstElementChild.offsetHeight,
-                    width: downloadContainer.firstElementChild.offsetWidth,
-                    scrollX: 0,
-                    scrollY: 0
-                }).then(canvas => {
-                    // Download the image
-                    const link = document.createElement('a');
-                    link.download = `EARIST-CS-${personalityCode}-${Date.now()}.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0);
-                    link.click();
-                    
-                    // Remove temporary container
-                    document.body.removeChild(downloadContainer);
-                    console.log('Download successful with html2canvas!');
-                    
-                }).catch(error => {
-                    console.error('html2canvas failed:', error);
-                    document.body.removeChild(downloadContainer);
-                    alert('Download failed. Please try the other method.');
-                });
-            }, 500);
-        };
-
-        // NEW: Enhanced Facebook button to use dynamic OG image
-        facebookBtn.onclick = () => {
-            shareToFacebook(personalityType, result);
-        };
-
-        // NEW: Copy link button for easy sharing
-        if (copyLinkBtn) {
-            copyLinkBtn.onclick = async () => {
-                try {
-                    await navigator.clipboard.writeText(window.location.href);
-                    copyLinkBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyLinkBtn.textContent = '🔗 Copy Link';
-                    }, 2000);
-                } catch (err) {
-                    // Fallback for older browsers
-                    const textArea = document.createElement('textarea');
-                    textArea.value = window.location.href;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    
-                    copyLinkBtn.textContent = '✅ Copied!';
-                    setTimeout(() => {
-                        copyLinkBtn.textContent = '🔗 Copy Link';
-                    }, 2000);
-                }
-            };
-        }
     }
+}
 
     // Add shake animation keyframes
     const shakeStyle = document.createElement('style');
