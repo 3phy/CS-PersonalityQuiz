@@ -412,11 +412,61 @@ function calculateResult() {
     showResult(personality);
 }
 
+// NEW: Enhanced OG image update function with URL parameter support
+function updateOGImageAndURL(personalityType) {
+    // Update the Open Graph image meta tag
+    let ogImage = document.querySelector('meta[property="og:image"]');
+    if (!ogImage) {
+        ogImage = document.createElement('meta');
+        ogImage.setAttribute('property', 'og:image');
+        document.head.appendChild(ogImage);
+    }
+    ogImage.content = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
+    
+    // Update the URL to include personality type for better sharing
+    const newURL = `${window.location.origin}/?result=${personalityType}`;
+    
+    // Update OG URL meta tag
+    let ogURL = document.querySelector('meta[property="og:url"]');
+    if (!ogURL) {
+        ogURL = document.createElement('meta');
+        ogURL.setAttribute('property', 'og:url');
+        document.head.appendChild(ogURL);
+    }
+    ogURL.content = newURL;
+    
+    // Update page title and OG title to include personality type
+    const result = personalities[personalityType];
+    if (result) {
+        const newTitle = `I'm ${result.name} - EARIST-CS Developer Personality Test`;
+        document.title = newTitle;
+        
+        let ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) {
+            ogTitle.content = newTitle;
+        }
+        
+        // Update OG description with personality info
+        let ogDescription = document.querySelector('meta[property="og:description"]');
+        if (ogDescription) {
+            ogDescription.content = `${result.desc} - ${result.fullDesc.substring(0, 100)}...`;
+        }
+    }
+    
+    // Update browser URL without page reload (for better sharing experience)
+    if (window.history && window.history.pushState) {
+        window.history.pushState({personalityType}, '', newURL);
+    }
+    
+    console.log(`Updated OG image to: /assets/thumbnails/${personalityType}.png`);
+    console.log(`Updated URL to: ${newURL}`);
+}
+
 function showResult(personalityType) {
     const result = personalities[personalityType];
     
-    // Update Open Graph image for better Facebook sharing
-    updateOGImage(personalityType);
+    // NEW: Update OG tags and URL before showing result
+    updateOGImageAndURL(personalityType);
     
     document.getElementById("result").innerHTML = `
         <div class="result-container">
@@ -445,6 +495,9 @@ function showResult(personalityType) {
                 <button id="facebook-btn" class="result-btn">
                     📘 Share on Facebook
                 </button>
+                <button id="copy-link-btn" class="result-btn">
+                    🔗 Copy Link
+                </button>
             </div>
             
             <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
@@ -452,23 +505,15 @@ function showResult(personalityType) {
                     <img src="assets/img/logo.png" alt="EARIST Logo" style="height: 60px; width: auto;">
                 </div>
                 <div style="font-size: 0.8rem; color: #4bc88b;">EARIST-CS Personality Test</div>
+                <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 0.5rem;">
+                    Share URL: ${window.location.href}
+                </div>
             </div>
         </div>
     `;
 
     document.getElementById("result-modal").style.display = "flex";
     setupModalButtons(personalityType, result);
-}
-
-// Helper function to update Open Graph image meta tag
-function updateOGImage(personalityType) {
-    let ogImage = document.querySelector('meta[property="og:image"]');
-    if (!ogImage) {
-        ogImage = document.createElement('meta');
-        ogImage.setAttribute('property', 'og:image');
-        document.head.appendChild(ogImage);
-    }
-    ogImage.content = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
 }
 
 // Helper function to check if image exists
@@ -533,48 +578,18 @@ ${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
 #EARISTCS #DeveloperPersonality #${personalityCode}`;
 }
 
-// Facebook sharing with direct thumbnail (simpler method)
-async function shareToFacebook(personalityType, result) {
-    try {
-        console.log("Preparing Facebook share with thumbnail...");
-        
-        // Get the thumbnail image URL from your assets folder
-        const thumbnailUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png`;
-        
-        // Verify the image exists (optional but recommended)
-        const imageExists = await checkImageExists(thumbnailUrl);
-        
-        if (!imageExists) {
-            console.warn(`Thumbnail not found: ${thumbnailUrl}, trying fallback`);
-            // Fallback to a default thumbnail if specific one doesn't exist
-            const fallbackUrl = `${window.location.origin}/assets/thumbnails/default.png`;
-            const fallbackExists = await checkImageExists(fallbackUrl);
-            
-            if (!fallbackExists) {
-                alert("Thumbnail images not found. Please make sure you have thumbnail images in /assets/thumbnails/ folder.");
-                // Fall back to Imgur method
-                shareToFacebookWithImgur(personalityType, result);
-                return;
-            }
-        }
-        
-        // Build share text with personality info
-        const shareText = buildShareText(personalityType, result);
-        
-        // Create Facebook share URL
-        const shareUrl = window.location.href;
-        const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
-        
-        // Open Facebook share dialog
-        window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
-        
-        console.log("Facebook share dialog opened with thumbnail:", thumbnailUrl);
-        
-    } catch (err) {
-        console.error("Error in shareToFacebook:", err);
-        // Fallback to Imgur method
-        shareToFacebookWithImgur(personalityType, result);
-    }
+// NEW: Enhanced Facebook sharing with dynamic OG image
+function shareToFacebook(personalityType, result) {
+    // The OG tags are already updated, so Facebook will pick up the correct image
+    const shareUrl = window.location.href; // This now includes the personality type parameter
+    const shareText = buildShareText(personalityType, result);
+
+    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+    
+    // Open Facebook share dialog
+    window.open(fbShareUrl, 'facebookShare', 'width=600,height=400,scrollbars=yes,resizable=yes');
+    
+    console.log(`Sharing to Facebook with thumbnail: /assets/thumbnails/${personalityType}.png`);
 }
 
 // Alternative: Upload thumbnail to Imgur for guaranteed sharing
@@ -646,6 +661,7 @@ function setupModalButtons(personalityType, result) {
     const restartBtn = document.getElementById('restart-btn');
     const downloadBtn = document.getElementById('download-btn');
     const facebookBtn = document.getElementById('facebook-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
 
     closeModalBtn.onclick = () => {
         resultModal.style.display = 'none';
@@ -656,6 +672,19 @@ function setupModalButtons(personalityType, result) {
         currentQuestion = 0;
         userAnswers.length = 0;
         Object.keys(scores).forEach(key => scores[key] = 0);
+        
+        // NEW: Reset URL and OG tags to default
+        const defaultURL = window.location.origin;
+        if (window.history && window.history.pushState) {
+            window.history.pushState({}, '', defaultURL);
+        }
+        document.title = "What Kind of Programmer Are You?";
+        
+        let ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage) {
+            ogImage.content = `${window.location.origin}/assets/thumbnails/default.png`;
+        }
+        
         renderQuestion(currentQuestion);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -800,16 +829,36 @@ function setupModalButtons(personalityType, result) {
         }, 500);
     };
 
-    // Updated Facebook button to use thumbnail images
+    // NEW: Enhanced Facebook button to use dynamic OG image
     facebookBtn.onclick = () => {
-        // Use the method that works best for you:
-        // Option 1: Direct thumbnail sharing (simpler, but may not always work)
         shareToFacebook(personalityType, result);
-        
-        // Option 2: Upload thumbnail to Imgur first (more reliable)
-        // Uncomment the line below and comment the line above if you prefer Imgur method
-        // shareToFacebookWithImgur(personalityType, result);
     };
+
+    // NEW: Copy link button for easy sharing
+    if (copyLinkBtn) {
+        copyLinkBtn.onclick = async () => {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                copyLinkBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyLinkBtn.textContent = '🔗 Copy Link';
+                }, 2000);
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = window.location.href;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyLinkBtn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    copyLinkBtn.textContent = '🔗 Copy Link';
+                }, 2000);
+            }
+        };
+    }
 }
 
 // Add shake animation keyframes
@@ -833,8 +882,34 @@ shakeStyle.textContent = `
 `;
 document.head.appendChild(shakeStyle);
 
+// NEW: Check URL parameters on page load to show specific result
+function checkURLParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const resultParam = urlParams.get('result');
+    
+    if (resultParam && personalities[resultParam]) {
+        // If someone visits a direct result URL, show that result immediately
+        console.log(`Showing result from URL parameter: ${resultParam}`);
+        showResult(resultParam);
+        return true;
+    }
+    return false;
+}
+
+// NEW: Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.personalityType) {
+        showResult(event.state.personalityType);
+    } else {
+        // Back to quiz
+        document.getElementById('result-modal').style.display = 'none';
+    }
+});
+
 // Start the quiz
-renderQuestion(currentQuestion);
+if (!checkURLParameters()) {
+    renderQuestion(currentQuestion);
+}
 
 // Close modal when clicking outside
 window.onclick = e => {
