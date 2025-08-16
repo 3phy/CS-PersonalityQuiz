@@ -1257,6 +1257,8 @@ function checkURLParameters() {
     return false;
 }
 
+
+
 // Handle browser back/forward buttons
 window.addEventListener('popstate', function(event) {
     if (event.state && event.state.personalityType) {
