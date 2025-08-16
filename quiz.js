@@ -414,6 +414,7 @@ function calculateResult() {
 
 // FIXED: Comprehensive OG tag update function
 // ENHANCED: More robust Facebook cache busting and OG tag management
+// ENHANCED: More robust Facebook cache busting and OG tag management
 function updateOGImageAndURL(personalityType) {
     const result = personalities[personalityType];
     if (!result) return;
