@@ -1,3 +1,6 @@
+// COMPLETE FACEBOOK SHARING SOLUTION
+// Replace your existing JavaScript with this enhanced version
+
 const questions = [
     // Social Energy (E vs I) - 4 questions 
     {
@@ -412,104 +415,31 @@ function calculateResult() {
     showResult(personality);
 }
 
-// FIXED: Comprehensive OG tag update function
-// ENHANCED: More robust Facebook cache busting and OG tag management
-// ENHANCED: More robust Facebook cache busting and OG tag management
-function updateOGImageAndURL(personalityType) {
-    const result = personalities[personalityType];
-    if (!result) return;
+// ================================
+// ENHANCED FACEBOOK SHARING SYSTEM
+// ================================
 
-    // Create unique URL with better cache busting parameters
-    const timestamp = Date.now();
-    const randomId = Math.random().toString(36).substr(2, 9);
-    const sessionId = Math.random().toString(36).substr(2, 5);
-    const baseUrl = window.location.origin + window.location.pathname;
-    
-    // Use multiple parameters to ensure uniqueness
-    const newURL = `${baseUrl}?result=${personalityType}&v=${timestamp}&r=${randomId}&s=${sessionId}`;
-
-    // Enhanced image URL with aggressive cache busting
-    const imageUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
-    const title = `I'm ${result.name} - COMSA Developer Personality Test`;
-    const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
-
-    // CRITICAL: Complete OG tag reset and recreation
-    removeAllOGTags();
-    
-    // Wait a moment for DOM cleanup
-    setTimeout(() => {
-        // Add comprehensive OG tags with Facebook-specific optimizations
-        addOGTag('og:title', title);
-        addOGTag('og:description', description);
-        addOGTag('og:image', imageUrl);
-        addOGTag('og:image:secure_url', imageUrl.replace('http://', 'https://'));
-        addOGTag('og:image:width', '1200');
-        addOGTag('og:image:height', '630');
-        addOGTag('og:image:type', 'image/png');
-        addOGTag('og:url', newURL);
-        addOGTag('og:type', 'website');
-        addOGTag('og:site_name', 'COMSA Developer Personality Test');
-        addOGTag('og:updated_time', new Date().toISOString());
-        
-        // Facebook-specific tags
-        addOGTag('fb:app_id', '2964994887030908');
-        addOGTag('article:modified_time', new Date().toISOString());
-        
-        // Twitter Cards for fallback
-        addOGTag('twitter:card', 'summary_large_image', 'name');
-        addOGTag('twitter:title', title, 'name');
-        addOGTag('twitter:description', description, 'name');
-        addOGTag('twitter:image', imageUrl, 'name');
-
-        // Update page metadata
-        document.title = title;
-        
-        // Force browser cache refresh for the image
-        preloadImageWithCacheBust(imageUrl);
-        
-        console.log(`🔄 Updated OG tags for ${personalityType}`);
-        console.log(`📸 Image URL: ${imageUrl}`);
-        console.log(`🔗 Share URL: ${newURL}`);
-        
-    }, 100);
-
-    // Update URL in browser
-    if (window.history && window.history.pushState) {
-        window.history.pushState({personalityType}, '', newURL);
-    }
-
-    return { newURL, imageUrl, title, description };
-}
-
-// ENHANCED: More thorough OG tag removal
-function removeAllOGTags() {
+// Remove all dynamic meta tags
+function removeAllMetaTags() {
     const selectors = [
         'meta[property^="og:"]',
         'meta[name^="twitter:"]',
         'meta[property^="fb:"]',
-        'meta[property^="article:"]',
-        'meta[name="description"]:not([data-original])'
+        'meta[property^="article:"]'
     ];
     
     selectors.forEach(selector => {
         document.querySelectorAll(selector).forEach(tag => {
-            // Only remove dynamic tags, preserve original ones
-            if (!tag.hasAttribute('data-original') && !tag.hasAttribute('data-default')) {
+            if (!tag.hasAttribute('data-original')) {
                 tag.remove();
             }
         });
     });
 }
 
-// ENHANCED: Better OG tag addition with priority placement
-function addOGTag(property, content, attributeType = 'property') {
+// Add meta tag with priority placement
+function addMetaTag(property, content, attributeType = 'property') {
     if (!content) return;
-    
-    // Remove any existing dynamic tag with same property
-    const existingTag = document.querySelector(`meta[${attributeType}="${property}"]:not([data-original])`);
-    if (existingTag) {
-        existingTag.remove();
-    }
     
     const meta = document.createElement('meta');
     meta.setAttribute(attributeType, property);
@@ -517,7 +447,7 @@ function addOGTag(property, content, attributeType = 'property') {
     meta.setAttribute('data-dynamic', 'true');
     meta.setAttribute('data-timestamp', Date.now().toString());
     
-    // Insert at the very beginning of head for maximum priority
+    // Insert at the very beginning of head
     const firstChild = document.head.firstChild;
     if (firstChild) {
         document.head.insertBefore(meta, firstChild);
@@ -526,42 +456,104 @@ function addOGTag(property, content, attributeType = 'property') {
     }
 }
 
-// NEW: Preload image to force cache refresh
-function preloadImageWithCacheBust(imageUrl) {
-    return new Promise((resolve, reject) => {
+// Preload image to ensure it exists
+function preloadImage(imageUrl) {
+    return new Promise((resolve) => {
         const img = new Image();
         img.onload = () => {
-            console.log(`✅ Image preloaded successfully: ${imageUrl}`);
+            console.log(`✅ Image preloaded: ${imageUrl}`);
             resolve(true);
         };
         img.onerror = () => {
-            console.warn(`⚠️ Image preload failed: ${imageUrl}`);
+            console.warn(`⚠️ Image failed to load: ${imageUrl}`);
             resolve(false);
         };
-        
-        // Add random parameter to bypass any caching
-        const cacheBustUrl = imageUrl + (imageUrl.includes('?') ? '&' : '?') + `preload=${Date.now()}`;
-        img.src = cacheBustUrl;
+        img.src = imageUrl;
     });
 }
 
-// COMPLETELY REWRITTEN: More aggressive Facebook cache clearing
+// MAIN FUNCTION: Update OG tags and URL
+function updateOGImageAndURL(personalityType) {
+    const result = personalities[personalityType];
+    if (!result) return;
+
+    // Create unique URL with aggressive cache busting
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substr(2, 9);
+    const sessionId = Math.random().toString(36).substr(2, 5);
+    const baseUrl = window.location.origin + window.location.pathname;
+    
+    // Multiple parameters to force Facebook to treat as new content
+    const newURL = `${baseUrl}?result=${personalityType}&v=${timestamp}&r=${randomId}&s=${sessionId}&fb=1`;
+
+    // Image URL with cache busting
+    const imageUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
+    
+    const title = `I'm ${result.name} - COMSA Developer Personality Test`;
+    const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
+
+    console.log(`🔄 Updating OG tags for ${personalityType}`);
+    console.log(`📸 Image URL: ${imageUrl}`);
+    console.log(`🔗 Share URL: ${newURL}`);
+
+    // Step 1: Remove all existing OG tags
+    removeAllMetaTags();
+    
+    // Step 2: Wait for cleanup then add new tags
+    setTimeout(() => {
+        // Essential OG tags for Facebook
+        addMetaTag('og:title', title);
+        addMetaTag('og:description', description);
+        addMetaTag('og:image', imageUrl);
+        addMetaTag('og:image:secure_url', imageUrl.replace('http://', 'https://'));
+        addMetaTag('og:image:width', '1200');
+        addMetaTag('og:image:height', '630');
+        addMetaTag('og:image:type', 'image/png');
+        addMetaTag('og:url', newURL);
+        addMetaTag('og:type', 'website');
+        addMetaTag('og:site_name', 'COMSA Developer Personality Test');
+        addMetaTag('og:updated_time', new Date().toISOString());
+        
+        // Facebook specific tags
+        addMetaTag('fb:app_id', '2964994887030908');
+        addMetaTag('article:modified_time', new Date().toISOString());
+        
+        // Twitter Cards for fallback
+        addMetaTag('twitter:card', 'summary_large_image', 'name');
+        addMetaTag('twitter:title', title, 'name');
+        addMetaTag('twitter:description', description, 'name');
+        addMetaTag('twitter:image', imageUrl, 'name');
+
+        // Update page title
+        document.title = title;
+        
+        // Update URL in browser
+        if (window.history && window.history.pushState) {
+            window.history.pushState({personalityType}, '', newURL);
+        }
+        
+        console.log('✅ OG tags updated successfully');
+        
+    }, 100);
+
+    return { newURL, imageUrl, title, description };
+}
+
+// Refresh Facebook cache
 async function refreshFacebookCache(url) {
-    console.log('🔄 Starting Facebook cache refresh...');
+    console.log('🔄 Attempting Facebook cache refresh...');
     
     try {
-        // Method 1: Facebook's official debug tool API
+        // Method 1: Facebook Debug Tool
         const debugUrls = [
             `https://developers.facebook.com/tools/debug/og/object/?q=${encodeURIComponent(url)}`,
-            `https://graph.facebook.com/v18.0/?id=${encodeURIComponent(url)}&scrape=true&method=post`,
-            `https://graph.facebook.com/?id=${encodeURIComponent(url)}&scrape=true`
+            `https://graph.facebook.com/v18.0/?id=${encodeURIComponent(url)}&scrape=true&method=post`
         ];
         
-        // Try multiple refresh methods
         debugUrls.forEach((debugUrl, index) => {
             setTimeout(() => {
                 try {
-                    // Method using fetch with no-cors
+                    // Use fetch with no-cors to attempt refresh
                     fetch(debugUrl, {
                         method: 'POST',
                         mode: 'no-cors',
@@ -570,7 +562,7 @@ async function refreshFacebookCache(url) {
                         console.log(`Facebook refresh attempt ${index + 1} completed`);
                     });
                     
-                    // Method using hidden iframe
+                    // Also try with hidden iframe
                     const iframe = document.createElement('iframe');
                     iframe.style.display = 'none';
                     iframe.style.width = '1px';
@@ -582,83 +574,97 @@ async function refreshFacebookCache(url) {
                         try {
                             document.body.removeChild(iframe);
                         } catch (e) {
-                            // Iframe already removed
+                            // Already removed
                         }
                     }, 3000);
                     
                 } catch (error) {
                     console.log(`Refresh method ${index + 1} attempted`);
                 }
-            }, index * 1000); // Stagger the requests
+            }, index * 1000);
         });
         
-        // Method 2: Create a ping to our own server to validate OG tags
-        setTimeout(() => {
-            const pingUrl = `${window.location.origin}/ping?url=${encodeURIComponent(url)}&t=${Date.now()}`;
-            fetch(pingUrl, { method: 'HEAD', mode: 'no-cors' }).catch(() => {
-                console.log('Server ping attempted');
-            });
-        }, 2000);
-        
-        console.log('✅ Facebook cache refresh initiated with multiple methods');
+        console.log('✅ Facebook cache refresh initiated');
         
     } catch (error) {
-        console.error('❌ Error during Facebook cache refresh:', error);
+        console.error('❌ Facebook cache refresh error:', error);
     }
 }
 
-// ENHANCED: More robust Facebook sharing with multiple fallbacks
+// Build share text
+function buildShareText(personalityType, result) {
+    const personalityCode = result.code;
+    const personalityName = result.name;
+    const personalityDesc = result.desc;
+    const personalityFullDesc = result.fullDesc;
+    const traits = result.traits;
+
+    return `🎯 I just discovered my COMSA Developer Personality!
+
+🏷️ TYPE: "${personalityName}"
+🔤 CODE: ${personalityCode}
+
+📝 DESCRIPTION:
+${personalityDesc}
+
+💡 WHAT THIS MEANS:
+${personalityFullDesc}
+
+✨ MY KEY TRAITS:
+${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+
+🎮 Take the quiz: ${window.location.href}
+
+#COMSAPersonality #DeveloperPersonality #${personalityCode}`;
+}
+
+// Enhanced Facebook sharing
 async function shareToFacebook(personalityType, result) {
-    console.log("🔄 Starting enhanced Facebook share process...");
+    console.log("🔄 Starting Facebook share process...");
     
     try {
-        // Step 1: Update OG tags with aggressive cache busting
+        // Step 1: Update OG tags
         const { newURL, imageUrl, title, description } = updateOGImageAndURL(personalityType);
         
-        // Step 2: Wait for OG tags to be processed by browser
-        console.log("⏳ Waiting for OG tags processing...");
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Step 3: Preload image to ensure it's cached
+        // Step 2: Preload image to ensure it exists
         console.log("📸 Preloading image...");
-        await preloadImageWithCacheBust(imageUrl);
+        const imageExists = await preloadImage(imageUrl);
         
-        // Step 4: Refresh Facebook cache aggressively
-        console.log("🔄 Refreshing Facebook cache...");
-        refreshFacebookCache(newURL); // Don't await this
+        if (!imageExists) {
+            console.warn("⚠️ Image preload failed, but continuing...");
+        }
         
-        // Step 5: Wait a bit more for cache refresh
+        // Step 3: Wait for OG tags to be processed
+        console.log("⏳ Waiting for OG tags processing...");
         await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Step 6: Try multiple sharing strategies with better error handling
+        // Step 4: Refresh Facebook cache
+        refreshFacebookCache(newURL);
+        
+        // Step 5: Wait a bit more for cache refresh
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Step 6: Open Facebook share dialog
         const shareText = buildShareText(personalityType, result);
+        const success = await openFacebookShareDialog(newURL, shareText);
         
-        console.log("🎯 Attempting Facebook share...");
-        
-        // Try the enhanced Facebook sharing approach
-        const success = await shareViaEnhancedFacebookDialog(newURL, shareText, title, description);
-        
-        if (success) {
-            console.log("✅ Facebook sharing successful!");
-        } else {
-            console.log("⚠️ Facebook dialog closed, showing manual instructions");
-            showEnhancedSharingInstructions(newURL, shareText, imageUrl);
+        if (!success) {
+            console.log("⚠️ Facebook dialog failed, showing manual instructions");
+            showSharingInstructions(newURL, shareText, imageUrl);
         }
         
     } catch (error) {
         console.error("💥 Facebook sharing error:", error);
-        // Fallback to manual instructions
         const { newURL, imageUrl } = updateOGImageAndURL(personalityType);
         const shareText = buildShareText(personalityType, result);
-        showEnhancedSharingInstructions(newURL, shareText, imageUrl);
+        showSharingInstructions(newURL, shareText, imageUrl);
     }
 }
 
-// NEW: Enhanced Facebook dialog with better parameters
-function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description) {
+// Open Facebook share dialog
+function openFacebookShareDialog(shareUrl, shareText) {
     return new Promise((resolve) => {
         try {
-            // Create a more comprehensive Facebook share URL
             const fbParams = new URLSearchParams({
                 u: shareUrl,
                 quote: shareText,
@@ -667,7 +673,7 @@ function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description)
             
             const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?${fbParams.toString()}`;
             
-            console.log("🔗 Opening Facebook share dialog:", fbShareUrl);
+            console.log("🔗 Opening Facebook share dialog");
             
             const popup = window.open(
                 fbShareUrl, 
@@ -681,7 +687,7 @@ function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description)
                 return;
             }
             
-            // Enhanced popup monitoring
+            // Monitor popup
             let checkCount = 0;
             const maxChecks = 120; // 60 seconds
             
@@ -696,7 +702,7 @@ function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description)
                         return;
                     }
                 } catch (error) {
-                    // Popup might be cross-origin, continue checking
+                    // Cross-origin, continue checking
                 }
                 
                 if (checkCount >= maxChecks) {
@@ -705,7 +711,7 @@ function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description)
                     try {
                         popup.close();
                     } catch (e) {
-                        // Popup might already be closed
+                        // Already closed
                     }
                     resolve(false);
                 }
@@ -718,10 +724,10 @@ function shareViaEnhancedFacebookDialog(shareUrl, shareText, title, description)
     });
 }
 
-// ENHANCED: Better manual sharing instructions with troubleshooting
-function showEnhancedSharingInstructions(url, text, imageUrl) {
-    const instructionModal = document.createElement('div');
-    instructionModal.innerHTML = `
+// Show manual sharing instructions
+function showSharingInstructions(url, text, imageUrl) {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
         <div style="
             position: fixed;
             top: 0;
@@ -747,9 +753,7 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                 color: #333;
                 box-shadow: 0 30px 60px rgba(0,0,0,0.3);
                 position: relative;
-                border: 1px solid rgba(255,255,255,0.2);
             ">
-                <!-- Close button -->
                 <button onclick="this.closest('div').parentElement.remove()" style="
                     position: absolute;
                     top: 20px;
@@ -765,10 +769,8 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    transition: all 0.2s ease;
-                " onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">×</button>
+                ">×</button>
                 
-                <!-- Facebook icon -->
                 <div style="
                     width: 80px;
                     height: 80px;
@@ -785,14 +787,12 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                 
                 <h3 style="margin: 0 0 25px; color: #1877f2; font-size: 28px; font-weight: 700;">Share Your Result! 🎯</h3>
                 
-                <!-- Enhanced result preview -->
                 <div style="
                     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
                     padding: 30px;
                     border-radius: 18px;
                     margin: 30px 0;
                     border: 2px solid #e3e6ea;
-                    position: relative;
                 ">
                     <img src="${imageUrl}" alt="Result Preview" style="
                         max-width: 200px;
@@ -804,7 +804,7 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                     " onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     
                     <div style="display: none; padding: 25px; background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 10px; color: #856404; font-size: 15px; font-weight: 600;">
-                        ⚠️ Preview image loading... It will appear when you share!
+                        ⚠️ Preview loading... Your personalized image will appear when you share!
                     </div>
                     
                     <div style="
@@ -822,33 +822,30 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                     ">${url}</div>
                 </div>
                 
-                <!-- Enhanced instructions -->
                 <div style="margin: 30px 0; line-height: 1.8; color: #495057; text-align: left;">
-                    <h4 style="color: #1877f2; margin: 0 0 20px; text-align: center; font-size: 20px;">📋 How to Share (Updated Method):</h4>
+                    <h4 style="color: #1877f2; margin: 0 0 20px; text-align: center; font-size: 20px;">📋 How to Share:</h4>
                     
                     <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 25px; border-radius: 15px; border-left: 5px solid #1877f2; margin-bottom: 20px;">
                         <p style="margin: 0 0 15px; font-weight: 600;"><strong>📋 Step 1:</strong> Copy the link above</p>
                         <p style="margin: 0 0 15px; font-weight: 600;"><strong>🌐 Step 2:</strong> Open Facebook in a new tab</p>
                         <p style="margin: 0 0 15px; font-weight: 600;"><strong>📝 Step 3:</strong> Create a new post</p>
-                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>🔗 Step 4:</strong> Paste the link and wait 10-30 seconds</p>
+                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>🔗 Step 4:</strong> Paste the link and wait 15-30 seconds</p>
                         <p style="margin: 0; font-weight: 600;"><strong>🎉 Step 5:</strong> Your personalized image will appear!</p>
                     </div>
                     
-                    <!-- Troubleshooting section -->
                     <div style="background: #e8f4fd; padding: 20px; border-radius: 12px; border-left: 4px solid #17a2b8;">
                         <h5 style="color: #17a2b8; margin: 0 0 15px; font-size: 16px;">🔧 If image doesn't show:</h5>
                         <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
                             <li style="margin-bottom: 8px;">Wait 30 seconds for Facebook to process the link</li>
                             <li style="margin-bottom: 8px;">Delete and re-paste the link</li>
                             <li style="margin-bottom: 8px;">Refresh your Facebook page and try again</li>
-                            <li>Your unique result image will definitely appear once processed!</li>
+                            <li>Your unique result image will appear once processed!</li>
                         </ul>
                     </div>
                 </div>
                 
-                <!-- Enhanced action buttons -->
                 <div style="margin: 35px 0 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="copyAdvancedLink('${url}', this)" style="
+                    <button onclick="copyToClipboard('${url}', this)" style="
                         background: linear-gradient(135deg, #1877f2, #4267b2);
                         color: white;
                         border: none;
@@ -860,9 +857,7 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                         box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
                         transition: all 0.3s ease;
                         min-width: 160px;
-                    " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 30px rgba(24, 119, 242, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(24, 119, 242, 0.4)'">
-                        📋 Copy Link
-                    </button>
+                    ">📋 Copy Link</button>
                     
                     <button onclick="window.open('https://www.facebook.com/', '_blank')" style="
                         background: linear-gradient(135deg, #42a5f5, #1976d2);
@@ -876,12 +871,9 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
                         box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
                         transition: all 0.3s ease;
                         min-width: 160px;
-                    " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 12px 30px rgba(25, 118, 210, 0.5)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(25, 118, 210, 0.4)'">
-                        🌐 Open Facebook
-                    </button>
+                    ">🌐 Open Facebook</button>
                 </div>
                 
-                <!-- Enhanced pro tips -->
                 <div style="
                     margin-top: 30px;
                     padding-top: 25px;
@@ -905,25 +897,23 @@ function showEnhancedSharingInstructions(url, text, imageUrl) {
         </div>
     `;
     
-    document.body.appendChild(instructionModal);
+    document.body.appendChild(modal);
 }
 
-// Keep the existing copyAdvancedLink function as it's working well
-function copyAdvancedLink(text, button) {
+// Copy to clipboard function
+function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(() => {
         const originalHTML = button.innerHTML;
         const originalStyle = button.style.background;
         
         button.innerHTML = '✅ Copied!';
         button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        button.style.boxShadow = '0 8px 25px rgba(40, 167, 69, 0.5)';
         
         setTimeout(() => {
             button.innerHTML = originalHTML;
             button.style.background = originalStyle;
-            button.style.boxShadow = '0 8px 25px rgba(24, 119, 242, 0.4)';
         }, 3000);
-    }).catch(err => {
+    }).catch(() => {
         // Fallback for older browsers
         const textArea = document.createElement('textarea');
         textArea.value = text;
@@ -936,60 +926,15 @@ function copyAdvancedLink(text, button) {
         document.body.removeChild(textArea);
         
         button.innerHTML = '✅ Copied!';
-        button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        
         setTimeout(() => {
             button.innerHTML = '📋 Copy Link';
-            button.style.background = 'linear-gradient(135deg, #1877f2, #4267b2)';
         }, 3000);
     });
 }
 
-function openFacebookAndKeepModal() {
-    window.open('https://www.facebook.com/', '_blank', 'width=800,height=600');
-    // Keep modal open so user can copy link easily
-}
-
-// Warning for missing images
-function showImageNotFoundWarning(personalityType, imageUrl) {
-    console.warn(`⚠️ Image validation failed for ${personalityType}`);
-    
-    // Create a small warning toast
-    const toast = document.createElement('div');
-    toast.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #ffc107, #ff8f00);
-            color: #333;
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
-            z-index: 9999;
-            font-size: 14px;
-            max-width: 300px;
-            font-weight: 500;
-        ">
-            ⚠️ <strong>Image Check:</strong><br>
-            Thumbnail might not be available, but sharing will still work!
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    // Auto remove toast after 4 seconds
-    setTimeout(() => {
-        if (document.body.contains(toast)) {
-            document.body.removeChild(toast);
-        }
-    }, 4000);
-}
-
-// Generic sharing error handler
-function showSharingError() {
-    alert('❌ Sharing encountered an issue. Please try the manual sharing option or copy the link directly.');
-}
+// ================================
+// MAIN RESULT DISPLAY FUNCTION
+// ================================
 
 function showResult(personalityType) {
     const result = personalities[personalityType];
@@ -1045,7 +990,10 @@ function showResult(personalityType) {
     setupModalButtons(personalityType, result);
 }
 
-// Modal button setup with enhanced functionality
+// ================================
+// MODAL BUTTON SETUP
+// ================================
+
 function setupModalButtons(personalityType, result) {
     const resultModal = document.getElementById('result-modal');
     const closeModalBtn = document.getElementById('close-modal');
@@ -1072,22 +1020,21 @@ function setupModalButtons(personalityType, result) {
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', defaultURL);
             }
-            document.title = "CS Developer Personality Test";
+            document.title = "COMSA Developer Personality Test";
             
-            // Reset OG tags to default
-            removeAllOGTags();
-            addOGTag('og:title', 'CS Developer Personality Test');
-            addOGTag('og:description', 'Discover your coding personality!');
-            addOGTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
-            addOGTag('og:url', defaultURL);
-            addOGTag('og:type', 'website');
+            // Reset OG tags
+            removeAllMetaTags();
+            addMetaTag('og:title', 'COMSA Developer Personality Test');
+            addMetaTag('og:description', 'Discover your coding personality!');
+            addMetaTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
+            addMetaTag('og:url', defaultURL);
             
             renderQuestion(currentQuestion);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
     }
 
-    // Enhanced download functionality
+    // Download functionality
     if (downloadBtn) {
         downloadBtn.onclick = async () => {
             try {
@@ -1102,7 +1049,6 @@ function setupModalButtons(personalityType, result) {
     // Enhanced Facebook sharing
     if (facebookBtn) {
         facebookBtn.onclick = async () => {
-            // Add loading state
             const originalText = facebookBtn.textContent;
             facebookBtn.textContent = '🔄 Preparing...';
             facebookBtn.disabled = true;
@@ -1110,7 +1056,6 @@ function setupModalButtons(personalityType, result) {
             try {
                 await shareToFacebook(personalityType, result);
             } finally {
-                // Reset button state
                 setTimeout(() => {
                     facebookBtn.textContent = originalText;
                     facebookBtn.disabled = false;
@@ -1119,7 +1064,7 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Enhanced copy link functionality
+    // Copy link functionality
     if (copyLinkBtn) {
         copyLinkBtn.onclick = async () => {
             const shareUrl = window.location.href;
@@ -1127,14 +1072,10 @@ function setupModalButtons(personalityType, result) {
                 await navigator.clipboard.writeText(shareUrl);
                 
                 const originalText = copyLinkBtn.textContent;
-                const originalStyle = copyLinkBtn.style.background;
-                
                 copyLinkBtn.textContent = '✅ Copied!';
-                copyLinkBtn.style.background = '#28a745';
                 
                 setTimeout(() => {
                     copyLinkBtn.textContent = originalText;
-                    copyLinkBtn.style.background = originalStyle;
                 }, 2500);
                 
             } catch (err) {
@@ -1150,18 +1091,18 @@ function setupModalButtons(personalityType, result) {
                 document.body.removeChild(textArea);
                 
                 copyLinkBtn.textContent = '✅ Copied!';
-                copyLinkBtn.style.background = '#28a745';
-                
                 setTimeout(() => {
                     copyLinkBtn.textContent = '🔗 Copy Link';
-                    copyLinkBtn.style.background = '';
                 }, 2500);
             }
         };
     }
 }
 
-// Enhanced download function
+// ================================
+// DOWNLOAD FUNCTIONALITY
+// ================================
+
 async function createAndDownloadResult(personalityType, result) {
     const personalityCode = result.code;
     const personalityName = result.name;
@@ -1169,7 +1110,6 @@ async function createAndDownloadResult(personalityType, result) {
     const personalityFullDesc = result.fullDesc;
     const traits = result.traits;
     
-    // Create download container
     const downloadContainer = document.createElement('div');
     downloadContainer.style.position = 'absolute';
     downloadContainer.style.left = '-9999px';
@@ -1269,10 +1209,8 @@ async function createAndDownloadResult(personalityType, result) {
     document.body.appendChild(downloadContainer);
     
     try {
-        // Wait for fonts and layout
         await new Promise(resolve => setTimeout(resolve, 500));
         
-        // Use html2canvas to capture
         const canvas = await html2canvas(downloadContainer.firstElementChild, {
             backgroundColor: null,
             scale: 2,
@@ -1283,7 +1221,6 @@ async function createAndDownloadResult(personalityType, result) {
             height: downloadContainer.firstElementChild.offsetHeight
         });
         
-        // Download the image
         const link = document.createElement('a');
         link.download = `COMSA-${personalityCode}-${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
@@ -1292,20 +1229,45 @@ async function createAndDownloadResult(personalityType, result) {
         console.log('✅ Download successful!');
         
     } finally {
-        // Always cleanup
         document.body.removeChild(downloadContainer);
     }
 }
 
-// Initialize default OG tags on page load
+// ================================
+// INITIALIZATION AND EVENT HANDLERS
+// ================================
+
+// Initialize default OG tags
 function initializeDefaultOGTags() {
-    // Mark original tags as defaults
     document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(tag => {
         tag.setAttribute('data-original', 'true');
     });
 }
 
-// Add shake animation keyframes
+// Check URL parameters on page load
+function checkURLParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const resultParam = urlParams.get('result');
+    
+    if (resultParam && personalities[resultParam]) {
+        console.log(`📊 Showing result from URL parameter: ${resultParam}`);
+        showResult(resultParam);
+        return true;
+    }
+    return false;
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    if (event.state && event.state.personalityType) {
+        showResult(event.state.personalityType);
+    } else {
+        const modal = document.getElementById('result-modal');
+        if (modal) modal.style.display = 'none';
+    }
+});
+
+// Add CSS animations
 const shakeStyle = document.createElement('style');
 shakeStyle.textContent = `
     @keyframes shake {
@@ -1331,35 +1293,10 @@ shakeStyle.textContent = `
 `;
 document.head.appendChild(shakeStyle);
 
-// Check URL parameters on page load to show specific result
-function checkURLParameters() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const resultParam = urlParams.get('result');
-    
-    if (resultParam && personalities[resultParam]) {
-        console.log(`📊 Showing result from URL parameter: ${resultParam}`);
-        showResult(resultParam);
-        return true;
-    }
-    return false;
-}
-
-// Handle browser back/forward buttons
-window.addEventListener('popstate', function(event) {
-    if (event.state && event.state.personalityType) {
-        showResult(event.state.personalityType);
-    } else {
-        // Back to quiz
-        const modal = document.getElementById('result-modal');
-        if (modal) modal.style.display = 'none';
-    }
-});
-
 // Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', function() {
     initializeDefaultOGTags();
     
-    // Start the quiz or show result from URL
     if (!checkURLParameters()) {
         renderQuestion(currentQuestion);
     }
