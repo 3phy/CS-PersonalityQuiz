@@ -217,7 +217,7 @@ const questions = [
         q: "I feel more alive when coding with friends, even if it turns into a chit-chat session.",
         dimension: "EI",
         type: "E"
-    }/*,
+    },
     {
         q: "I enjoy presenting the demo rather than staying quiet in the back.",
         dimension: "EI",
@@ -308,7 +308,7 @@ const questions = [
         q: "I use GitHub projects, trackers, or calendars to keep my workflow organized.",
         dimension: "SD",
         type: "D"
-    }*/
+    }
 ];
 
 const personalities = {
