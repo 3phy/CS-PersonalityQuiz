@@ -217,7 +217,7 @@ const questions = [
         q: "I feel more alive when coding with friends, even if it turns into a chit-chat session.",
         dimension: "EI",
         type: "E"
-    },
+    }/*,
     {
         q: "I enjoy presenting the demo rather than staying quiet in the back.",
         dimension: "EI",
@@ -308,7 +308,7 @@ const questions = [
         q: "I use GitHub projects, trackers, or calendars to keep my workflow organized.",
         dimension: "SD",
         type: "D"
-    }
+    }*/
 ];
 
 const personalities = {
@@ -2125,3 +2125,203 @@ window.onclick = e => {
         modal.style.display = 'none';
     }
 }; 
+// SOLUTION 1: Fix your existing window.onload function
+window.onload = function () {
+  // Reset variables
+  currentQuestion = 0;
+  userAnswers.length = 0;
+  Object.keys(scores).forEach(key => scores[key] = 0);
+
+  // Hide result modal if it's showing
+  const resultModal = document.getElementById('result-modal');
+  if (resultModal) {
+    resultModal.style.display = 'none';
+  }
+
+  // Reset URL to clean state (remove any query parameters)
+  if (window.history && window.history.pushState) {
+    const cleanURL = window.location.origin + window.location.pathname;
+    window.history.pushState({}, '', cleanURL);
+  }
+
+  // Reset document title
+  document.title = "COMSA Developer Personality Test";
+
+  // Reset OG tags to default
+  removeAllMetaTags();
+  addMetaTag('og:title', 'COMSA Developer Personality Test');
+  addMetaTag('og:description', 'Discover your coding personality!');
+  addMetaTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
+  addMetaTag('og:url', window.location.origin + window.location.pathname);
+
+  // Show first question
+  renderQuestion(0);
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// SOLUTION 2: Alternative using DOMContentLoaded (more reliable)
+document.addEventListener('DOMContentLoaded', function() {
+  // Only reset if there are no URL parameters (to preserve shared links)
+  const urlParams = new URLSearchParams(window.location.search);
+  const hasResultParam = urlParams.get('result');
+  
+  if (!hasResultParam) {
+    // Reset everything to initial state
+    currentQuestion = 0;
+    userAnswers.length = 0;
+    Object.keys(scores).forEach(key => scores[key] = 0);
+    
+    // Hide any open modals
+    const resultModal = document.getElementById('result-modal');
+    if (resultModal) {
+      resultModal.style.display = 'none';
+    }
+    
+    // Initialize default OG tags
+    initializeDefaultOGTags();
+    
+    // Show first question
+    renderQuestion(0);
+  } else {
+    // If there's a result parameter, show that result instead
+    checkURLParameters();
+  }
+});
+
+// SOLUTION 3: Using beforeunload to detect refresh (optional)
+window.addEventListener('beforeunload', function() {
+  // Store a flag that indicates the page is being refreshed
+  sessionStorage.setItem('pageRefreshed', 'true');
+});
+
+window.addEventListener('load', function() {
+  // Check if page was refreshed
+  if (sessionStorage.getItem('pageRefreshed') === 'true') {
+    sessionStorage.removeItem('pageRefreshed');
+    
+    // Reset to start
+    resetToStart();
+  }
+});
+
+// SOLUTION 4: Complete reset function (recommended)
+function resetToStart() {
+  // Reset all quiz variables
+  currentQuestion = 0;
+  userAnswers.length = 0;
+  Object.keys(scores).forEach(key => scores[key] = 0);
+  
+  // Hide result modal
+  const resultModal = document.getElementById('result-modal');
+  if (resultModal) {
+    resultModal.style.display = 'none';
+  }
+  
+  // Clean URL
+  if (window.history && window.history.pushState) {
+    const cleanURL = window.location.origin + window.location.pathname;
+    window.history.pushState({}, '', cleanURL);
+  }
+  
+  // Reset document title
+  document.title = "COMSA Developer Personality Test";
+  
+  // Reset meta tags
+  removeAllMetaTags();
+  addMetaTag('og:title', 'COMSA Developer Personality Test');
+  addMetaTag('og:description', 'Discover your coding personality!');
+  
+  // Show first question
+  renderQuestion(0);
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  
+  console.log('🔄 Quiz reset to start');
+}
+
+// SOLUTION 5: Enhanced version that preserves shared links but resets manual refreshes
+document.addEventListener('DOMContentLoaded', function() {
+  initializeDefaultOGTags();
+  
+  // Check if this is a shared result link
+  const urlParams = new URLSearchParams(window.location.search);
+  const resultParam = urlParams.get('result');
+  
+  if (resultParam && personalities[resultParam]) {
+    // This is a shared result link - show the result
+    console.log(`📊 Showing shared result: ${resultParam}`);
+    showResult(resultParam);
+  } else {
+    // This is a fresh start or refresh - reset everything
+    resetToStart();
+  }
+});
+
+// SOLUTION 6: Detect if user manually refreshed vs navigated
+let isManualRefresh = false;
+
+// Detect manual refresh
+window.addEventListener('beforeunload', function() {
+  isManualRefresh = true;
+});
+
+// Handle page load
+window.addEventListener('load', function() {
+  if (isManualRefresh) {
+    // Manual refresh detected
+    resetToStart();
+  } else {
+    // Normal navigation - preserve state if needed
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('result')) {
+      resetToStart();
+    }
+  }
+  isManualRefresh = false;
+});
+
+// RECOMMENDED IMPLEMENTATION:
+// Replace your existing window.onload at the end of your file with this:
+
+window.addEventListener('load', function() {
+  // Reset quiz state
+  currentQuestion = 0;
+  userAnswers.length = 0;
+  Object.keys(scores).forEach(key => scores[key] = 0);
+  
+  // Hide any open modals
+  const resultModal = document.getElementById('result-modal');
+  if (resultModal) {
+    resultModal.style.display = 'none';
+  }
+  
+  // Check for shared result links
+  const urlParams = new URLSearchParams(window.location.search);
+  const resultParam = urlParams.get('result');
+  
+  if (resultParam && personalities[resultParam]) {
+    // Show shared result
+    showResult(resultParam);
+  } else {
+    // Clean URL and start fresh
+    if (window.history && window.history.pushState) {
+      const cleanURL = window.location.origin + window.location.pathname;
+      window.history.pushState({}, '', cleanURL);
+    }
+    
+    // Reset title and meta tags
+    document.title = "COMSA Developer Personality Test";
+    removeAllMetaTags();
+    addMetaTag('og:title', 'COMSA Developer Personality Test');
+    addMetaTag('og:description', 'Discover your coding personality!');
+    
+    // Show first question
+    renderQuestion(0);
+  }
+  
+  // Always scroll to top
+  window.scrollTo({ top: 0, behavior: 'instant' });
+});
