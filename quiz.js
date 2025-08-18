@@ -1324,26 +1324,7 @@ function showPersonalityGallery() {
                         </div>
                     `).join('')}
                 </div>
-                
-                <div style="
-                    text-align: center;
-                    margin-top: 40px;
-                    padding-top: 30px;
-                    border-top: 2px solid #e9ecef;
-                ">
-                    <button onclick="this.closest('div').parentElement.remove()" style="
-                        background: linear-gradient(135deg, #667eea, #764ba2);
-                        color: white;
-                        border: none;
-                        padding: 15px 30px;
-                        border-radius: 12px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        font-weight: 600;
-                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
-                        transition: all 0.3s ease;
-                        min-width: 140px;
-                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.3)'">Close Gallery</button>
+
                 </div>
             </div>
         </div>
