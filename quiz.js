@@ -1,3 +1,213 @@
+// Show detailed view of a specific personality
+function showPersonalityDetails(personalityCode) {
+    const personality = personalities[personalityCode];
+    if (!personality) return;
+    
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+            overflow-y: auto;
+            padding: 20px;
+        ">
+            <div style="
+                background: linear-gradient(135deg, ${personality.color}, ${personality.color}dd);
+                padding: 40px 30px;
+                border-radius: 24px;
+                max-width: 800px;
+                max-height: 95vh;
+                overflow-y: auto;
+                color: white;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+                position: relative;
+                text-align: center;
+                width: 100%;
+            ">
+                <button onclick="this.closest('div').parentElement.remove()" style="
+                    position: absolute;
+                    top: 20px;
+                    right: 25px;
+                    background: rgba(255,255,255,0.2);
+                    border: none;
+                    font-size: 24px;
+                    color: white;
+                    cursor: pointer;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+                    backdrop-filter: blur(10px);
+                    z-index: 10002;
+                " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">×</button>
+                
+                <div style="
+                    width: 100px;
+                    height: 100px;
+                    background: rgba(255,255,255,0.2);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 24px;
+                    font-weight: bold;
+                    margin: 0 auto 30px;
+                    backdrop-filter: blur(10px);
+                ">${personality.code}</div>
+                
+                <h2 style="
+                    margin: 0 0 15px; 
+                    font-size: 32px; 
+                    font-weight: 700;
+                    line-height: 1.2;
+                ">${personality.name}</h2>
+                
+                <p style="
+                    margin: 0 0 25px; 
+                    font-size: 18px; 
+                    opacity: 0.9;
+                    line-height: 1.4;
+                    font-weight: 500;
+                ">${personality.desc}</p>
+                
+                <p style="
+                    margin: 0 0 35px; 
+                    font-size: 16px; 
+                    line-height: 1.6; 
+                    opacity: 0.85;
+                ">${personality.fullDesc}</p>
+                
+                <div style="margin-bottom: 40px;">
+                    <h3 style="
+                        margin: 0 0 20px; 
+                        font-size: 20px;
+                        font-weight: 700;
+                    ">Your Key Traits:</h3>
+                    <div style="
+                        display: flex; 
+                        flex-wrap: wrap; 
+                        justify-content: center; 
+                        gap: 12px;
+                    ">
+                        ${personality.traits.map(trait => `
+                            <span style="
+                                background: rgba(255,255,255,0.2);
+                                padding: 10px 18px;
+                                border-radius: 25px;
+                                font-size: 14px;
+                                font-weight: 600;
+                                white-space: nowrap;
+                                backdrop-filter: blur(10px);
+                            ">${trait}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Compatible Personalities Section -->
+                <div style="margin-bottom: 40px;">
+                    <h3 style="
+                        margin: 0 0 25px; 
+                        font-size: 20px;
+                        font-weight: 700;
+                        text-align: center;
+                    ">Compatible Personalities:</h3>
+                    
+                    <div style="
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                        flex-wrap: wrap;
+                        margin-bottom: 20px;
+                    ">
+                        ${personality.compatibility.map(comp => {
+                            const compatiblePersonality = personalities[comp.type];
+                            return `
+                                <div style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    cursor: pointer;
+                                    transition: all 0.3s ease;
+                                    gap: 8px;
+                                " onclick="event.stopPropagation(); this.closest('div').parentElement.remove(); showPersonalityDetails('${comp.type}')" onmouseover="this.style.transform='translateY(-3px) scale(1.05)'" onmouseout="this.style.transform='translateY(0) scale(1)'">
+                                    <!-- Compatible Personality Avatar -->
+                                    <div style="
+                                        width: 80px;
+                                        height: 80px;
+                                        background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 16px;
+                                        font-weight: bold;
+                                        color: white;
+                                        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+                                        border: 3px solid rgba(255,255,255,0.3);
+                                        backdrop-filter: blur(10px);
+                                        overflow: hidden;
+                                    ">
+                                        <img src="assets/thumbnails/${comp.type}.png" 
+                                             alt="${compatiblePersonality.name}" 
+                                             style="
+                                                width: 100%;
+                                                height: 100%;
+                                                object-fit: cover;
+                                                border-radius: 50%;
+                                             "
+                                             onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size: 16px; font-weight: bold; color: white;\\'>${comp.type}</span>';">
+                                    </div>
+                                    
+                                    <!-- Name and Description -->
+                                    <div style="text-align: center;">
+                                        <div style="
+                                            font-size: 14px;
+                                            font-weight: 700;
+                                            color: white;
+                                            margin-bottom: 2px;
+                                        ">${compatiblePersonality.name}</div>
+                                        <div style="
+                                            font-size: 11px;
+                                            opacity: 0.8;
+                                            color: white;
+                                            line-height: 1.3;
+                                            max-width: 120px;
+                                        ">${compatiblePersonality.desc.split(' • ')[0]} • ${compatiblePersonality.desc.split(' • ')[1]}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Auto-remove after clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
 // COMPLETE FACEBOOK SHARING SOLUTION
 // Replace your existing JavaScript with this enhanced version
 
@@ -7,19 +217,19 @@ const questions = [
         q: "I feel more alive when coding with friends, even if it turns into a chit-chat session.",
         dimension: "EI",
         type: "E"
-    },
+    }/*,
     {
         q: "I enjoy presenting the demo rather than staying quiet in the back.",
         dimension: "EI",
         type: "E"
     },
     {
-        q: "I’m more productive when coding alone without interruptions.",
+        q: "I'm more productive when coding alone without interruptions.",
         dimension: "EI",
         type: "I"
     },
     {
-        q: "I’d rather submit my output on Google Classroom than give a live presentation.",
+        q: "I'd rather submit my output on Google Classroom than give a live presentation.",
         dimension: "EI",
         type: "I"
     },
@@ -36,7 +246,7 @@ const questions = [
         type: "P"
     },
     {
-        q: "I don’t mind messy code as long as it works.",
+        q: "I don't mind messy code as long as it works.",
         dimension: "PR",
         type: "P"
     },
@@ -53,7 +263,7 @@ const questions = [
 
     // Problem Approach (Technical vs Creative) - 5 questions
     {
-        q: "I’d rather solve algorithm and backend problems than do UI/UX design.",
+        q: "I'd rather solve algorithm and backend problems than do UI/UX design.",
         dimension: "TC",
         type: "T"
     },
@@ -68,7 +278,7 @@ const questions = [
         type: "C"
     },
     {
-        q: "I add animations even if they’re optional, as long as it looks good.",
+        q: "I add animations even if they're optional, as long as it looks good.",
         dimension: "TC",
         type: "C"
     },
@@ -85,7 +295,7 @@ const questions = [
         type: "S"
     },
     {
-        q: "I’d rather explore options first than stick to a strict plan right away.",
+        q: "I'd rather explore options first than stick to a strict plan right away.",
         dimension: "SD",
         type: "S"
     },
@@ -98,9 +308,8 @@ const questions = [
         q: "I use GitHub projects, trackers, or calendars to keep my workflow organized.",
         dimension: "SD",
         type: "D"
-    }
+    }*/
 ];
-
 
 const personalities = {
     EPTS: {
@@ -109,7 +318,24 @@ const personalities = {
         desc: "Extroverted • Prototyper • Technical • Spontaneous",
         fullDesc: "Life of the lab. You start coding in the middle of discussions and somehow always finish first. You thrive on collaboration and rapid technical iteration.",
         traits: ["Collaborative coder", "Quick problem solver", "Team energizer", "Pressure performer"],
-        color: "#ff6b35"
+        color: "#ff6b35",
+        compatibility: [
+            {
+                type: "IRTD",
+                reason: "The Zero-Bug Coder provides the stability and quality control that complements your rapid prototyping style.",
+                relationship: "Perfect Balance"
+            },
+            {
+                type: "ERCD",
+                reason: "The Pixel Perfectionist can polish your quick prototypes into beautiful, production-ready applications.",
+                relationship: "Creative Partnership"
+            },
+            {
+                type: "IPCD",
+                reason: "The Peaceful Designer works quietly to create consistent designs while you energize the team.",
+                relationship: "Complementary Strengths"
+            }
+        ]
     },
     EPTD: {
         name: "The Sprint Master", 
@@ -117,7 +343,24 @@ const personalities = {
         desc: "Extroverted • Prototyper • Technical • Disciplined",
         fullDesc: "Always leading sprints, loves project trackers but still codes fast. You combine rapid prototyping with organized project management.",
         traits: ["Project leader", "Fast developer", "Process optimizer", "Team coordinator"],
-        color: "#4ecdc4"
+        color: "#4ecdc4",
+        compatibility: [
+            {
+                type: "IRTD",
+                reason: "Both value discipline and quality, creating a powerhouse team for delivering bug-free projects on time.",
+                relationship: "Disciplined Duo"
+            },
+            {
+                type: "EPCS",
+                reason: "The Demo Wizard brings creative flair to your organized technical approach, making impressive presentations.",
+                relationship: "Leadership Synergy"
+            },
+            {
+                type: "IPCD",
+                reason: "The Peaceful Designer provides consistent visual direction while you handle project coordination.",
+                relationship: "Organized Partnership"
+            }
+        ]
     },
     EPCS: {
         name: "The Demo Wizard",
@@ -125,7 +368,24 @@ const personalities = {
         desc: "Extroverted • Prototyper • Creative • Spontaneous",
         fullDesc: "Makes flashy demos that wow the audience, even if half is placeholder code. You excel at creating impressive prototypes quickly.",
         traits: ["Demo master", "Creative prototyper", "Presentation pro", "Rapid designer"],
-        color: "#45b7d1"
+        color: "#45b7d1",
+        compatibility: [
+            {
+                type: "IRTS",
+                reason: "The Debug Ninja can fix your demo code behind the scenes while you focus on the creative presentation.",
+                relationship: "Demo Dream Team"
+            },
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer builds robust backends that support your flashy frontend demonstrations.",
+                relationship: "Frontend-Backend Balance"
+            },
+            {
+                type: "ERCD",
+                reason: "The Pixel Perfectionist refines your creative ideas into polished, professional designs.",
+                relationship: "Creative Excellence"
+            }
+        ]
     },
     EPCD: {
         name: "The Design Director",
@@ -133,7 +393,24 @@ const personalities = {
         desc: "Extroverted • Prototyper • Creative • Disciplined", 
         fullDesc: "The 'design lead' who also organizes deadlines and Figma boards. You balance creative vision with structured project management.",
         traits: ["Design leader", "Creative organizer", "Vision setter", "Team motivator"],
-        color: "#96ceb4"
+        color: "#96ceb4",
+        compatibility: [
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer provides reliable technical implementation for your creative vision and organized plans.",
+                relationship: "Vision & Execution"
+            },
+            {
+                type: "ERTS",
+                reason: "The Coding Comedian brings humor and technical expertise while respecting your design leadership.",
+                relationship: "Creative Leadership"
+            },
+            {
+                type: "IRCD",
+                reason: "The Aesthetic Architect shares your love for beautiful, structured design and attention to detail.",
+                relationship: "Design Harmony"
+            }
+        ]
     },
     ERTS: {
         name: "The Coding Comedian",
@@ -141,7 +418,24 @@ const personalities = {
         desc: "Extroverted • Refiner • Technical • Spontaneous",
         fullDesc: "Fixes your code mid-presentation but also cracks jokes while doing it. You bring humor and technical expertise to any team.",
         traits: ["Code optimizer", "Team comedian", "Live debugger", "Morale booster"],
-        color: "#feca57"
+        color: "#feca57",
+        compatibility: [
+            {
+                type: "IPCS",
+                reason: "The Creative Experimenter appreciates your humor while you help optimize their experimental code.",
+                relationship: "Fun & Function"
+            },
+            {
+                type: "EPTD",
+                reason: "The Sprint Master provides structure while you keep the team's spirits high during intense development cycles.",
+                relationship: "Productive Energy"
+            },
+            {
+                type: "IRCD",
+                reason: "The Aesthetic Architect creates beautiful code while you ensure it's optimized and the team stays motivated.",
+                relationship: "Beauty & Optimization"
+            }
+        ]
     },
     ERTD: {
         name: "The Code Guardian", 
@@ -149,7 +443,24 @@ const personalities = {
         desc: "Extroverted • Refiner • Technical • Disciplined",
         fullDesc: "Project manager vibes, merges all pull requests after thorough review. You maintain code quality while leading technical discussions.",
         traits: ["Quality enforcer", "Code reviewer", "Technical leader", "Standard setter"],
-        color: "#ff9ff3"
+        color: "#ff9ff3",
+        compatibility: [
+            {
+                type: "EPCS",
+                reason: "The Demo Wizard creates impressive prototypes while you ensure code quality and maintainability.",
+                relationship: "Quality & Innovation"
+            },
+            {
+                type: "IPTS",
+                reason: "The Solo Hacker delivers quick solutions while you provide code review and quality standards.",
+                relationship: "Speed & Quality"
+            },
+            {
+                type: "IPCD",
+                reason: "The Peaceful Designer creates consistent visuals while you maintain technical excellence.",
+                relationship: "Excellence Partnership"
+            }
+        ]
     },
     ERCS: {
         name: "The Overnight Redesigner",
@@ -157,7 +468,24 @@ const personalities = {
         desc: "Extroverted • Refiner • Creative • Spontaneous", 
         fullDesc: "Can redesign the UI in one night after feedback, still smiling. You adapt quickly to creative challenges with endless enthusiasm.",
         traits: ["Rapid redesigner", "Feedback implementer", "Creative adapter", "Positive energy"],
-        color: "#54a0ff"
+        color: "#54a0ff",
+        compatibility: [
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer provides stable backend support while you rapidly iterate on frontend designs.",
+                relationship: "Adaptive Partnership"
+            },
+            {
+                type: "IRTS",
+                reason: "The Debug Ninja quietly fixes issues while you focus on creative improvements and user feedback.",
+                relationship: "Creative Problem Solving"
+            },
+            {
+                type: "EPCD",
+                reason: "The Design Director provides vision and structure while you handle rapid design iterations.",
+                relationship: "Design Evolution"
+            }
+        ]
     },
     ERCD: {
         name: "The Pixel Perfectionist",
@@ -165,7 +493,24 @@ const personalities = {
         desc: "Extroverted • Refiner • Creative • Disciplined",
         fullDesc: "Polished UI, pixel-perfect, and follows every UX best practice. You create beautiful, refined interfaces while maintaining team collaboration.",
         traits: ["UX expert", "Detail perfectionist", "Design standards keeper", "Quality advocate"],
-        color: "#5f27cd"
+        color: "#5f27cd",
+        compatibility: [
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer builds reliable systems that perfectly support your meticulous design standards.",
+                relationship: "Perfect Execution"
+            },
+            {
+                type: "IPTS",
+                reason: "The Solo Hacker creates rapid prototypes that you can refine into pixel-perfect implementations.",
+                relationship: "Prototype to Perfection"
+            },
+            {
+                type: "EPTS",
+                reason: "The Lab Leader brings collaborative energy while you ensure every detail meets the highest standards.",
+                relationship: "Energy & Excellence"
+            }
+        ]
     },
     IPTS: {
         name: "The Solo Hacker",
@@ -173,7 +518,24 @@ const personalities = {
         desc: "Introverted • Prototyper • Technical • Spontaneous",
         fullDesc: "Solo hacker who can finish a minimum viable product overnight. You work best independently and deliver impressive results quickly.",
         traits: ["Independent coder", "MVP creator", "Night owl developer", "Problem solver"],
-        color: "#00d2d3"
+        color: "#00d2d3",
+        compatibility: [
+            {
+                type: "ERCD",
+                reason: "The Pixel Perfectionist can take your quick MVPs and polish them into beautiful, user-friendly applications.",
+                relationship: "MVP to Masterpiece"
+            },
+            {
+                type: "EPTD",
+                reason: "The Sprint Master provides project structure and team coordination while respecting your independent work style.",
+                relationship: "Independence & Structure"
+            },
+            {
+                type: "ERCS",
+                reason: "The Overnight Redesigner shares your ability to work quickly and can improve your prototypes with better UX.",
+                relationship: "Rapid Development"
+            }
+        ]
     },
     IPTD: {
         name: "The Silent Deliverer",
@@ -181,7 +543,24 @@ const personalities = {
         desc: "Introverted • Prototyper • Technical • Disciplined",
         fullDesc: "Quiet but deadly — delivers a perfectly working backend on time. You combine independent work style with reliable execution.",
         traits: ["Reliable deliverer", "Backend specialist", "Quiet achiever", "Deadline keeper"],
-        color: "#ff9f43"
+        color: "#ff9f43",
+        compatibility: [
+            {
+                type: "EPCS",
+                reason: "The Demo Wizard creates impressive frontends while you provide the rock-solid backend infrastructure.",
+                relationship: "Frontend-Backend Harmony"
+            },
+            {
+                type: "ERCS",
+                reason: "The Overnight Redesigner handles UI iterations while you maintain stable, reliable backend services.",
+                relationship: "Stable Innovation"
+            },
+            {
+                type: "EPCD",
+                reason: "The Design Director leads creative vision while you quietly deliver the technical foundation.",
+                relationship: "Vision & Foundation"
+            }
+        ]
     },
     IPCS: {
         name: "The Creative Experimenter",
@@ -189,7 +568,24 @@ const personalities = {
         desc: "Introverted • Prototyper • Creative • Spontaneous", 
         fullDesc: "Makes mini-games or experiments just for fun, often late-night coder. You explore creative ideas independently with passion.",
         traits: ["Creative explorer", "Game developer", "Experimental coder", "Passion projecter"],
-        color: "#ee5a6f"
+        color: "#ee5a6f",
+        compatibility: [
+            {
+                type: "ERTS",
+                reason: "The Coding Comedian appreciates your creative experiments and helps optimize your innovative code.",
+                relationship: "Innovation & Optimization"
+            },
+            {
+                type: "EPTD",
+                reason: "The Sprint Master can help structure your creative experiments into organized, deliverable projects.",
+                relationship: "Creativity & Organization"
+            },
+            {
+                type: "IRCD",
+                reason: "The Aesthetic Architect shares your creative passion and can help make your experiments visually stunning.",
+                relationship: "Creative Synergy"
+            }
+        ]
     },
     IPCD: {
         name: "The Peaceful Designer",
@@ -197,7 +593,24 @@ const personalities = {
         desc: "Introverted • Prototyper • Creative • Disciplined",
         fullDesc: "Crafts beautiful, consistent designs alone in peaceful silence. You create polished creative work through focused, independent effort.",
         traits: ["Consistent designer", "Peaceful creator", "Detail focused", "Independent artist"],
-        color: "#0abde3"
+        color: "#0abde3",
+        compatibility: [
+            {
+                type: "EPTS",
+                reason: "The Lab Leader provides collaborative energy and team coordination while respecting your need for focused design time.",
+                relationship: "Energy & Focus"
+            },
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer shares your disciplined, independent work style and provides reliable technical support.",
+                relationship: "Quiet Excellence"
+            },
+            {
+                type: "ERTD",
+                reason: "The Code Guardian ensures technical quality while you maintain design consistency and visual standards.",
+                relationship: "Quality & Beauty"
+            }
+        ]
     },
     IRTS: {
         name: "The Debug Ninja",
@@ -205,7 +618,24 @@ const personalities = {
         desc: "Introverted • Refiner • Technical • Spontaneous",
         fullDesc: "Appears last minute to debug everything and disappears again. You're the mysterious problem-solver who saves the day.",
         traits: ["Debug master", "Problem fixer", "Mysterious helper", "Last-minute hero"],
-        color: "#1dd1a1"
+        color: "#1dd1a1",
+        compatibility: [
+            {
+                type: "EPCS",
+                reason: "The Demo Wizard creates impressive presentations while you ensure everything works perfectly behind the scenes.",
+                relationship: "Performance & Polish"
+            },
+            {
+                type: "ERCS",
+                reason: "The Overnight Redesigner rapidly implements changes while you quietly fix any issues that arise.",
+                relationship: "Rapid Problem Solving"
+            },
+            {
+                type: "IPCS",
+                reason: "The Creative Experimenter creates innovative projects while you help debug and optimize their experimental code.",
+                relationship: "Innovation Support"
+            }
+        ]
     },
     IRTD: {
         name: "The Zero-Bug Coder",
@@ -213,7 +643,24 @@ const personalities = {
         desc: "Introverted • Refiner • Technical • Disciplined", 
         fullDesc: "Methodical coder, zero bugs, zero drama. You write impeccable code through careful planning and systematic execution.",
         traits: ["Bug-free coder", "Methodical programmer", "Quality focused", "Drama-free developer"],
-        color: "#ffd32a"
+        color: "#ffd32a",
+        compatibility: [
+            {
+                type: "EPTS",
+                reason: "The Lab Leader brings collaborative energy while you provide the technical foundation and quality assurance.",
+                relationship: "Energy & Stability"
+            },
+            {
+                type: "EPCD",
+                reason: "The Design Director leads creative vision while you ensure flawless technical implementation.",
+                relationship: "Vision & Precision"
+            },
+            {
+                type: "ERCS",
+                reason: "The Overnight Redesigner handles rapid UI changes while you maintain code quality and system stability.",
+                relationship: "Change & Stability"
+            }
+        ]
     },
     IRCS: {
         name: "The Quiet Redesigner",
@@ -221,7 +668,24 @@ const personalities = {
         desc: "Introverted • Refiner • Creative • Spontaneous",
         fullDesc: "Will suddenly redesign the project banner during a break. You contribute creative improvements quietly and unexpectedly.",
         traits: ["Surprise improver", "Quiet creative", "Banner artist", "Spontaneous designer"],
-        color: "#ff5252"
+        color: "#ff5252",
+        compatibility: [
+            {
+                type: "IRCD",
+                reason: "The Aesthetic Architect shares your creative vision and attention to detail, creating beautifully cohesive designs together.",
+                relationship: "Creative Harmony"
+            },
+            {
+                type: "EPTD",
+                reason: "The Sprint Master provides project structure while appreciating your spontaneous creative contributions.",
+                relationship: "Structure & Surprise"
+            },
+            {
+                type: "IRTS",
+                reason: "The Debug Ninja quietly fixes technical issues while you focus on unexpected creative improvements.",
+                relationship: "Quiet Collaboration"
+            }
+        ]
     },
     IRCD: {
         name: "The Aesthetic Architect", 
@@ -229,7 +693,24 @@ const personalities = {
         desc: "Introverted • Refiner • Creative • Disciplined",
         fullDesc: "Meticulous artist and coder — everything is neat, structured, and aesthetic. You perfect the intersection of beauty and functionality.",
         traits: ["Meticulous creator", "Aesthetic coder", "Structure lover", "Beauty engineer"],
-        color: "#7b1fa2"
+        color: "#7b1fa2",
+        compatibility: [
+            {
+                type: "IRCS",
+                reason: "The Quiet Redesigner brings spontaneous creative ideas while you provide structured, methodical design implementation.",
+                relationship: "Structured Creativity"
+            },
+            {
+                type: "IPTD",
+                reason: "The Silent Deliverer provides reliable technical foundation while you create beautiful, well-architected interfaces.",
+                relationship: "Beauty & Reliability"
+            },
+            {
+                type: "EPCD",
+                reason: "The Design Director shares your passion for beautiful design while providing leadership and team coordination.",
+                relationship: "Design Leadership"
+            }
+        ]
     }
 };
 
@@ -417,8 +898,186 @@ function calculateResult() {
 }
 
 // ================================
-// ENHANCED FACEBOOK SHARING SYSTEM
+// FACEBOOK SHARING - UNDER CONSTRUCTION
 // ================================
+
+// Show "Under Construction" modal for Facebook sharing
+function showUnderConstructionModal() {
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+        ">
+            <div style="
+                background: linear-gradient(135deg, #ffffff, #f8f9fa);
+                padding: 50px 40px;
+                border-radius: 24px;
+                max-width: 500px;
+                text-align: center;
+                color: #333;
+                box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+                position: relative;
+                transform: scale(0.8);
+                animation: popIn 0.4s ease-out 0.1s forwards;
+            ">
+                <button onclick="this.closest('div').parentElement.remove()" style="
+                    position: absolute;
+                    top: 20px;
+                    right: 25px;
+                    background: none;
+                    border: none;
+                    font-size: 28px;
+                    color: #666;
+                    cursor: pointer;
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+                " onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">×</button>
+                
+                <div style="
+                    width: 100px;
+                    height: 100px;
+                    background: linear-gradient(135deg, #ff6b35, #f39c12);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0 auto 30px;
+                    font-size: 40px;
+                    color: white;
+                    box-shadow: 0 15px 35px rgba(255, 107, 53, 0.4);
+                    animation: bounce 2s infinite;
+                ">🚧</div>
+                
+                <h2 style="
+                    margin: 0 0 20px; 
+                    color: #2c3e50; 
+                    font-size: 32px; 
+                    font-weight: 700;
+                    line-height: 1.2;
+                ">Under Construction!</h2>
+                
+                <p style="
+                    margin: 0 0 30px; 
+                    color: #5a6c7d; 
+                    font-size: 18px; 
+                    line-height: 1.6;
+                    font-weight: 400;
+                ">We're working hard to bring you Facebook sharing functionality. Stay tuned for updates!</p>
+                
+                <div style="
+                    background: linear-gradient(135deg, #e8f4fd, #f0f8ff);
+                    padding: 25px;
+                    border-radius: 15px;
+                    margin: 30px 0;
+                    border: 2px solid #bee5eb;
+                ">
+                    <h4 style="
+                        color: #0c5460; 
+                        margin: 0 0 15px; 
+                        font-size: 16px;
+                        font-weight: 600;
+                    ">🔧 In the meantime:</h4>
+                    <ul style="
+                        margin: 0; 
+                        padding-left: 20px; 
+                        color: #0c5460; 
+                        font-size: 14px;
+                        line-height: 1.8;
+                        text-align: left;
+                    ">
+                        <li>Download your result as an image</li>
+                        <li>Copy the link to share manually</li>
+                        <li>Take a screenshot to share on social media</li>
+                    </ul>
+                </div>
+                
+                <button onclick="this.closest('div').parentElement.remove()" style="
+                    background: linear-gradient(135deg, #667eea, #764ba2);
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: 600;
+                    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                    transition: all 0.3s ease;
+                    min-width: 140px;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.3)'">Got it! 👍</button>
+            </div>
+        </div>
+    `;
+    
+    // Add animations
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-10px); }
+            70% { transform: translateY(-5px); }
+            90% { transform: translateY(-2px); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    document.body.appendChild(modal);
+    
+    // Auto-remove after clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            style.remove();
+        }
+    });
+    
+    // Remove styles when modal is removed
+    setTimeout(() => {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                mutation.removedNodes.forEach((node) => {
+                    if (node === modal && style.parentNode) {
+                        style.remove();
+                        observer.disconnect();
+                    }
+                });
+            });
+        });
+        observer.observe(document.body, { childList: true });
+    }, 100);
+}
+
+// Simplified Facebook sharing function (now shows under construction)
+function shareToFacebook(personalityType, result) {
+    console.log("🚧 Facebook sharing is under construction");
+    showUnderConstructionModal();
+}
 
 // Remove all dynamic meta tags
 function removeAllMetaTags() {
@@ -455,22 +1114,6 @@ function addMetaTag(property, content, attributeType = 'property') {
     } else {
         document.head.appendChild(meta);
     }
-}
-
-// Preload image to ensure it exists
-function preloadImage(imageUrl) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => {
-            console.log(`✅ Image preloaded: ${imageUrl}`);
-            resolve(true);
-        };
-        img.onerror = () => {
-            console.warn(`⚠️ Image failed to load: ${imageUrl}`);
-            resolve(false);
-        };
-        img.src = imageUrl;
-    });
 }
 
 // MAIN FUNCTION: Update OG tags and URL
@@ -540,193 +1183,8 @@ function updateOGImageAndURL(personalityType) {
     return { newURL, imageUrl, title, description };
 }
 
-// Refresh Facebook cache
-async function refreshFacebookCache(url) {
-    console.log('🔄 Attempting Facebook cache refresh...');
-    
-    try {
-        // Method 1: Facebook Debug Tool
-        const debugUrls = [
-            `https://developers.facebook.com/tools/debug/og/object/?q=${encodeURIComponent(url)}`,
-            `https://graph.facebook.com/v18.0/?id=${encodeURIComponent(url)}&scrape=true&method=post`
-        ];
-        
-        debugUrls.forEach((debugUrl, index) => {
-            setTimeout(() => {
-                try {
-                    // Use fetch with no-cors to attempt refresh
-                    fetch(debugUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        cache: 'no-cache'
-                    }).catch(() => {
-                        console.log(`Facebook refresh attempt ${index + 1} completed`);
-                    });
-                    
-                    // Also try with hidden iframe
-                    const iframe = document.createElement('iframe');
-                    iframe.style.display = 'none';
-                    iframe.style.width = '1px';
-                    iframe.style.height = '1px';
-                    iframe.src = debugUrl;
-                    document.body.appendChild(iframe);
-                    
-                    setTimeout(() => {
-                        try {
-                            document.body.removeChild(iframe);
-                        } catch (e) {
-                            // Already removed
-                        }
-                    }, 3000);
-                    
-                } catch (error) {
-                    console.log(`Refresh method ${index + 1} attempted`);
-                }
-            }, index * 1000);
-        });
-        
-        console.log('✅ Facebook cache refresh initiated');
-        
-    } catch (error) {
-        console.error('❌ Facebook cache refresh error:', error);
-    }
-}
-
-// Build share text
-function buildShareText(personalityType, result) {
-    const personalityCode = result.code;
-    const personalityName = result.name;
-    const personalityDesc = result.desc;
-    const personalityFullDesc = result.fullDesc;
-    const traits = result.traits;
-
-    return `🎯 I just discovered my COMSA Developer Personality!
-
-🏷️ TYPE: "${personalityName}"
-🔤 CODE: ${personalityCode}
-
-📝 DESCRIPTION:
-${personalityDesc}
-
-💡 WHAT THIS MEANS:
-${personalityFullDesc}
-
-✨ MY KEY TRAITS:
-${traits.map((t, i) => `${i + 1}. ${t}`).join('\n')}
-
-🎮 Take the quiz: ${window.location.href}
-
-#COMSAPersonality #DeveloperPersonality #${personalityCode}`;
-}
-
-// Enhanced Facebook sharing
-async function shareToFacebook(personalityType, result) {
-    console.log("🔄 Starting Facebook share process...");
-    
-    try {
-        // Step 1: Update OG tags
-        const { newURL, imageUrl, title, description } = updateOGImageAndURL(personalityType);
-        
-        // Step 2: Preload image to ensure it exists
-        console.log("📸 Preloading image...");
-        const imageExists = await preloadImage(imageUrl);
-        
-        if (!imageExists) {
-            console.warn("⚠️ Image preload failed, but continuing...");
-        }
-        
-        // Step 3: Wait for OG tags to be processed
-        console.log("⏳ Waiting for OG tags processing...");
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Step 4: Refresh Facebook cache
-        refreshFacebookCache(newURL);
-        
-        // Step 5: Wait a bit more for cache refresh
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Step 6: Open Facebook share dialog
-        const shareText = buildShareText(personalityType, result);
-        const success = await openFacebookShareDialog(newURL, shareText);
-        
-        if (!success) {
-            console.log("⚠️ Facebook dialog failed, showing manual instructions");
-            showSharingInstructions(newURL, shareText, imageUrl);
-        }
-        
-    } catch (error) {
-        console.error("💥 Facebook sharing error:", error);
-        const { newURL, imageUrl } = updateOGImageAndURL(personalityType);
-        const shareText = buildShareText(personalityType, result);
-        showSharingInstructions(newURL, shareText, imageUrl);
-    }
-}
-
-// Open Facebook share dialog
-function openFacebookShareDialog(shareUrl, shareText) {
-    return new Promise((resolve) => {
-        try {
-            const fbParams = new URLSearchParams({
-                u: shareUrl,
-                quote: shareText,
-                hashtag: '#COMSAPersonality'
-            });
-            
-            const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?${fbParams.toString()}`;
-            
-            console.log("🔗 Opening Facebook share dialog");
-            
-            const popup = window.open(
-                fbShareUrl, 
-                'facebookShare', 
-                'width=656,height=500,left=' + (window.screen.width / 2 - 328) + ',top=' + (window.screen.height / 2 - 250) + ',scrollbars=yes,resizable=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes'
-            );
-            
-            if (!popup || popup.closed) {
-                console.log("❌ Popup blocked or failed to open");
-                resolve(false);
-                return;
-            }
-            
-            // Monitor popup
-            let checkCount = 0;
-            const maxChecks = 120; // 60 seconds
-            
-            const checkInterval = setInterval(() => {
-                checkCount++;
-                
-                try {
-                    if (popup.closed) {
-                        clearInterval(checkInterval);
-                        console.log("✅ Facebook share dialog closed by user");
-                        resolve(true);
-                        return;
-                    }
-                } catch (error) {
-                    // Cross-origin, continue checking
-                }
-                
-                if (checkCount >= maxChecks) {
-                    clearInterval(checkInterval);
-                    console.log("⏰ Popup timeout reached");
-                    try {
-                        popup.close();
-                    } catch (e) {
-                        // Already closed
-                    }
-                    resolve(false);
-                }
-            }, 500);
-            
-        } catch (error) {
-            console.error('❌ Facebook dialog error:', error);
-            resolve(false);
-        }
-    });
-}
-
-// Show manual sharing instructions
-function showSharingInstructions(url, text, imageUrl) {
+// Show personality gallery modal
+function showPersonalityGallery() {
     const modal = document.createElement('div');
     modal.innerHTML = `
         <div style="
@@ -741,19 +1199,21 @@ function showSharingInstructions(url, text, imageUrl) {
             justify-content: center;
             z-index: 10000;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+            overflow-y: auto;
         ">
             <div style="
-                background: linear-gradient(145deg, #ffffff, #f8f9fa);
-                padding: 40px;
+                background: linear-gradient(135deg, #ffffff, #f8f9fa);
+                padding: 40px 30px;
                 border-radius: 24px;
-                max-width: 700px;
-                max-height: 90vh;
+                max-width: 95vw;
+                max-height: 95vh;
                 overflow-y: auto;
-                text-align: center;
                 color: #333;
-                box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+                box-shadow: 0 30px 80px rgba(0,0,0,0.25);
                 position: relative;
+                margin: 20px;
             ">
                 <button onclick="this.closest('div').parentElement.remove()" style="
                     position: absolute;
@@ -764,179 +1224,144 @@ function showSharingInstructions(url, text, imageUrl) {
                     font-size: 28px;
                     color: #666;
                     cursor: pointer;
-                    width: 35px;
-                    height: 35px;
+                    width: 40px;
+                    height: 40px;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                ">×</button>
+                    transition: all 0.2s ease;
+                    z-index: 10001;
+                " onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='none'">×</button>
+                
+                <h2 style="
+                    text-align: center;
+                    margin: 0 0 30px; 
+                    color: #2c3e50; 
+                    font-size: 28px; 
+                    font-weight: 700;
+                    line-height: 1.2;
+                ">🎯 All COMSA Developer Personalities</h2>
+                
+                <p style="
+                    text-align: center;
+                    margin: 0 0 40px; 
+                    color: #5a6c7d; 
+                    font-size: 16px; 
+                    line-height: 1.6;
+                ">Discover all 16 unique developer personality types and their characteristics.</p>
                 
                 <div style="
-                    width: 80px;
-                    height: 80px;
-                    background: linear-gradient(135deg, #1877f2, #42a5f5);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    margin: 0 auto 30px;
-                    font-size: 32px;
-                    color: white;
-                    box-shadow: 0 10px 25px rgba(24, 119, 242, 0.4);
-                ">📘</div>
-                
-                <h3 style="margin: 0 0 25px; color: #1877f2; font-size: 28px; font-weight: 700;">Share Your Result! 🎯</h3>
-                
-                <div style="
-                    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-                    padding: 30px;
-                    border-radius: 18px;
-                    margin: 30px 0;
-                    border: 2px solid #e3e6ea;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                    gap: 20px;
+                    max-width: 1200px;
+                    margin: 0 auto;
                 ">
-                    <img src="${imageUrl}" alt="Result Preview" style="
-                        max-width: 200px;
-                        height: auto;
-                        border-radius: 12px;
-                        margin-bottom: 20px;
-                        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-                        border: 3px solid white;
-                    " onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    
-                    <div style="display: none; padding: 25px; background: #fff3cd; border: 2px solid #ffeaa7; border-radius: 10px; color: #856404; font-size: 15px; font-weight: 600;">
-                        ⚠️ Preview loading... Your personalized image will appear when you share!
-                    </div>
-                    
-                    <div style="
-                        background: white;
-                        padding: 25px;
-                        border-radius: 15px;
-                        border: 2px solid #e3e6ea;
-                        font-size: 13px;
-                        color: #495057;
-                        text-align: left;
-                        word-break: break-all;
-                        font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-                        line-height: 1.5;
-                        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-                    ">${url}</div>
-                </div>
-                
-                <div style="margin: 30px 0; line-height: 1.8; color: #495057; text-align: left;">
-                    <h4 style="color: #1877f2; margin: 0 0 20px; text-align: center; font-size: 20px;">📋 How to Share:</h4>
-                    
-                    <div style="background: linear-gradient(135deg, #f8f9fa, #ffffff); padding: 25px; border-radius: 15px; border-left: 5px solid #1877f2; margin-bottom: 20px;">
-                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>📋 Step 1:</strong> Copy the link above</p>
-                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>🌐 Step 2:</strong> Open Facebook in a new tab</p>
-                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>📝 Step 3:</strong> Create a new post</p>
-                        <p style="margin: 0 0 15px; font-weight: 600;"><strong>🔗 Step 4:</strong> Paste the link and wait 15-30 seconds</p>
-                        <p style="margin: 0; font-weight: 600;"><strong>🎉 Step 5:</strong> Your personalized image will appear!</p>
-                    </div>
-                    
-                    <div style="background: #e8f4fd; padding: 20px; border-radius: 12px; border-left: 4px solid #17a2b8;">
-                        <h5 style="color: #17a2b8; margin: 0 0 15px; font-size: 16px;">🔧 If image doesn't show:</h5>
-                        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
-                            <li style="margin-bottom: 8px;">Wait 30 seconds for Facebook to process the link</li>
-                            <li style="margin-bottom: 8px;">Delete and re-paste the link</li>
-                            <li style="margin-bottom: 8px;">Refresh your Facebook page and try again</li>
-                            <li>Your unique result image will appear once processed!</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div style="margin: 35px 0 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="copyToClipboard('${url}', this)" style="
-                        background: linear-gradient(135deg, #1877f2, #4267b2);
-                        color: white;
-                        border: none;
-                        padding: 18px 35px;
-                        border-radius: 15px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        font-weight: 700;
-                        box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
-                        transition: all 0.3s ease;
-                        min-width: 160px;
-                    ">📋 Copy Link</button>
-                    
-                    <button onclick="window.open('https://www.facebook.com/', '_blank')" style="
-                        background: linear-gradient(135deg, #42a5f5, #1976d2);
-                        color: white;
-                        border: none;
-                        padding: 18px 35px;
-                        border-radius: 15px;
-                        cursor: pointer;
-                        font-size: 16px;
-                        font-weight: 700;
-                        box-shadow: 0 8px 25px rgba(25, 118, 210, 0.4);
-                        transition: all 0.3s ease;
-                        min-width: 160px;
-                    ">🌐 Open Facebook</button>
+                    ${Object.entries(personalities).map(([code, personality]) => `
+                        <div onclick="showPersonalityDetails('${code}')" style="
+                            background: linear-gradient(135deg, ${personality.color}, ${personality.color}dd);
+                            padding: 25px;
+                            border-radius: 16px;
+                            color: white;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                            position: relative;
+                            overflow: hidden;
+                        " onmouseover="this.style.transform='translateY(-5px) scale(1.02)'; this.style.boxShadow='0 15px 40px rgba(0,0,0,0.25)'" onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'">
+                            <div style="
+                                width: 60px;
+                                height: 60px;
+                                background: rgba(255,255,255,0.2);
+                                border-radius: 50%;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                font-size: 14px;
+                                font-weight: bold;
+                                margin: 0 auto 15px;
+                                backdrop-filter: blur(10px);
+                            ">${personality.code}</div>
+                            
+                            <h3 style="
+                                margin: 0 0 10px;
+                                font-size: 18px;
+                                font-weight: 700;
+                                text-align: center;
+                                line-height: 1.3;
+                            ">${personality.name}</h3>
+                            
+                            <p style="
+                                margin: 0 0 15px;
+                                font-size: 12px;
+                                opacity: 0.9;
+                                text-align: center;
+                                line-height: 1.4;
+                                font-weight: 500;
+                            ">${personality.desc}</p>
+                            
+                            <p style="
+                                margin: 0;
+                                font-size: 11px;
+                                opacity: 0.8;
+                                text-align: center;
+                                line-height: 1.4;
+                                display: -webkit-box;
+                                -webkit-line-clamp: 2;
+                                -webkit-box-orient: vertical;
+                                overflow: hidden;
+                            ">${personality.fullDesc}</p>
+                            
+                            <div style="
+                                position: absolute;
+                                bottom: 10px;
+                                right: 15px;
+                                font-size: 12px;
+                                opacity: 0.7;
+                                font-weight: 600;
+                            ">Click to view →</div>
+                        </div>
+                    `).join('')}
                 </div>
                 
                 <div style="
-                    margin-top: 30px;
-                    padding-top: 25px;
+                    text-align: center;
+                    margin-top: 40px;
+                    padding-top: 30px;
                     border-top: 2px solid #e9ecef;
-                    font-size: 13px;
-                    color: #6c757d;
-                    line-height: 1.7;
-                    text-align: left;
                 ">
-                    <h5 style="color: #495057; margin: 0 0 15px; text-align: center; font-size: 16px;">💡 Pro Tips:</h5>
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
-                        <ul style="margin: 0; padding-left: 20px;">
-                            <li style="margin-bottom: 8px;">Each result has a unique, personalized image with your type and traits</li>
-                            <li style="margin-bottom: 8px;">Facebook needs 10-30 seconds to process and show your custom image</li>
-                            <li style="margin-bottom: 8px;">If you see a generic image first, wait and refresh - your personalized one will appear</li>
-                            <li>The link contains your specific result data for accurate sharing</li>
-                        </ul>
-                    </div>
+                    <button onclick="this.closest('div').parentElement.remove()" style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-size: 16px;
+                        font-weight: 600;
+                        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+                        transition: all 0.3s ease;
+                        min-width: 140px;
+                    " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 25px rgba(102, 126, 234, 0.3)'">Close Gallery</button>
                 </div>
             </div>
         </div>
     `;
     
     document.body.appendChild(modal);
-}
-
-// Copy to clipboard function
-function copyToClipboard(text, button) {
-    navigator.clipboard.writeText(text).then(() => {
-        const originalHTML = button.innerHTML;
-        const originalStyle = button.style.background;
-        
-        button.innerHTML = '✅ Copied!';
-        button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
-        
-        setTimeout(() => {
-            button.innerHTML = originalHTML;
-            button.style.background = originalStyle;
-        }, 3000);
-    }).catch(() => {
-        // Fallback for older browsers
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        textArea.style.left = '-9999px';
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        
-        button.innerHTML = '✅ Copied!';
-        setTimeout(() => {
-            button.innerHTML = '📋 Copy Link';
-        }, 3000);
+    
+    // Auto-remove after clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
     });
 }
 
 // ================================
 // MAIN RESULT DISPLAY FUNCTION
 // ================================
-
 function showResult(personalityType) {
     const result = personalities[personalityType];
     
@@ -960,6 +1385,28 @@ function showResult(personalityType) {
                 </div>
             </div>
             
+            <!-- Compatible Personalities Section - 3 Column Layout -->
+            <div class="compatible-section">
+                <h3>Compatible Personalities:</h3>
+                <div class="compatible-personalities-grid">
+                    ${result.compatibility.map(comp => {
+                        const compatiblePersonality = personalities[comp.type];
+                        return `
+                            <div class="compatible-item-card" onclick="showPersonalityDetails('${comp.type}')">
+                                <div class="compatible-avatar" style="background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);">
+                                    ${comp.type}
+                                </div>
+                                <div class="compatible-info-card">
+                                    <div class="compatible-name">${compatiblePersonality.name}</div>
+                                    <div class="compatible-desc-short">${compatiblePersonality.desc.split(' • ')[0]} • ${compatiblePersonality.desc.split(' • ')[1]}</div>
+                                    <div class="compatible-relationship">${comp.relationship}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            
             <div class="result-actions">
                 <button id="restart-btn" class="result-btn">
                     🔄 Take Quiz Again
@@ -970,8 +1417,8 @@ function showResult(personalityType) {
                 <button id="facebook-btn" class="result-btn">
                     📘 Share on Facebook
                 </button>
-                <button id="copy-link-btn" class="result-btn">
-                    🔗 Copy Link
+                <button id="other-personality-btn" class="result-btn">
+                    🔄 Check Other Personalities
                 </button>
             </div>
             
@@ -1001,7 +1448,8 @@ function setupModalButtons(personalityType, result) {
     const restartBtn = document.getElementById('restart-btn');
     const downloadBtn = document.getElementById('download-btn');
     const facebookBtn = document.getElementById('facebook-btn');
-    const copyLinkBtn = document.getElementById('copy-link-btn');
+    const otherPersonalityBtn = document.getElementById('other-personality-btn');
+    const compatibilityBtn = document.getElementById('compatibility-btn');
 
     if (closeModalBtn) {
         closeModalBtn.onclick = () => {
@@ -1035,202 +1483,378 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Download functionality
+    // Download functionality with improved error handling
     if (downloadBtn) {
         downloadBtn.onclick = async () => {
             try {
+                // Show loading state
+                downloadBtn.disabled = true;
+                downloadBtn.textContent = '📷 Generating...';
+                
                 await createAndDownloadResult(personalityType, result);
+                
+                // Reset button state
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = '📱 Download Result';
+                
             } catch (error) {
                 console.error('Download failed:', error);
-                alert('Download failed. Please try again.');
+                
+                // Reset button state
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = '📱 Download Result';
+                
+                // Show fallback option
+                const fallbackModal = document.createElement('div');
+                fallbackModal.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100vw;
+                        height: 100vh;
+                        background: rgba(0,0,0,0.85);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 10002;
+                        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+                    ">
+                        <div style="
+                            background: white;
+                            padding: 40px;
+                            border-radius: 20px;
+                            max-width: 400px;
+                            text-align: center;
+                            color: #333;
+                        ">
+                            <h3 style="margin: 0 0 20px; color: #e74c3c;">Download Failed</h3>
+                            <p style="margin: 0 0 30px; line-height: 1.6;">
+                                We couldn't generate the download. You can:
+                            </p>
+                            <ul style="text-align: left; margin: 0 0 30px; line-height: 1.8;">
+                                <li>Take a screenshot of your result</li>
+                                <li>Copy the page URL to share</li>
+                                <li>Try the download again later</li>
+                            </ul>
+                            <button onclick="this.closest('div').parentElement.remove()" style="
+                                background: #3498db;
+                                color: white;
+                                border: none;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-size: 16px;
+                                font-weight: 600;
+                            ">Got it</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(fallbackModal);
+                
+                setTimeout(() => {
+                    if (fallbackModal.parentNode) {
+                        fallbackModal.remove();
+                    }
+                }, 5000);
             }
         };
     }
 
-    // Enhanced Facebook sharing
+    // Facebook sharing - now shows "Under Construction"
     if (facebookBtn) {
-        facebookBtn.onclick = async () => {
-            const originalText = facebookBtn.textContent;
-            facebookBtn.textContent = '🔄 Preparing...';
-            facebookBtn.disabled = true;
-            
-            try {
-                await shareToFacebook(personalityType, result);
-            } finally {
-                setTimeout(() => {
-                    facebookBtn.textContent = originalText;
-                    facebookBtn.disabled = false;
-                }, 2000);
-            }
+        facebookBtn.onclick = () => {
+            shareToFacebook(personalityType, result);
         };
     }
 
-    // Copy link functionality
-    if (copyLinkBtn) {
-        copyLinkBtn.onclick = async () => {
-            const shareUrl = window.location.href;
-            try {
-                await navigator.clipboard.writeText(shareUrl);
-                
-                const originalText = copyLinkBtn.textContent;
-                copyLinkBtn.textContent = '✅ Copied!';
-                
-                setTimeout(() => {
-                    copyLinkBtn.textContent = originalText;
-                }, 2500);
-                
-            } catch (err) {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = shareUrl;
-                textArea.style.position = 'fixed';
-                textArea.style.opacity = '0';
-                textArea.style.left = '-9999px';
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                copyLinkBtn.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    copyLinkBtn.textContent = '🔗 Copy Link';
-                }, 2500);
-            }
+    // Other personalities functionality
+    if (otherPersonalityBtn) {
+        otherPersonalityBtn.onclick = () => {
+            showPersonalityGallery();
+        };
+    }
+
+    // Compatibility functionality
+    if (compatibilityBtn) {
+        compatibilityBtn.onclick = () => {
+            showPersonalityDetails(personalityType);
         };
     }
 }
 
 // ================================
-// DOWNLOAD FUNCTIONALITY
+// ENHANCED DOWNLOAD FUNCTIONALITY WITH HTML2CANVAS FALLBACK
 // ================================
 
+// Function to load html2canvas library dynamically
+function loadHtml2Canvas() {
+    return new Promise((resolve, reject) => {
+        // Check if html2canvas is already loaded
+        if (window.html2canvas) {
+            resolve(window.html2canvas);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        script.onload = () => {
+            if (window.html2canvas) {
+                resolve(window.html2canvas);
+            } else {
+                reject(new Error('html2canvas failed to load'));
+            }
+        };
+        script.onerror = () => reject(new Error('Failed to load html2canvas script'));
+        document.head.appendChild(script);
+    });
+}
+
 async function createAndDownloadResult(personalityType, result) {
-    const personalityCode = result.code;
-    const personalityName = result.name;
-    const personalityDesc = result.desc;
-    const personalityFullDesc = result.fullDesc;
-    const traits = result.traits;
-    
-    const downloadContainer = document.createElement('div');
-    downloadContainer.style.position = 'absolute';
-    downloadContainer.style.left = '-9999px';
-    downloadContainer.innerHTML = `
-        <div style="
-            width: 600px;
-            min-height: 700px;
-            padding: 40px;
-            background: linear-gradient(135deg, ${result.color}, #4bc88b);
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            text-align: center;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            position: relative;
-        ">
+    try {
+        // Load html2canvas library
+        const html2canvas = await loadHtml2Canvas();
+        
+        const personalityCode = result.code;
+        const personalityName = result.name;
+        const personalityDesc = result.desc;
+        const personalityFullDesc = result.fullDesc;
+        const traits = result.traits;
+        const compatibility = result.compatibility;
+        
+        const downloadContainer = document.createElement('div');
+        downloadContainer.style.position = 'absolute';
+        downloadContainer.style.left = '-9999px';
+        downloadContainer.style.top = '0';
+        downloadContainer.innerHTML = `
             <div style="
-                width: 120px;
-                height: 120px;
-                margin: 0 auto 30px;
-                background: rgba(255,255,255,0.2);
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 28px;
-                font-weight: bold;
-                backdrop-filter: blur(10px);
-            ">${personalityCode}</div>
-            
-            <h1 style="
-                margin: 0 0 15px; 
-                font-size: 2.5rem; 
-                font-weight: 700;
-                line-height: 1.2;
-            ">${personalityName}</h1>
-            
-            <p style="
-                margin: 0 0 25px; 
-                font-size: 1.2rem; 
-                opacity: 0.9;
-                line-height: 1.4;
-                font-weight: 500;
-            ">${personalityDesc}</p>
-            
-            <p style="
-                margin: 0 0 35px; 
-                font-size: 1rem; 
-                line-height: 1.6; 
-                opacity: 0.8;
-                max-width: 500px;
-                margin-left: auto;
-                margin-right: auto;
-            ">${personalityFullDesc}</p>
-            
-            <div style="margin-bottom: 40px;">
-                <h3 style="
-                    margin: 0 0 20px; 
-                    font-size: 1.4rem;
-                    font-weight: 700;
-                ">Key Traits:</h3>
+                width: 800px;
+                min-height: 1000px;
+                padding: 50px;
+                background: linear-gradient(135deg, ${result.color}, #4bc88b);
+                color: white;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+                text-align: center;
+                border-radius: 20px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                position: relative;
+                box-sizing: border-box;
+            ">
                 <div style="
-                    display: flex; 
-                    flex-wrap: wrap; 
-                    justify-content: center; 
-                    gap: 12px;
-                    max-width: 500px;
-                    margin: 0 auto;
-                ">
-                    ${traits.map(trait => `
-                        <span style="
-                            background: rgba(255,255,255,0.2);
-                            padding: 10px 20px;
-                            border-radius: 25px;
-                            font-size: 0.95rem;
-                            font-weight: 600;
-                            white-space: nowrap;
-                            backdrop-filter: blur(10px);
-                        ">${trait}</span>
-                    `).join('')}
+                    width: 150px;
+                    height: 150px;
+                    margin: 0 auto 40px;
+                    background: rgba(255,255,255,0.2);
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 36px;
+                    font-weight: bold;
+                    backdrop-filter: blur(10px);
+                    border: 4px solid rgba(255,255,255,0.3);
+                ">${personalityCode}</div>
+                
+                <h1 style="
+                    margin: 0 0 20px; 
+                    font-size: 3rem; 
+                    font-weight: 700;
+                    line-height: 1.2;
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                ">${personalityName}</h1>
+                
+                <p style="
+                    margin: 0 0 30px; 
+                    font-size: 1.4rem; 
+                    opacity: 0.9;
+                    line-height: 1.4;
+                    font-weight: 500;
+                ">${personalityDesc}</p>
+                
+                <p style="
+                    margin: 0 0 40px; 
+                    font-size: 1.1rem; 
+                    line-height: 1.6; 
+                    opacity: 0.85;
+                    max-width: 600px;
+                    margin-left: auto;
+                    margin-right: auto;
+                ">${personalityFullDesc}</p>
+                
+                <div style="margin-bottom: 50px;">
+                    <h3 style="
+                        margin: 0 0 25px; 
+                        font-size: 1.8rem;
+                        font-weight: 700;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    ">Key Traits:</h3>
+                    <div style="
+                        display: flex; 
+                        flex-wrap: wrap; 
+                        justify-content: center; 
+                        gap: 15px;
+                        max-width: 600px;
+                        margin: 0 auto;
+                    ">
+                        ${traits.map(trait => `
+                            <span style="
+                                background: rgba(255,255,255,0.25);
+                                padding: 12px 24px;
+                                border-radius: 30px;
+                                font-size: 1rem;
+                                font-weight: 600;
+                                white-space: nowrap;
+                                backdrop-filter: blur(10px);
+                                border: 2px solid rgba(255,255,255,0.2);
+                                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                            ">${trait}</span>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- Compatible Personalities Section - 3 Column Grid -->
+                <div style="margin-bottom: 50px;">
+                    <h3 style="
+                        margin: 0 0 30px; 
+                        font-size: 1.8rem;
+                        font-weight: 700;
+                        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    ">Compatible Personalities:</h3>
+                    <div style="
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
+                        max-width: 700px;
+                        margin: 0 auto;
+                    ">
+                        ${compatibility.map(comp => {
+                            const compatiblePersonality = personalities[comp.type];
+                            return `
+                                <div style="
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    background: rgba(255,255,255,0.15);
+                                    padding: 25px 15px;
+                                    border-radius: 20px;
+                                    backdrop-filter: blur(10px);
+                                    border: 2px solid rgba(255,255,255,0.2);
+                                    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                                    text-align: center;
+                                    min-height: 280px;
+                                    justify-content: space-between;
+                                ">
+                                    <div style="
+                                        width: 80px;
+                                        height: 80px;
+                                        background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);
+                                        border-radius: 50%;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        font-size: 14px;
+                                        font-weight: bold;
+                                        color: white;
+                                        margin-bottom: 15px;
+                                        border: 3px solid rgba(255,255,255,0.3);
+                                        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+                                    ">${comp.type}</div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                                        <div>
+                                            <div style="
+                                                font-size: 1.1rem;
+                                                font-weight: 700;
+                                                margin-bottom: 8px;
+                                                line-height: 1.2;
+                                            ">${compatiblePersonality.name}</div>
+                                            <div style="
+                                                font-size: 0.8rem;
+                                                opacity: 0.8;
+                                                margin-bottom: 15px;
+                                                line-height: 1.3;
+                                            ">${compatiblePersonality.desc.split(' • ')[0]}<br>${compatiblePersonality.desc.split(' • ')[1]}</div>
+                                        </div>
+                                        <div style="
+                                            font-size: 0.75rem;
+                                            opacity: 0.9;
+                                            font-weight: 600;
+                                            background: rgba(255,255,255,0.25);
+                                            padding: 6px 12px;
+                                            border-radius: 12px;
+                                            line-height: 1.2;
+                                            margin-top: auto;
+                                        ">${comp.relationship}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                
+                <div style="
+                    margin-top: 50px;
+                    padding-top: 30px;
+                    border-top: 2px solid rgba(255,255,255,0.3);
+                    font-size: 1.2rem;
+                    opacity: 0.8;
+                    font-weight: 600;
+                ">          
+                    <div style="margin-bottom: 10px;">
+        <img src="assets/img/logo.png" alt="COMSA Logo" style="height: 60px; width: auto; vertical-align: middle; margin-right: 8px;">
+        COMSA Developer Personality Test
+    </div>
+    <div style="font-size: 0.9rem; opacity: 0.6;">
+        Discover your unique coding personality
+    </div>
                 </div>
             </div>
+        `;
+        
+        document.body.appendChild(downloadContainer);
+        
+        try {
+            // Wait for fonts and images to load
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            <div style="
-                margin-top: 40px;
-                padding-top: 25px;
-                border-top: 1px solid rgba(255,255,255,0.2);
-                font-size: 1rem;
-                opacity: 0.7;
-                font-weight: 600;
-            ">
-                COMSA Developer Personality Test
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(downloadContainer);
-    
-    try {
-        await new Promise(resolve => setTimeout(resolve, 500));
+            const canvas = await html2canvas(downloadContainer.firstElementChild, {
+                backgroundColor: null,
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: false,
+                width: 800,
+                height: downloadContainer.firstElementChild.offsetHeight,
+                onclone: (clonedDoc) => {
+                    // Ensure all styles are preserved in the cloned document
+                    const clonedElement = clonedDoc.querySelector('div');
+                    if (clonedElement) {
+                        clonedElement.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
+                    }
+                }
+            });
+            
+            const link = document.createElement('a');
+            link.download = `COMSA-${personalityCode}-Personality-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            
+            // Create a temporary click event
+            const clickEvent = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true
+            });
+            
+            link.dispatchEvent(clickEvent);
+            
+            console.log('✅ Download successful!');
+            
+        } finally {
+            document.body.removeChild(downloadContainer);
+        }
         
-        const canvas = await html2canvas(downloadContainer.firstElementChild, {
-            backgroundColor: null,
-            scale: 2,
-            logging: false,
-            useCORS: true,
-            allowTaint: false,
-            width: 600,
-            height: downloadContainer.firstElementChild.offsetHeight
-        });
-        
-        const link = document.createElement('a');
-        link.download = `COMSA-${personalityCode}-${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
-        
-        console.log('✅ Download successful!');
-        
-    } finally {
-        document.body.removeChild(downloadContainer);
+    } catch (error) {
+        console.error('Download failed:', error);
+        throw error; // Re-throw to be handled by the calling function
     }
 }
 
@@ -1257,8 +1881,6 @@ function checkURLParameters() {
     }
     return false;
 }
-
-
 
 // Handle browser back/forward buttons
 window.addEventListener('popstate', function(event) {
@@ -1293,8 +1915,218 @@ shakeStyle.textContent = `
         opacity: 0.6;
         pointer-events: none;
     }
+    
+    /* Additional styles for compatibility section */
+    .compatible-section {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .compatible-personalities {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .compatible-item {
+        display: flex;
+        align-items: center;
+        background: rgba(255,255,255,0.1);
+        padding: 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .compatible-item:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-2px);
+    }
+    
+    .compatible-avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: white;
+        margin-right: 1rem;
+        flex-shrink: 0;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+    
+    .compatible-info {
+        flex: 1;
+        text-align: left;
+    }
+    
+    .compatible-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .compatible-desc {
+        font-size: 0.85rem;
+        opacity: 0.8;
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+    
+    .compatible-relationship {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        padding: 0.2rem 0.6rem;
+        border-radius: 10px;
+        display: inline-block;
+    }
 `;
 document.head.appendChild(shakeStyle);
+
+// ================================
+// UPDATED CSS FOR 3-COLUMN LAYOUT
+// ================================
+
+// Updated CSS for 3-column compatible personalities layout
+const updatedStyles = `
+    /* Compatible Personalities 3-Column Grid Styles */
+    .compatible-section {
+        margin: 2rem 0;
+        padding: 1.5rem;
+        background: rgba(255,255,255,0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .compatible-personalities-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .compatible-item-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255,255,255,0.1);
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255,255,255,0.2);
+        text-align: center;
+        min-height: 220px;
+        justify-content: space-between;
+    }
+    
+    .compatible-item-card:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+    
+    .compatible-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 1rem;
+        flex-shrink: 0;
+        border: 3px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    
+    .compatible-info-card {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+    }
+    
+    .compatible-name {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    
+    .compatible-desc-short {
+        font-size: 0.8rem;
+        opacity: 0.8;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+    }
+    
+    .compatible-relationship {
+        font-size: 0.75rem;
+        opacity: 0.9;
+        font-weight: 600;
+        background: rgba(255,255,255,0.25);
+        padding: 0.4rem 0.8rem;
+        border-radius: 12px;
+        margin-top: auto;
+        line-height: 1.2;
+    }
+    
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+        .compatible-personalities-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .compatible-item-card {
+            min-height: 180px;
+            padding: 1.2rem 0.8rem;
+        }
+        
+        .compatible-avatar {
+            width: 60px;
+            height: 60px;
+            font-size: 12px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .compatible-section {
+            padding: 1rem;
+        }
+        
+        .compatible-item-card {
+            min-height: 160px;
+            padding: 1rem 0.6rem;
+        }
+    }
+`;
+
+// Add the updated styles to the existing style element or create a new one
+const existingStyle = document.querySelector('style');
+if (existingStyle) {
+    existingStyle.textContent += '\n' + updatedStyles;
+} else {
+    const newStyle = document.createElement('style');
+    newStyle.textContent = updatedStyles;
+    document.head.appendChild(newStyle);
+}
+
+// Add the updated styles to the existing style element
+shakeStyle.textContent += '\n' + updatedStyles;
 
 // Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -1311,4 +2143,4 @@ window.onclick = e => {
     if (e.target === modal && modal) {
         modal.style.display = 'none';
     }
-};
+}; 
