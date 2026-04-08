@@ -102,135 +102,135 @@ const questions = [
 ];
 
 const personalities = {
-    EPTS: {
-        name: "The Lab Leader",
-        code: "EPTS",
-        desc: "Extroverted • Prototyper • Technical • Spontaneous",
-        fullDesc: "Life of the lab. You start coding in the middle of discussions and somehow always finish first. You thrive on collaboration and rapid technical iteration.",
-        traits: ["Collaborative coder", "Quick problem solver", "Team energizer", "Pressure performer"],
-        color: "#ff6b35"
-    },
-    EPTD: {
-        name: "The Sprint Master", 
-        code: "EPTD",
-        desc: "Extroverted • Prototyper • Technical • Disciplined",
-        fullDesc: "Always leading sprints, loves project trackers but still codes fast. You combine rapid prototyping with organized project management.",
-        traits: ["Project leader", "Fast developer", "Process optimizer", "Team coordinator"],
-        color: "#4ecdc4"
-    },
-    EPCS: {
-        name: "The Demo Wizard",
-        code: "EPCS", 
-        desc: "Extroverted • Prototyper • Creative • Spontaneous",
-        fullDesc: "Makes flashy demos that wow the audience, even if half is placeholder code. You excel at creating impressive prototypes quickly.",
-        traits: ["Demo master", "Creative prototyper", "Presentation pro", "Rapid designer"],
-        color: "#45b7d1"
-    },
-    EPCD: {
-        name: "The Design Director",
-        code: "EPCD",
-        desc: "Extroverted • Prototyper • Creative • Disciplined", 
-        fullDesc: "The 'design lead' who also organizes deadlines and Figma boards. You balance creative vision with structured project management.",
-        traits: ["Design leader", "Creative organizer", "Vision setter", "Team motivator"],
-        color: "#96ceb4"
-    },
-    ERTS: {
-        name: "The Coding Comedian",
-        code: "ERTS",
-        desc: "Extroverted • Refiner • Technical • Spontaneous",
-        fullDesc: "Fixes your code mid-presentation but also cracks jokes while doing it. You bring humor and technical expertise to any team.",
-        traits: ["Code optimizer", "Team comedian", "Live debugger", "Morale booster"],
-        color: "#feca57"
-    },
-    ERTD: {
-        name: "The Code Guardian", 
-        code: "ERTD",
-        desc: "Extroverted • Refiner • Technical • Disciplined",
-        fullDesc: "Project manager vibes, merges all pull requests after thorough review. You maintain code quality while leading technical discussions.",
-        traits: ["Quality enforcer", "Code reviewer", "Technical leader", "Standard setter"],
-        color: "#ff9ff3"
-    },
-    ERCS: {
-        name: "The Overnight Redesigner",
-        code: "ERCS",
-        desc: "Extroverted • Refiner • Creative • Spontaneous", 
-        fullDesc: "Can redesign the UI in one night after feedback, still smiling. You adapt quickly to creative challenges with endless enthusiasm.",
-        traits: ["Rapid redesigner", "Feedback implementer", "Creative adapter", "Positive energy"],
-        color: "#54a0ff"
-    },
-    ERCD: {
-        name: "The Pixel Perfectionist",
-        code: "ERCD", 
-        desc: "Extroverted • Refiner • Creative • Disciplined",
-        fullDesc: "Polished UI, pixel-perfect, and follows every UX best practice. You create beautiful, refined interfaces while maintaining team collaboration.",
-        traits: ["UX expert", "Detail perfectionist", "Design standards keeper", "Quality advocate"],
-        color: "#5f27cd"
-    },
-    IPTS: {
-        name: "The Solo Hacker",
-        code: "IPTS",
-        desc: "Introverted • Prototyper • Technical • Spontaneous",
-        fullDesc: "Solo hacker who can finish a minimum viable product overnight. You work best independently and deliver impressive results quickly.",
-        traits: ["Independent coder", "MVP creator", "Night owl developer", "Problem solver"],
-        color: "#00d2d3"
-    },
-    IPTD: {
-        name: "The Silent Deliverer",
-        code: "IPTD", 
-        desc: "Introverted • Prototyper • Technical • Disciplined",
-        fullDesc: "Quiet but deadly — delivers a perfectly working backend on time. You combine independent work style with reliable execution.",
-        traits: ["Reliable deliverer", "Backend specialist", "Quiet achiever", "Deadline keeper"],
-        color: "#ff9f43"
-    },
-    IPCS: {
-        name: "The Creative Experimenter",
-        code: "IPCS",
-        desc: "Introverted • Prototyper • Creative • Spontaneous", 
-        fullDesc: "Makes mini-games or experiments just for fun, often late-night coder. You explore creative ideas independently with passion.",
-        traits: ["Creative explorer", "Game developer", "Experimental coder", "Passion projecter"],
-        color: "#ee5a6f"
-    },
-    IPCD: {
-        name: "The Peaceful Designer",
-        code: "IPCD",
-        desc: "Introverted • Prototyper • Creative • Disciplined",
-        fullDesc: "Crafts beautiful, consistent designs alone in peaceful silence. You create polished creative work through focused, independent effort.",
-        traits: ["Consistent designer", "Peaceful creator", "Detail focused", "Independent artist"],
-        color: "#0abde3"
-    },
-    IRTS: {
-        name: "The Debug Ninja",
-        code: "IRTS", 
-        desc: "Introverted • Refiner • Technical • Spontaneous",
-        fullDesc: "Appears last minute to debug everything and disappears again. You're the mysterious problem-solver who saves the day.",
-        traits: ["Debug master", "Problem fixer", "Mysterious helper", "Last-minute hero"],
-        color: "#1dd1a1"
-    },
-    IRTD: {
-        name: "The Zero-Bug Coder",
-        code: "IRTD",
-        desc: "Introverted • Refiner • Technical • Disciplined", 
-        fullDesc: "Methodical coder, zero bugs, zero drama. You write impeccable code through careful planning and systematic execution.",
-        traits: ["Bug-free coder", "Methodical programmer", "Quality focused", "Drama-free developer"],
-        color: "#ffd32a"
-    },
-    IRCS: {
-        name: "The Quiet Redesigner",
-        code: "IRCS",
-        desc: "Introverted • Refiner • Creative • Spontaneous",
-        fullDesc: "Will suddenly redesign the project banner during a break. You contribute creative improvements quietly and unexpectedly.",
-        traits: ["Surprise improver", "Quiet creative", "Banner artist", "Spontaneous designer"],
-        color: "#ff5252"
-    },
-    IRCD: {
-        name: "The Aesthetic Architect", 
-        code: "IRCD",
-        desc: "Introverted • Refiner • Creative • Disciplined",
-        fullDesc: "Meticulous artist and coder — everything is neat, structured, and aesthetic. You perfect the intersection of beauty and functionality.",
-        traits: ["Meticulous creator", "Aesthetic coder", "Structure lover", "Beauty engineer"],
-        color: "#7b1fa2"
-    }
-};
+        EPTS: {
+            name: "The Recitation Main Character",
+            code: "EPTS",
+            desc: "Extroverted • Prototyper • Technical • Spontaneous",
+            fullDesc: "Always talking, always coding, and somehow always right. Starts coding habang discussion pa lang and finishes before everyone even opens VS Code.",
+            traits: ["Talks while coding", "Fast thinker", "Group hype man", "Unfair advantage"],
+            color: "#ff6b35"
+        },
+        EPTD: {
+            name: "The Group Leader na Napilitan",
+            code: "EPTD",
+            desc: "Extroverted • Prototyper • Technical • Disciplined",
+            fullDesc: "Ikaw na naman leader kahit ayaw mo. You assign tasks, track progress, tapos ikaw pa rin gagawa ng lahat sa dulo.",
+            traits: ["Forced leadership", "Organized chaos", "Carries the team", "Deadline clutch"],
+            color: "#4ecdc4"
+        },
+        EPCS: {
+            name: "The Demo Lang Gumagana",
+            code: "EPCS",
+            desc: "Extroverted • Prototyper • Creative • Spontaneous",
+            fullDesc: "Pag demo smooth... pag tinesting ulit wala na 😭 You specialize in 'basta gumana sa harap ni sir'.",
+            traits: ["Demo magician", "Creative bluff", "UI over logic", "Confidence 100%"],
+            color: "#45b7d1"
+        },
+        EPCD: {
+            name: "The Canva x Figma Overthinker",
+            code: "EPCD",
+            desc: "Extroverted • Prototyper • Creative • Disciplined",
+            fullDesc: "Mas matagal pa design kaysa coding. Every pixel may meaning… kahit di pa tapos backend.",
+            traits: ["Design obsessed", "Organized files", "Perfectionist", "Aesthetic priority"],
+            color: "#96ceb4"
+        },
+        ERTS: {
+            name: "The Stand-up Debugger",
+            code: "ERTS",
+            desc: "Extroverted • Refiner • Technical • Spontaneous",
+            fullDesc: "Nagde-debug habang nagpapatawa. Fixes your bug habang nagjo-joke. MVP ng tropa.",
+            traits: ["Funny coder", "Quick fixer", "Live debugger", "Team morale booster"],
+            color: "#feca57"
+        },
+        ERTD: {
+            name: "The GitHub Terror",
+            code: "ERTD",
+            desc: "Extroverted • Refiner • Technical • Disciplined",
+            fullDesc: "Strict sa commits. 'Walang comment? reject.' Ikaw ang dahilan kung bakit maayos ang code… at kinatatakutan ng lahat.",
+            traits: ["Strict reviewer", "Clean code police", "Systematic thinker", "No mercy"],
+            color: "#ff9ff3"
+        },
+        ERCS: {
+            name: "The Biglang UI Update",
+            code: "ERCS",
+            desc: "Extroverted • Refiner • Creative • Spontaneous",
+            fullDesc: "Tahimik lang tapos biglang 'guys pinalitan ko buong UI kagabi'. Walang paalam 😭",
+            traits: ["Sudden redesign", "Creative burst", "Unpredictable", "Always surprising"],
+            color: "#54a0ff"
+        },
+        ERCD: {
+            name: "The Pixel OC",
+            code: "ERCD",
+            desc: "Extroverted • Refiner • Creative • Disciplined",
+            fullDesc: "1px off? Hindi pwede. Kahit pasado na, aayusin pa rin. Ikaw ang dahilan kung bakit gumaganda project.",
+            traits: ["Detail freak", "UX master", "Polish expert", "OC malala"],
+            color: "#5f27cd"
+        },
+        IPTS: {
+            name: "The 3AM Warrior",
+            code: "IPTS",
+            desc: "Introverted • Prototyper • Technical • Spontaneous",
+            fullDesc: "Hindi mo makita buong araw… pero 3AM may output na. Tahimik pero deadly sa coding.",
+            traits: ["Night coder", "Independent", "Fast builder", "Lowkey genius"],
+            color: "#00d2d3"
+        },
+        IPTD: {
+            name: "The Tahimik Pero Top",
+            code: "IPTD",
+            desc: "Introverted • Prototyper • Technical • Disciplined",
+            fullDesc: "Hindi nagsasalita pero perfect yung backend. Walang error, walang drama.",
+            traits: ["Silent worker", "Reliable coder", "Backend master", "Consistent"],
+            color: "#ff9f43"
+        },
+        IPCS: {
+            name: "The Side Project Addict",
+            code: "IPCS",
+            desc: "Introverted • Prototyper • Creative • Spontaneous",
+            fullDesc: "May sariling game, app, at random projects… pero group project di pa tapos 😭",
+            traits: ["Creative coder", "Idea generator", "Distracted genius", "Passion projects"],
+            color: "#ee5a6f"
+        },
+        IPCD: {
+            name: "The Minimalist Dev",
+            code: "IPCD",
+            desc: "Introverted • Prototyper • Creative • Disciplined",
+            fullDesc: "Simple, clean, tahimik. Walang extra, pero ang ganda ng gawa.",
+            traits: ["Clean design", "Focused", "Independent", "Chill worker"],
+            color: "#0abde3"
+        },
+        IRTS: {
+            name: "The Biglang Sumulpot Fixer",
+            code: "IRTS",
+            desc: "Introverted • Refiner • Technical • Spontaneous",
+            fullDesc: "Hindi mo alam nasaan… tapos biglang 'na-fix ko na'. Then mawawala ulit.",
+            traits: ["Silent fixer", "Bug hunter", "Mysterious", "Last-minute savior"],
+            color: "#1dd1a1"
+        },
+        IRTD: {
+            name: "The Walang Bug Legend",
+            code: "IRTD",
+            desc: "Introverted • Refiner • Technical • Disciplined",
+            fullDesc: "Hindi nagkakamali. Kung may bug, kasalanan mo. 😂",
+            traits: ["Perfect logic", "Clean code", "Systematic", "Legend status"],
+            color: "#ffd32a"
+        },
+        IRCS: {
+            name: "The Tahimik na Artist",
+            code: "IRCS",
+            desc: "Introverted • Refiner • Creative • Spontaneous",
+            fullDesc: "Biglang may bagong banner, bagong UI, walang announcement. Gulat ka nalang.",
+            traits: ["Silent designer", "Creative", "Unexpected updates", "Chill vibes"],
+            color: "#ff5252"
+        },
+        IRCD: {
+            name: "The Aesthetic Overlord",
+            code: "IRCD",
+            desc: "Introverted • Refiner • Creative • Disciplined",
+            fullDesc: "Everything must be perfect. Design, code, spacing—lahat. Parang thesis level kahit activity lang.",
+            traits: ["Perfectionist", "Aesthetic master", "Organized", "High standards"],
+            color: "#7b1fa2"
+        }
+    };
 
 let currentQuestion = 0;
 const userAnswers = [];
