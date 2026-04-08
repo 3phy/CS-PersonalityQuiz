@@ -1300,10 +1300,10 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Facebook sharing - now shows "Under Construction"
+    // Facebook sharing
     if (facebookBtn) {
         facebookBtn.onclick = () => {
-            shareToFacebook(personalityType, result);
+            shareToFacebook(personalityType);
         };
     }
 
