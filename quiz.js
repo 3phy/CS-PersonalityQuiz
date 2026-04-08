@@ -822,10 +822,12 @@ function showUnderConstructionModal() {
     }, 100);
 }
 
-// Simplified Facebook sharing function (now shows under construction)
-function shareToFacebook(personalityType, result) {
-    console.log("🚧 Facebook sharing is under construction");
-    showUnderConstructionModal();
+function shareToFacebook(personalityType) {
+    const baseUrl = window.location.origin;
+    const sharePageUrl = `${baseUrl}/share/${encodeURIComponent(personalityType)}.html`;
+    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`;
+
+    window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=600,height=700');
 }
 
 // Remove all dynamic meta tags
