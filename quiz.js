@@ -454,6 +454,17 @@ const backBtn = document.getElementById("back-btn");
 const progress = document.getElementById("progress");
 const progressFill = document.getElementById("progress-fill");
 
+const CANONICAL_SITE_URL = 'https://comsa-quiz.vercel.app';
+
+function getSiteBaseUrl() {
+    const host = window.location.hostname;
+    // Facebook cannot scrape localhost/private LAN URLs
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) {
+        return CANONICAL_SITE_URL;
+    }
+    return window.location.origin;
+}
+
 function updateProgress() {
     const percentage = ((currentQuestion + 1) / questions.length) * 100;
     progress.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
@@ -823,7 +834,7 @@ function showUnderConstructionModal() {
 }
 
 function shareToFacebook(personalityType) {
-    const baseUrl = window.location.origin;
+    const baseUrl = getSiteBaseUrl();
     const sharePageUrl = `${baseUrl}/share/${encodeURIComponent(personalityType)}.html`;
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`;
 
@@ -876,13 +887,13 @@ function updateOGImageAndURL(personalityType) {
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substr(2, 9);
     const sessionId = Math.random().toString(36).substr(2, 5);
-    const baseUrl = window.location.origin + window.location.pathname;
+    const baseUrl = getSiteBaseUrl() + window.location.pathname;
     
     // Multiple parameters to force Facebook to treat as new content
     const newURL = `${baseUrl}?result=${personalityType}&v=${timestamp}&r=${randomId}&s=${sessionId}&fb=1`;
 
     // Image URL with cache busting
-    const imageUrl = `${window.location.origin}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
+    const imageUrl = `${getSiteBaseUrl()}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
     
     const title = `I'm ${result.name} - COMSA Developer Personality Test`;
     const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
@@ -1098,6 +1109,7 @@ function showResult(personalityType) {
     const result = personalities[personalityType];
     if (!result) return;
     const compatibilityList = Array.isArray(result.compatibility) ? result.compatibility : [];
+    const shareUrl = `${getSiteBaseUrl()}/share/${encodeURIComponent(personalityType)}.html`;
     
     // Update OG tags and URL before showing result
     updateOGImageAndURL(personalityType);
@@ -1167,7 +1179,7 @@ function showResult(personalityType) {
                 </div>
                 <div style="font-size: 0.8rem; color: #4bc88b;">COMSA Personality Test</div>
                 <div style="font-size: 0.7rem; opacity: 0.7; margin-top: 0.5rem;">
-                    Share URL: ${window.location.href}
+                    Share URL: ${shareUrl}
                 </div>
             </div>
         </div>
