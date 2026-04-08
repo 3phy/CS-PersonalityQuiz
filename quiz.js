@@ -445,6 +445,7 @@ const personalities = {
 let currentQuestion = 0;
 const userAnswers = [];
 const scores = { E: 0, I: 0, P: 0, R: 0, T: 0, C: 0, S: 0, D: 0 };
+let autoAdvanceTimer = null;
 
 const form = document.getElementById("quiz-form");
 const container = document.getElementById("question-container");
@@ -528,6 +529,14 @@ function renderQuestion(index) {
     }, 150);
 }
 
+function allQuestionsAnswered() {
+    if (userAnswers.length < questions.length) return false;
+    for (let i = 0; i < questions.length; i++) {
+        if (userAnswers[i] === undefined) return false;
+    }
+    return true;
+}
+
 function selectOption(value, questionIndex) {
     // Remove previous selection styling
     container.querySelectorAll('.scale-option').forEach(opt => {
@@ -540,13 +549,25 @@ function selectOption(value, questionIndex) {
     
     userAnswers[questionIndex] = value;
     
-    // Auto-advance after a short delay
-    setTimeout(() => {
+    if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+    }
+
+    // Auto-advance / auto-finish after a short delay
+    autoAdvanceTimer = setTimeout(() => {
+        autoAdvanceTimer = null;
+
+        // If user has already answered everything, immediately show result.
+        if (allQuestionsAnswered()) {
+            calculateResult();
+            return;
+        }
+
+        // Otherwise proceed to the next question as usual.
         if (currentQuestion < questions.length - 1) {
             currentQuestion++;
             renderQuestion(currentQuestion);
-        } else {
-            calculateResult();
         }
     }, 800);
 }
@@ -1073,6 +1094,8 @@ function showPersonalityGallery() {
 // ================================
 function showResult(personalityType) {
     const result = personalities[personalityType];
+    if (!result) return;
+    const compatibilityList = Array.isArray(result.compatibility) ? result.compatibility : [];
     
     // Update OG tags and URL before showing result
     updateOGImageAndURL(personalityType);
@@ -1095,26 +1118,31 @@ function showResult(personalityType) {
             </div>
             
             <!-- Compatible Personalities Section - 3 Column Layout -->
-            <div class="compatible-section">
-                <h3>Compatible Personalities:</h3>
-                <div class="compatible-personalities-grid">
-                    ${result.compatibility.map(comp => {
-                        const compatiblePersonality = personalities[comp.type];
-                        return `
-                            <div class="compatible-item-card" onclick="showPersonalityDetails('${comp.type}')">
-                                <div class="compatible-avatar" style="background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);">
-                                    ${comp.type}
+            ${compatibilityList.length ? `
+                <div class="compatible-section">
+                    <h3>Compatible Personalities:</h3>
+                    <div class="compatible-personalities-grid">
+                        ${compatibilityList.map(comp => {
+                            const compatiblePersonality = personalities[comp.type];
+                            if (!compatiblePersonality) return '';
+                            const descParts = (compatiblePersonality.desc || '').split(' • ');
+                            const shortDesc = descParts.length >= 2 ? `${descParts[0]} • ${descParts[1]}` : (compatiblePersonality.desc || '');
+                            return `
+                                <div class="compatible-item-card" onclick="showPersonalityDetails('${comp.type}')">
+                                    <div class="compatible-avatar" style="background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);">
+                                        ${comp.type}
+                                    </div>
+                                    <div class="compatible-info-card">
+                                        <div class="compatible-name">${compatiblePersonality.name}</div>
+                                        <div class="compatible-desc-short">${shortDesc}</div>
+                                        <div class="compatible-relationship">${comp.relationship || ''}</div>
+                                    </div>
                                 </div>
-                                <div class="compatible-info-card">
-                                    <div class="compatible-name">${compatiblePersonality.name}</div>
-                                    <div class="compatible-desc-short">${compatiblePersonality.desc.split(' • ')[0]} • ${compatiblePersonality.desc.split(' • ')[1]}</div>
-                                    <div class="compatible-relationship">${comp.relationship}</div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('')}
+                            `;
+                        }).join('')}
+                    </div>
                 </div>
-            </div>
+            ` : ''}
             
             <div class="result-actions">
                 <button id="restart-btn" class="result-btn">
