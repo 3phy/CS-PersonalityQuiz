@@ -696,3 +696,121 @@ h1 {
     25% { transform: translateX(-10px); }
     75% { transform: translateX(10px); }
 }
+/* Compatible Personalities Section */
+.compatible-section {
+    margin: 40px 0;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.compatible-section h3 {
+    color: #4ecdc4;
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.compatible-personalities {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.compatible-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 20px 15px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 140px;
+    max-width: 160px;
+}
+
+.compatible-item:hover {
+    transform: translateY(-8px) scale(1.05);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(78, 205, 196, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.compatible-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.compatible-item:hover .compatible-avatar {
+    transform: scale(1.1);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.compatible-info {
+    text-align: center;
+}
+
+.compatible-name {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+    line-height: 1.2;
+}
+
+.compatible-desc {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Mobile responsiveness for compatibility section */
+@media (max-width: 768px) {
+    .compatible-section {
+        padding: 20px 15px;
+        margin: 30px 0;
+    }
+    
+    .compatible-personalities {
+        gap: 15px;
+    }
+    
+    .compatible-item {
+        min-width: 120px;
+        max-width: 130px;
+        padding: 15px 10px;
+    }
+    
+    .compatible-avatar {
+        width: 70px;
+        height: 70px;
+        font-size: 14px;
+    }
+    
+    .compatible-name {
+        font-size: 0.9rem;
+    }
+    
+    .compatible-desc {
+        font-size: 0.75rem;
+    }
+}
