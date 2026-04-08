@@ -212,103 +212,103 @@ function showPersonalityDetails(personalityCode) {
 // Replace your existing JavaScript with this enhanced version
 
 const questions = [
-    // Social Energy (E vs I) - 5 questions
+    // Social Energy (E vs I)
     {
-        q: "I feel more alive when coding with friends, even if it turns into a chit-chat session.",
+        q: "Mas energized ka kapag group coding kahit nagiging chikahan na lang.",
+        dimension: "EI",
+        type: "E"
+    }/*,
+    {
+        q: "Ikaw yung kusang nagvo-volunteer mag demo kay sir.",
         dimension: "EI",
         type: "E"
     },
     {
-        q: "I enjoy presenting the demo rather than staying quiet in the back.",
-        dimension: "EI",
-        type: "E"
-    },
-    {
-        q: "I'm more productive when coding alone without interruptions.",
+        q: "Mas productive ka kapag solo coding + naka-earphones buong time.",
         dimension: "EI",
         type: "I"
     },
     {
-        q: "I'd rather submit my output on Google Classroom than give a live presentation.",
+        q: "Mas gusto mo mag submit online kaysa magsalita sa harap.",
         dimension: "EI",
         type: "I"
     },
     {
-        q: "I prefer short chat updates over long meetings that go nowhere.",
+        q: "Ayaw mo ng meeting, gusto mo diretso coding na lang.",
         dimension: "EI",
         type: "I"
     },
 
-    // Work Style (Prototyper vs Refiner) - 4 questions
+    // Work Style (Prototyper vs Refiner)
     {
-        q: "I can start building a system even without a plan—just wing it.",
+        q: "Kaya mong gumawa ng system kahit walang plano (bahala na).",
         dimension: "PR",
         type: "P"
     },
     {
-        q: "I don't mind messy code as long as it works.",
+        q: "Okay lang magulo code basta gumagana sa demo.",
         dimension: "PR",
         type: "P"
     },
     {
-        q: "I still improve my code even if it already passes the requirements.",
+        q: "Inaayos mo pa rin code kahit pasado na.",
         dimension: "PR",
         type: "R"
     },
     {
-        q: "I feel more comfortable when my code has comments, flowcharts, and a clean repo.",
+        q: "Mas kampante ka kapag malinis code + may comments + organized repo.",
         dimension: "PR",
         type: "R"
     },
 
-    // Problem Approach (Technical vs Creative) - 5 questions
+    // Problem Approach (Technical vs Creative)
     {
-        q: "I'd rather solve algorithm and backend problems than do UI/UX design.",
+        q: "Mas gusto mo backend logic kaysa UI design.",
         dimension: "TC",
         type: "T"
     },
     {
-        q: "I enjoy debugging logic errors more than picking a color palette.",
+        q: "Mas enjoy ka mag debug kaysa pumili ng kulay.",
         dimension: "TC",
         type: "T"
     },
     {
-        q: "I get excited making a UI that looks better than the official school website.",
+        q: "Mas proud ka kapag maganda UI kaysa sa logic.",
         dimension: "TC",
         type: "C"
     },
     {
-        q: "I add animations even if they're optional, as long as it looks good.",
+        q: "Naglalagay ka ng animations kahit di required.",
         dimension: "TC",
         type: "C"
     },
     {
-        q: "I feel more proud when the demo looks smooth and aesthetic rather than hardcore backend.",
+        q: "Mas importante sayo 'wow ang ganda' kaysa 'wow ang complex'.",
         dimension: "TC",
         type: "C"
     },
 
-    // Workflow Preference (Spontaneous vs Disciplined) - 4 questions
+    // Workflow (Spontaneous vs Disciplined)
     {
-        q: "I can finish an entire project in one night before the defense (with an energy drink).",
+        q: "Kaya mong tapusin buong project isang gabi bago deadline 😭",
         dimension: "SD",
         type: "S"
     },
     {
-        q: "I'd rather explore options first than stick to a strict plan right away.",
+        q: "Mas gusto mo explore muna kaysa mag plan agad.",
         dimension: "SD",
         type: "S"
     },
     {
-        q: "I like finishing tasks way ahead of deadlines so I can relax while others cram.",
+        q: "Natapos mo na project habang iba nagccram pa.",
         dimension: "SD",
         type: "D"
     },
     {
-        q: "I use GitHub projects, trackers, or calendars to keep my workflow organized.",
+        q: "Gumagamit ka ng GitHub, tracker, or planner (hindi lang utak).",
         dimension: "SD",
         type: "D"
-    }
+    }*/
 ];
 
 const personalities = {
