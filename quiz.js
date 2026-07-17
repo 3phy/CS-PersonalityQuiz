@@ -67,7 +67,12 @@ function showPersonalityDetails(personalityCode) {
                     font-weight: bold;
                     margin: 0 auto 30px;
                     backdrop-filter: blur(10px);
-                ">${personality.code}</div>
+                ">
+                    <img src="assets/thumbnails/${personality.code}-128.png"
+                         alt="${personality.name}"
+                         style="width: 100%; height: 100%; object-fit: contain;"
+                         onerror="this.style.display='none'; this.parentElement.textContent='${personality.code}';">
+                </div>
                 
                 <h2 style="
                     margin: 0 0 15px; 
@@ -124,7 +129,7 @@ function showPersonalityDetails(personalityCode) {
                         font-size: 20px;
                         font-weight: 700;
                         text-align: center;
-                    ">Compatible Personalities:</h3>
+                    ">Related CS Branches:</h3>
                     
                     <div style="
                         display: flex;
@@ -161,7 +166,7 @@ function showPersonalityDetails(personalityCode) {
                                         backdrop-filter: blur(10px);
                                         overflow: hidden;
                                     ">
-                                        <img src="assets/thumbnails/${comp.type}.png" 
+                                        <img src="assets/thumbnails/${comp.type}-128.png"
                                              alt="${compatiblePersonality.name}" 
                                              style="
                                                 width: 100%;
@@ -211,240 +216,13 @@ function showPersonalityDetails(personalityCode) {
 // COMPLETE FACEBOOK SHARING SOLUTION
 // Replace your existing JavaScript with this enhanced version
 
-const questions = [
-    // Social Energy (E vs I)
-    {
-        q: "Mas energized ka kapag group coding kahit nagiging chikahan na lang.",
-        dimension: "EI",
-        type: "E"
-    }/*,
-    {
-        q: "Ikaw yung kusang nagvo-volunteer mag demo kay sir.",
-        dimension: "EI",
-        type: "E"
-    },
-    {
-        q: "Mas productive ka kapag solo coding + naka-earphones buong time.",
-        dimension: "EI",
-        type: "I"
-    },
-    {
-        q: "Mas gusto mo mag submit online kaysa magsalita sa harap.",
-        dimension: "EI",
-        type: "I"
-    },
-    {
-        q: "Ayaw mo ng meeting, gusto mo diretso coding na lang.",
-        dimension: "EI",
-        type: "I"
-    },
-
-    // Work Style (Prototyper vs Refiner)
-    {
-        q: "Kaya mong gumawa ng system kahit walang plano (bahala na).",
-        dimension: "PR",
-        type: "P"
-    },
-    {
-        q: "Okay lang magulo code basta gumagana sa demo.",
-        dimension: "PR",
-        type: "P"
-    },
-    {
-        q: "Inaayos mo pa rin code kahit pasado na.",
-        dimension: "PR",
-        type: "R"
-    },
-    {
-        q: "Mas kampante ka kapag malinis code + may comments + organized repo.",
-        dimension: "PR",
-        type: "R"
-    },
-
-    // Problem Approach (Technical vs Creative)
-    {
-        q: "Mas gusto mo backend logic kaysa UI design.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "Mas enjoy ka mag debug kaysa pumili ng kulay.",
-        dimension: "TC",
-        type: "T"
-    },
-    {
-        q: "Mas proud ka kapag maganda UI kaysa sa logic.",
-        dimension: "TC",
-        type: "C"
-    },
-    {
-        q: "Naglalagay ka ng animations kahit di required.",
-        dimension: "TC",
-        type: "C"
-    },
-    {
-        q: "Mas importante sayo 'wow ang ganda' kaysa 'wow ang complex'.",
-        dimension: "TC",
-        type: "C"
-    },
-
-    // Workflow (Spontaneous vs Disciplined)
-    {
-        q: "Kaya mong tapusin buong project isang gabi bago deadline 😭",
-        dimension: "SD",
-        type: "S"
-    },
-    {
-        q: "Mas gusto mo explore muna kaysa mag plan agad.",
-        dimension: "SD",
-        type: "S"
-    },
-    {
-        q: "Natapos mo na project habang iba nagccram pa.",
-        dimension: "SD",
-        type: "D"
-    },
-    {
-        q: "Gumagamit ka ng GitHub, tracker, or planner (hindi lang utak).",
-        dimension: "SD",
-        type: "D"
-    }*/
-];
-
-const personalities = {
-        EPTS: {
-            name: "The Recitation Main Character",
-            code: "EPTS",
-            desc: "Extroverted • Prototyper • Technical • Spontaneous",
-            fullDesc: "Always talking, always coding, and somehow always right. Starts coding habang discussion pa lang and finishes before everyone even opens VS Code.",
-            traits: ["Talks while coding", "Fast thinker", "Group hype man", "Unfair advantage"],
-            color: "#ff6b35"
-        },
-        EPTD: {
-            name: "The Group Leader na Napilitan",
-            code: "EPTD",
-            desc: "Extroverted • Prototyper • Technical • Disciplined",
-            fullDesc: "Ikaw na naman leader kahit ayaw mo. You assign tasks, track progress, tapos ikaw pa rin gagawa ng lahat sa dulo.",
-            traits: ["Forced leadership", "Organized chaos", "Carries the team", "Deadline clutch"],
-            color: "#4ecdc4"
-        },
-        EPCS: {
-            name: "The Demo Lang Gumagana",
-            code: "EPCS",
-            desc: "Extroverted • Prototyper • Creative • Spontaneous",
-            fullDesc: "Pag demo smooth... pag tinesting ulit wala na 😭 You specialize in 'basta gumana sa harap ni sir'.",
-            traits: ["Demo magician", "Creative bluff", "UI over logic", "Confidence 100%"],
-            color: "#45b7d1"
-        },
-        EPCD: {
-            name: "The Canva x Figma Overthinker",
-            code: "EPCD",
-            desc: "Extroverted • Prototyper • Creative • Disciplined",
-            fullDesc: "Mas matagal pa design kaysa coding. Every pixel may meaning… kahit di pa tapos backend.",
-            traits: ["Design obsessed", "Organized files", "Perfectionist", "Aesthetic priority"],
-            color: "#96ceb4"
-        },
-        ERTS: {
-            name: "The Stand-up Debugger",
-            code: "ERTS",
-            desc: "Extroverted • Refiner • Technical • Spontaneous",
-            fullDesc: "Nagde-debug habang nagpapatawa. Fixes your bug habang nagjo-joke. MVP ng tropa.",
-            traits: ["Funny coder", "Quick fixer", "Live debugger", "Team morale booster"],
-            color: "#feca57"
-        },
-        ERTD: {
-            name: "The GitHub Terror",
-            code: "ERTD",
-            desc: "Extroverted • Refiner • Technical • Disciplined",
-            fullDesc: "Strict sa commits. 'Walang comment? reject.' Ikaw ang dahilan kung bakit maayos ang code… at kinatatakutan ng lahat.",
-            traits: ["Strict reviewer", "Clean code police", "Systematic thinker", "No mercy"],
-            color: "#ff9ff3"
-        },
-        ERCS: {
-            name: "The Biglang UI Update",
-            code: "ERCS",
-            desc: "Extroverted • Refiner • Creative • Spontaneous",
-            fullDesc: "Tahimik lang tapos biglang 'guys pinalitan ko buong UI kagabi'. Walang paalam 😭",
-            traits: ["Sudden redesign", "Creative burst", "Unpredictable", "Always surprising"],
-            color: "#54a0ff"
-        },
-        ERCD: {
-            name: "The Pixel OC",
-            code: "ERCD",
-            desc: "Extroverted • Refiner • Creative • Disciplined",
-            fullDesc: "1px off? Hindi pwede. Kahit pasado na, aayusin pa rin. Ikaw ang dahilan kung bakit gumaganda project.",
-            traits: ["Detail freak", "UX master", "Polish expert", "OC malala"],
-            color: "#5f27cd"
-        },
-        IPTS: {
-            name: "The 3AM Warrior",
-            code: "IPTS",
-            desc: "Introverted • Prototyper • Technical • Spontaneous",
-            fullDesc: "Hindi mo makita buong araw… pero 3AM may output na. Tahimik pero deadly sa coding.",
-            traits: ["Night coder", "Independent", "Fast builder", "Lowkey genius"],
-            color: "#00d2d3"
-        },
-        IPTD: {
-            name: "The Tahimik Pero Top",
-            code: "IPTD",
-            desc: "Introverted • Prototyper • Technical • Disciplined",
-            fullDesc: "Hindi nagsasalita pero perfect yung backend. Walang error, walang drama.",
-            traits: ["Silent worker", "Reliable coder", "Backend master", "Consistent"],
-            color: "#ff9f43"
-        },
-        IPCS: {
-            name: "The Side Project Addict",
-            code: "IPCS",
-            desc: "Introverted • Prototyper • Creative • Spontaneous",
-            fullDesc: "May sariling game, app, at random projects… pero group project di pa tapos 😭",
-            traits: ["Creative coder", "Idea generator", "Distracted genius", "Passion projects"],
-            color: "#ee5a6f"
-        },
-        IPCD: {
-            name: "The Minimalist Dev",
-            code: "IPCD",
-            desc: "Introverted • Prototyper • Creative • Disciplined",
-            fullDesc: "Simple, clean, tahimik. Walang extra, pero ang ganda ng gawa.",
-            traits: ["Clean design", "Focused", "Independent", "Chill worker"],
-            color: "#0abde3"
-        },
-        IRTS: {
-            name: "The Biglang Sumulpot Fixer",
-            code: "IRTS",
-            desc: "Introverted • Refiner • Technical • Spontaneous",
-            fullDesc: "Hindi mo alam nasaan… tapos biglang 'na-fix ko na'. Then mawawala ulit.",
-            traits: ["Silent fixer", "Bug hunter", "Mysterious", "Last-minute savior"],
-            color: "#1dd1a1"
-        },
-        IRTD: {
-            name: "The Walang Bug Legend",
-            code: "IRTD",
-            desc: "Introverted • Refiner • Technical • Disciplined",
-            fullDesc: "Hindi nagkakamali. Kung may bug, kasalanan mo. 😂",
-            traits: ["Perfect logic", "Clean code", "Systematic", "Legend status"],
-            color: "#ffd32a"
-        },
-        IRCS: {
-            name: "The Tahimik na Artist",
-            code: "IRCS",
-            desc: "Introverted • Refiner • Creative • Spontaneous",
-            fullDesc: "Biglang may bagong banner, bagong UI, walang announcement. Gulat ka nalang.",
-            traits: ["Silent designer", "Creative", "Unexpected updates", "Chill vibes"],
-            color: "#ff5252"
-        },
-        IRCD: {
-            name: "The Aesthetic Overlord",
-            code: "IRCD",
-            desc: "Introverted • Refiner • Creative • Disciplined",
-            fullDesc: "Everything must be perfect. Design, code, spacing—lahat. Parang thesis level kahit activity lang.",
-            traits: ["Perfectionist", "Aesthetic master", "Organized", "High standards"],
-            color: "#7b1fa2"
-        }
-    };
+// Quiz questions and branch profiles are defined in branch-data.js.
 
 let currentQuestion = 0;
 const userAnswers = [];
-const scores = { E: 0, I: 0, P: 0, R: 0, T: 0, C: 0, S: 0, D: 0 };
+const branchOrder = Object.keys(personalities);
+const scores = Object.fromEntries(branchOrder.map(code => [code, 0]));
+let lastRankedTypes = [];
 let autoAdvanceTimer = null;
 
 const form = document.getElementById("quiz-form");
@@ -455,6 +233,7 @@ const progress = document.getElementById("progress");
 const progressFill = document.getElementById("progress-fill");
 
 const CANONICAL_SITE_URL = 'https://comsa-quiz.vercel.app';
+const SHARE_ASSET_VERSION = '20260717-hd2';
 
 function getSiteBaseUrl() {
     const host = window.location.hostname;
@@ -481,48 +260,39 @@ function renderQuestion(index) {
         
         const qDiv = document.createElement("div");
         qDiv.className = "question";
-        qDiv.innerHTML = `<h3>${index + 1}. ${q.q}</h3>`;
-
-        const scaleContainer = document.createElement("div");
-        scaleContainer.className = "likert-container";
-        
-        const scaleLabels = document.createElement("div");
-        scaleLabels.className = "scale-labels";
-        scaleLabels.innerHTML = `
-            <span>Strongly Disagree</span>
-            <span>Disagree</span>
-            <span>Neutral</span>
-            <span>Agree</span>
-            <span>Strongly Agree</span>
+        qDiv.innerHTML = `
+            <span class="question-kind">${q.kind || 'LIKINGS & EXPERIENCE'}</span>
+            <h3>${index + 1}. ${q.q}</h3>
         `;
-        
-        const scaleOptions = document.createElement("div");
-        scaleOptions.className = "scale-options";
 
-        for (let i = 1; i <= 5; i++) {
+        const choicesContainer = document.createElement("div");
+        choicesContainer.className = "branch-choices";
+
+        q.options.forEach((answer, optionIndex) => {
             const option = document.createElement("div");
-            option.className = "scale-option";
-            
+            option.className = "branch-choice";
+
             const radio = document.createElement("input");
             radio.type = "radio";
             radio.name = `question_${index}`;
-            radio.value = i;
-            radio.id = `q${index}_${i}`;
-            
+            radio.value = optionIndex;
+            radio.id = `q${index}_${optionIndex}`;
+
             const label = document.createElement("label");
-            label.setAttribute("for", `q${index}_${i}`);
-            label.textContent = i;
-            
+            label.setAttribute("for", `q${index}_${optionIndex}`);
+            label.innerHTML = `
+                <span class="choice-letter">${String.fromCharCode(65 + optionIndex)}</span>
+                <span class="choice-text">${answer.text}</span>
+            `;
+
             option.appendChild(radio);
             option.appendChild(label);
-            
-            radio.addEventListener('change', () => selectOption(i, index));
-            scaleOptions.appendChild(option);
-        }
 
-        scaleContainer.appendChild(scaleLabels);
-        scaleContainer.appendChild(scaleOptions);
-        qDiv.appendChild(scaleContainer);
+            radio.addEventListener('change', () => selectOption(optionIndex, index));
+            choicesContainer.appendChild(option);
+        });
+
+        qDiv.appendChild(choicesContainer);
         container.appendChild(qDiv);
 
         // Show previously selected answer
@@ -530,7 +300,7 @@ function renderQuestion(index) {
             const selectedRadio = container.querySelector(`input[value="${userAnswers[index]}"]`);
             if (selectedRadio) {
                 selectedRadio.checked = true;
-                selectedRadio.parentElement.classList.add('selected');
+                selectedRadio.closest('.branch-choice').classList.add('selected');
             }
         }
 
@@ -550,7 +320,7 @@ function allQuestionsAnswered() {
 
 function selectOption(value, questionIndex) {
     // Remove previous selection styling
-    container.querySelectorAll('.scale-option').forEach(opt => {
+    container.querySelectorAll('.branch-choice').forEach(opt => {
         opt.classList.remove('selected');
     });
     
@@ -613,48 +383,31 @@ backBtn.addEventListener("click", () => {
 function calculateResult() {
     // Reset scores
     Object.keys(scores).forEach(key => scores[key] = 0);
-    
-    // Calculate scores based on answers
+    const primaryCounts = Object.fromEntries(branchOrder.map(code => [code, 0]));
+
+    // Every selected answer gives three points to its primary branch and
+    // one point to a closely related branch.
     questions.forEach((question, index) => {
-        const answer = userAnswers[index];
-        if (answer !== undefined) {
-            const score = answer - 3; // Convert 1-5 scale to -2 to +2
-            
-            if (question.type === 'E' || question.type === 'I') {
-                if (question.type === 'E') {
-                    scores.E += score;
-                } else {
-                    scores.I += score;
-                }
-            } else if (question.type === 'P' || question.type === 'R') {
-                if (question.type === 'P') {
-                    scores.P += score;
-                } else {
-                    scores.R += score;
-                }
-            } else if (question.type === 'T' || question.type === 'C') {
-                if (question.type === 'T') {
-                    scores.T += score;
-                } else {
-                    scores.C += score;
-                }
-            } else if (question.type === 'S' || question.type === 'D') {
-                if (question.type === 'S') {
-                    scores.S += score;
-                } else {
-                    scores.D += score;
-                }
-            }
+        const selectedIndex = userAnswers[index];
+        const selectedOption = question.options[selectedIndex];
+        if (!selectedOption) return;
+
+        scores[selectedOption.branch] += 3;
+        primaryCounts[selectedOption.branch] += 1;
+        if (selectedOption.related && scores[selectedOption.related] !== undefined) {
+            scores[selectedOption.related] += 1;
         }
     });
-    
-    // Determine personality type
-    const personality = (scores.E > scores.I ? 'E' : 'I') +
-                    (scores.P > scores.R ? 'P' : 'R') +
-                    (scores.T > scores.C ? 'T' : 'C') +
-                    (scores.S > scores.D ? 'S' : 'D');
-    
-    showResult(personality);
+
+    // Stable ordering makes ties deterministic: total score, primary choices,
+    // then the published branch order.
+    lastRankedTypes = [...branchOrder].sort((a, b) =>
+        scores[b] - scores[a] ||
+        primaryCounts[b] - primaryCounts[a] ||
+        branchOrder.indexOf(a) - branchOrder.indexOf(b)
+    );
+
+    showResult(lastRankedTypes[0], lastRankedTypes);
 }
 
 // ================================
@@ -835,7 +588,7 @@ function showUnderConstructionModal() {
 
 function shareToFacebook(personalityType) {
     // Always share the production URL so Facebook can scrape OG tags/thumbnail
-    const sharePageUrl = `${CANONICAL_SITE_URL}/share/${encodeURIComponent(personalityType)}.html`;
+    const sharePageUrl = `${CANONICAL_SITE_URL}/share/${encodeURIComponent(personalityType)}.html?v=${SHARE_ASSET_VERSION}`;
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`;
 
     window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=600,height=700');
@@ -895,7 +648,7 @@ function updateOGImageAndURL(personalityType) {
     // Image URL with cache busting
     const imageUrl = `${getSiteBaseUrl()}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
     
-    const title = `I'm ${result.name} - COMSA Developer Personality Test`;
+    const title = `${result.branch}: ${result.name} - COMSA CS Branch Quiz`;
     const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
 
     console.log(`🔄 Updating OG tags for ${personalityType}`);
@@ -917,7 +670,7 @@ function updateOGImageAndURL(personalityType) {
         addMetaTag('og:image:type', 'image/png');
         addMetaTag('og:url', newURL);
         addMetaTag('og:type', 'website');
-        addMetaTag('og:site_name', 'COMSA Developer Personality Test');
+        addMetaTag('og:site_name', 'COMSA Computer Science Branch Quiz');
         addMetaTag('og:updated_time', new Date().toISOString());
         
         // Facebook specific tags
@@ -1003,7 +756,7 @@ function showPersonalityGallery() {
                     font-size: 28px; 
                     font-weight: 700;
                     line-height: 1.2;
-                ">🎯 All COMSA Developer Personalities</h2>
+                ">All Computer Science Branches</h2>
                 
                 <p style="
                     text-align: center;
@@ -1011,7 +764,7 @@ function showPersonalityGallery() {
                     color: #5a6c7d; 
                     font-size: 16px; 
                     line-height: 1.6;
-                ">Discover all 16 unique developer personality types and their characteristics.</p>
+                ">Explore all 16 computer science branches and discover where your interests can take you.</p>
                 
                 <div style="
                     display: grid;
@@ -1044,7 +797,13 @@ function showPersonalityGallery() {
                                 font-weight: bold;
                                 margin: 0 auto 15px;
                                 backdrop-filter: blur(10px);
-                            ">${personality.code}</div>
+                                overflow: hidden;
+                            ">
+                                <img src="assets/thumbnails/${personality.code}-128.png"
+                                     alt="${personality.name}"
+                                     style="width: 100%; height: 100%; object-fit: contain;"
+                                     onerror="this.style.display='none'; this.parentElement.textContent='${personality.code}';">
+                            </div>
                             
                             <h3 style="
                                 margin: 0 0 10px;
@@ -1105,22 +864,36 @@ function showPersonalityGallery() {
 // ================================
 // MAIN RESULT DISPLAY FUNCTION
 // ================================
-function showResult(personalityType) {
+function showResult(personalityType, rankedTypes = []) {
     const result = personalities[personalityType];
     if (!result) return;
-    const compatibilityList = Array.isArray(result.compatibility) ? result.compatibility : [];
-    const shareUrl = `${getSiteBaseUrl()}/share/${encodeURIComponent(personalityType)}.html`;
+    const closestMatches = rankedTypes
+        .filter(type => type !== personalityType)
+        .slice(0, 3)
+        .map(type => ({
+            type,
+            relationship: `Quiz match: ${scores[type]} points`
+        }));
+    const compatibilityList = closestMatches.length
+        ? closestMatches
+        : (Array.isArray(result.compatibility) ? result.compatibility : []);
+    const shareUrl = `${getSiteBaseUrl()}/share/${encodeURIComponent(personalityType)}.html?v=${SHARE_ASSET_VERSION}`;
     
     // Update OG tags and URL before showing result
     updateOGImageAndURL(personalityType);
     
     document.getElementById("result").innerHTML = `
         <div class="result-container">
-            <div class="result-avatar" style="background: linear-gradient(45deg, ${result.color}, #4bc88b);">
-                <div class="personality-code">${result.code}</div>
+            <div class="result-avatar" style="background: linear-gradient(45deg, ${result.color}, #4bc88b); overflow: hidden;">
+                <img src="assets/thumbnails/${result.code}-128.png"
+                     alt="${result.name}"
+                     style="width: 100%; height: 100%; object-fit: contain;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="personality-code" style="display: none;">${result.code}</div>
             </div>
             
             <h2 class="result-title">${result.name}</h2>
+            <p class="result-branch">${result.branch}</p>
             <p class="result-subtitle">${result.desc}</p>
             <p class="result-description">${result.fullDesc}</p>
             
@@ -1134,7 +907,7 @@ function showResult(personalityType) {
             <!-- Compatible Personalities Section - 3 Column Layout -->
             ${compatibilityList.length ? `
                 <div class="compatible-section">
-                    <h3>Compatible Personalities:</h3>
+                    <h3>${closestMatches.length ? 'Your Closest CS Branches:' : 'Related CS Branches:'}</h3>
                     <div class="compatible-personalities-grid">
                         ${compatibilityList.map(comp => {
                             const compatiblePersonality = personalities[comp.type];
@@ -1169,7 +942,7 @@ function showResult(personalityType) {
                     📘 Share on Facebook
                 </button>
                 <button id="other-personality-btn" class="result-btn">
-                    🔄 Check Other Personalities
+                    🔄 Explore Other CS Branches
                 </button>
             </div>
             
@@ -1214,18 +987,19 @@ function setupModalButtons(personalityType, result) {
             currentQuestion = 0;
             userAnswers.length = 0;
             Object.keys(scores).forEach(key => scores[key] = 0);
+            lastRankedTypes = [];
             
             // Reset URL and OG tags to default
             const defaultURL = window.location.origin + window.location.pathname;
             if (window.history && window.history.pushState) {
                 window.history.pushState({}, '', defaultURL);
             }
-            document.title = "COMSA Developer Personality Test";
+            document.title = "COMSA Computer Science Branch Quiz";
             
             // Reset OG tags
             removeAllMetaTags();
-            addMetaTag('og:title', 'COMSA Developer Personality Test');
-            addMetaTag('og:description', 'Discover your coding personality!');
+            addMetaTag('og:title', 'COMSA Computer Science Branch Quiz');
+            addMetaTag('og:description', 'Discover the computer science specialization that fits you best.');
             addMetaTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
             addMetaTag('og:url', defaultURL);
             
@@ -1470,7 +1244,7 @@ async function createAndDownloadResult(personalityType, result) {
                         font-size: 1.8rem;
                         font-weight: 700;
                         text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                    ">Compatible Personalities:</h3>
+                    ">Related CS Branches:</h3>
                     <div style="
                         display: grid;
                         grid-template-columns: repeat(3, 1fr);
@@ -1552,10 +1326,10 @@ async function createAndDownloadResult(personalityType, result) {
                 ">          
                     <div style="margin-bottom: 10px;">
         <img src="assets/img/logo.png" alt="COMSA Logo" style="height: 60px; width: auto; vertical-align: middle; margin-right: 8px;">
-        COMSA Developer Personality Test
+        COMSA Computer Science Branch Quiz
     </div>
     <div style="font-size: 0.9rem; opacity: 0.6;">
-        Discover your unique coding personality
+        Discover your ideal computer science specialization
     </div>
                 </div>
             </div>
@@ -1585,7 +1359,7 @@ async function createAndDownloadResult(personalityType, result) {
             });
             
             const link = document.createElement('a');
-            link.download = `COMSA-${personalityCode}-Personality-${Date.now()}.png`;
+            link.download = `COMSA-${personalityCode}-CS-Branch-${Date.now()}.png`;
             link.href = canvas.toDataURL('image/png', 1.0);
             
             // Create a temporary click event
@@ -1879,219 +1653,39 @@ if (existingStyle) {
 // Add the updated styles to the existing style element
 shakeStyle.textContent += '\n' + updatedStyles;
 
-// Initialize everything when page loads
+// Initialize the quiz exactly once. Shared result URLs take precedence;
+// otherwise the visitor starts with a clean quiz state.
 document.addEventListener('DOMContentLoaded', function() {
     initializeDefaultOGTags();
-    
-    if (!checkURLParameters()) {
-        renderQuestion(currentQuestion);
-    }
-});
 
-// Close modal when clicking outside
-window.onclick = e => {
-    const modal = document.getElementById('result-modal');
-    if (e.target === modal && modal) {
-        modal.style.display = 'none';
-    }
-}; 
-// SOLUTION 1: Fix your existing window.onload function
-window.onload = function () {
-  // Reset variables
-  currentQuestion = 0;
-  userAnswers.length = 0;
-  Object.keys(scores).forEach(key => scores[key] = 0);
-
-  // Hide result modal if it's showing
-  const resultModal = document.getElementById('result-modal');
-  if (resultModal) {
-    resultModal.style.display = 'none';
-  }
-
-  // Reset URL to clean state (remove any query parameters)
-  if (window.history && window.history.pushState) {
-    const cleanURL = window.location.origin + window.location.pathname;
-    window.history.pushState({}, '', cleanURL);
-  }
-
-  // Reset document title
-  document.title = "COMSA Developer Personality Test";
-
-  // Reset OG tags to default
-  removeAllMetaTags();
-  addMetaTag('og:title', 'COMSA Developer Personality Test');
-  addMetaTag('og:description', 'Discover your coding personality!');
-  addMetaTag('og:image', `${window.location.origin}/assets/thumbnails/default.png`);
-  addMetaTag('og:url', window.location.origin + window.location.pathname);
-
-  // Show first question
-  renderQuestion(0);
-  
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-};
-
-// SOLUTION 2: Alternative using DOMContentLoaded (more reliable)
-document.addEventListener('DOMContentLoaded', function() {
-  // Only reset if there are no URL parameters (to preserve shared links)
-  const urlParams = new URLSearchParams(window.location.search);
-  const hasResultParam = urlParams.get('result');
-  
-  if (!hasResultParam) {
-    // Reset everything to initial state
     currentQuestion = 0;
     userAnswers.length = 0;
     Object.keys(scores).forEach(key => scores[key] = 0);
-    
-    // Hide any open modals
-    const resultModal = document.getElementById('result-modal');
-    if (resultModal) {
-      resultModal.style.display = 'none';
-    }
-    
-    // Initialize default OG tags
-    initializeDefaultOGTags();
-    
-    // Show first question
-    renderQuestion(0);
-  } else {
-    // If there's a result parameter, show that result instead
-    checkURLParameters();
-  }
-});
+    lastRankedTypes = [];
 
-// SOLUTION 3: Using beforeunload to detect refresh (optional)
-window.addEventListener('beforeunload', function() {
-  // Store a flag that indicates the page is being refreshed
-  sessionStorage.setItem('pageRefreshed', 'true');
-});
-
-window.addEventListener('load', function() {
-  // Check if page was refreshed
-  if (sessionStorage.getItem('pageRefreshed') === 'true') {
-    sessionStorage.removeItem('pageRefreshed');
-    
-    // Reset to start
-    resetToStart();
-  }
-});
-
-// SOLUTION 4: Complete reset function (recommended)
-function resetToStart() {
-  // Reset all quiz variables
-  currentQuestion = 0;
-  userAnswers.length = 0;
-  Object.keys(scores).forEach(key => scores[key] = 0);
-  
-  // Hide result modal
-  const resultModal = document.getElementById('result-modal');
-  if (resultModal) {
-    resultModal.style.display = 'none';
-  }
-  
-  // Clean URL
-  if (window.history && window.history.pushState) {
-    const cleanURL = window.location.origin + window.location.pathname;
-    window.history.pushState({}, '', cleanURL);
-  }
-  
-  // Reset document title
-  document.title = "COMSA Developer Personality Test";
-  
-  // Reset meta tags
-  removeAllMetaTags();
-  addMetaTag('og:title', 'COMSA Developer Personality Test');
-  addMetaTag('og:description', 'Discover your coding personality!');
-  
-  // Show first question
-  renderQuestion(0);
-  
-  // Scroll to top
-  window.scrollTo({ top: 0, behavior: 'instant' });
-  
-  console.log('🔄 Quiz reset to start');
-}
-
-// SOLUTION 5: Enhanced version that preserves shared links but resets manual refreshes
-document.addEventListener('DOMContentLoaded', function() {
-  initializeDefaultOGTags();
-  
-  // Check if this is a shared result link
-  const urlParams = new URLSearchParams(window.location.search);
-  const resultParam = urlParams.get('result');
-  
-  if (resultParam && personalities[resultParam]) {
-    // This is a shared result link - show the result
-    console.log(`📊 Showing shared result: ${resultParam}`);
-    showResult(resultParam);
-  } else {
-    // This is a fresh start or refresh - reset everything
-    resetToStart();
-  }
-});
-
-// SOLUTION 6: Detect if user manually refreshed vs navigated
-let isManualRefresh = false;
-
-// Detect manual refresh
-window.addEventListener('beforeunload', function() {
-  isManualRefresh = true;
-});
-
-// Handle page load
-window.addEventListener('load', function() {
-  if (isManualRefresh) {
-    // Manual refresh detected
-    resetToStart();
-  } else {
-    // Normal navigation - preserve state if needed
     const urlParams = new URLSearchParams(window.location.search);
-    if (!urlParams.get('result')) {
-      resetToStart();
+    const resultParam = urlParams.get('result');
+
+    if (resultParam && personalities[resultParam]) {
+        showResult(resultParam);
+    } else {
+        const resultModal = document.getElementById('result-modal');
+        if (resultModal) resultModal.style.display = 'none';
+
+        if (resultParam && window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+
+        renderQuestion(0);
     }
-  }
-  isManualRefresh = false;
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
 });
 
-// RECOMMENDED IMPLEMENTATION:
-// Replace your existing window.onload at the end of your file with this:
-
-window.addEventListener('load', function() {
-  // Reset quiz state
-  currentQuestion = 0;
-  userAnswers.length = 0;
-  Object.keys(scores).forEach(key => scores[key] = 0);
-  
-  // Hide any open modals
-  const resultModal = document.getElementById('result-modal');
-  if (resultModal) {
-    resultModal.style.display = 'none';
-  }
-  
-  // Check for shared result links
-  const urlParams = new URLSearchParams(window.location.search);
-  const resultParam = urlParams.get('result');
-  
-  if (resultParam && personalities[resultParam]) {
-    // Show shared result
-    showResult(resultParam);
-  } else {
-    // Clean URL and start fresh
-    if (window.history && window.history.pushState) {
-      const cleanURL = window.location.origin + window.location.pathname;
-      window.history.pushState({}, '', cleanURL);
+// Close the result modal only when its backdrop is clicked.
+window.addEventListener('click', event => {
+    const modal = document.getElementById('result-modal');
+    if (modal && event.target === modal) {
+        modal.style.display = 'none';
     }
-    
-    // Reset title and meta tags
-    document.title = "COMSA Developer Personality Test";
-    removeAllMetaTags();
-    addMetaTag('og:title', 'COMSA Developer Personality Test');
-    addMetaTag('og:description', 'Discover your coding personality!');
-    
-    // Show first question
-    renderQuestion(0);
-  }
-  
-  // Always scroll to top
-  window.scrollTo({ top: 0, behavior: 'instant' });
 });
