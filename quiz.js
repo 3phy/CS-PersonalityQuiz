@@ -5,7 +5,7 @@ function showPersonalityDetails(personalityCode) {
     
     const modal = document.createElement('div');
     modal.innerHTML = `
-        <div style="
+        <div class="personality-detail-modal-overlay" style="
             position: fixed;
             top: 0;
             left: 0;
@@ -22,12 +22,15 @@ function showPersonalityDetails(personalityCode) {
             overflow-y: auto;
             padding: 20px;
         ">
-            <div style="
-                background: linear-gradient(135deg, ${personality.color}, ${personality.color}dd);
+            <div class="personality-detail-modal-content" style="
+                background:
+                    linear-gradient(rgba(0,0,0,0.22), rgba(0,0,0,0.22)),
+                    linear-gradient(135deg, ${personality.color}, ${personality.color}dd);
                 padding: 40px 30px;
                 border-radius: 24px;
-                max-width: 800px;
+                max-width: 900px;
                 max-height: 95vh;
+                overflow-x: visible;
                 overflow-y: auto;
                 color: white;
                 box-shadow: 0 30px 80px rgba(0,0,0,0.4);
@@ -55,46 +58,19 @@ function showPersonalityDetails(personalityCode) {
                     z-index: 10002;
                 " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">×</button>
                 
-                <div style="
-                    width: 100px;
-                    height: 100px;
-                    background: rgba(255,255,255,0.2);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 24px;
-                    font-weight: bold;
-                    margin: 0 auto 30px;
-                    backdrop-filter: blur(10px);
-                ">
-                    <img src="assets/thumbnails/${personality.code}-128.png"
-                         alt="${personality.name}"
-                         style="width: 100%; height: 100%; object-fit: contain;"
-                         onerror="this.style.display='none'; this.parentElement.textContent='${personality.code}';">
+                <div class="personality-detail-hero">
+                    <div class="personality-detail-copy">
+                        <h2>${personality.name}</h2>
+                        <p class="personality-detail-branch">${personality.desc}</p>
+                        <p class="personality-detail-description">${personality.fullDesc}</p>
+                    </div>
+
+                    <div class="personality-detail-avatar">
+                        <img src="assets/thumbnails/${personality.code}-hd.png"
+                             alt="${personality.name}"
+                             onerror="this.onerror=null; this.src='assets/thumbnails/${personality.code}-512.png';">
+                    </div>
                 </div>
-                
-                <h2 style="
-                    margin: 0 0 15px; 
-                    font-size: 32px; 
-                    font-weight: 700;
-                    line-height: 1.2;
-                ">${personality.name}</h2>
-                
-                <p style="
-                    margin: 0 0 25px; 
-                    font-size: 18px; 
-                    opacity: 0.9;
-                    line-height: 1.4;
-                    font-weight: 500;
-                ">${personality.desc}</p>
-                
-                <p style="
-                    margin: 0 0 35px; 
-                    font-size: 16px; 
-                    line-height: 1.6; 
-                    opacity: 0.85;
-                ">${personality.fullDesc}</p>
                 
                 <div style="margin-bottom: 40px;">
                     <h3 style="
@@ -1009,18 +985,21 @@ function showResult(personalityType, rankedTypes = []) {
     
     document.getElementById("result").innerHTML = `
         <div class="result-container">
-            <div class="result-avatar" style="background: linear-gradient(45deg, ${result.color}, #4bc88b); overflow: hidden;">
-                <img src="assets/thumbnails/${result.code}-128.png"
-                     alt="${result.name}"
-                     style="width: 100%; height: 100%; object-fit: contain;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="personality-code" style="display: none;">${result.code}</div>
+            <div class="personality-detail-hero">
+                <div class="personality-detail-copy">
+                    <h2 class="result-title">${result.name}</h2>
+                    <p class="result-branch">${result.branch}</p>
+                    <p class="result-subtitle">${result.desc}</p>
+                    <p class="result-description">${result.fullDesc}</p>
+                </div>
+
+                <div class="personality-detail-avatar">
+                    <img src="assets/thumbnails/${result.code}-hd.png"
+                         alt="${result.name}"
+                         onerror="this.onerror=null; this.src='assets/thumbnails/${result.code}-512.png'; this.nextElementSibling.style.display='flex';">
+                    <div class="personality-code" style="display: none;">${result.code}</div>
+                </div>
             </div>
-            
-            <h2 class="result-title">${result.name}</h2>
-            <p class="result-branch">${result.branch}</p>
-            <p class="result-subtitle">${result.desc}</p>
-            <p class="result-description">${result.fullDesc}</p>
             
             <div class="traits-container">
                 <h3>Your Key Traits:</h3>
