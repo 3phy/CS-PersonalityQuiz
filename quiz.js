@@ -308,6 +308,7 @@ function renderCharacterStages() {
 
 function showIntroScreen() {
     renderCharacterStages();
+    if (introCharacterStage) introCharacterStage.style.display = 'block';
     renderOutcomePreviews();
     form.style.display = 'none';
     introScreen.style.display = 'block';
@@ -338,6 +339,7 @@ function startQuiz() {
         reviewMode = false;
 
         introScreen.style.display = 'none';
+        if (introCharacterStage) introCharacterStage.style.display = 'none';
         form.style.display = 'block';
         gameStartOverlay.classList.remove('is-active');
         gameStartOverlay.setAttribute('aria-hidden', 'true');
@@ -1114,6 +1116,7 @@ function setupModalButtons(personalityType, result) {
             lastRankedTypes = [];
             reviewMode = false;
             introScreen.style.display = 'none';
+            if (introCharacterStage) introCharacterStage.style.display = 'none';
             form.style.display = 'block';
             
             // Reset URL and OG tags to default

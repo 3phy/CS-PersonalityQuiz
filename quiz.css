@@ -45,6 +45,7 @@ body::before {
     max-width: 900px;
     margin: 0 auto;
     position: relative;
+    z-index: 1;
 }
 
 .logo-container {
@@ -960,7 +961,7 @@ h1 {
     grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
     align-items: center;
     gap: 2rem;
-    min-height: 520px;
+    min-height: 250px;
     margin-bottom: 1.25rem;
     padding: 2rem;
     overflow: hidden;
@@ -1089,15 +1090,26 @@ h1 {
 }
 
 .cover-character-stage {
+    position: fixed;
     z-index: 0;
+    inset: 0;
 }
 
 .cover-character-stage .stage-row-back {
-    opacity: 0.66;
+    bottom: 17vh;
+    width: min(1500px, 116vw);
+    opacity: 0.72;
 }
 
 .cover-character-stage .stage-row-front {
-    opacity: 0.9;
+    bottom: -3vh;
+    width: min(1580px, 120vw);
+    opacity: 0.94;
+}
+
+.cover-character-stage .stage-character {
+    flex-basis: clamp(125px, 14vw, 210px);
+    margin-inline: clamp(-30px, -2.4vw, -14px);
 }
 
 .cover-character-stage .stage-character {
@@ -1459,7 +1471,7 @@ h1 {
 @media (max-width: 600px) {
     .intro-hero {
         grid-template-columns: 1fr;
-        min-height: 610px;
+        min-height: 390px;
         padding: 1.4rem;
         text-align: center;
     }
@@ -1479,6 +1491,21 @@ h1 {
     .stage-character {
         flex-basis: clamp(68px, 22vw, 100px);
         margin-inline: -16px;
+    }
+
+    .cover-character-stage .stage-row-back {
+        bottom: 19vh;
+        width: 165vw;
+    }
+
+    .cover-character-stage .stage-row-front {
+        bottom: -1vh;
+        width: 175vw;
+    }
+
+    .cover-character-stage .stage-character {
+        flex-basis: clamp(88px, 27vw, 128px);
+        margin-inline: -19px;
     }
 
     .loading-character-stage .character-stage-row {
