@@ -282,17 +282,18 @@ function renderCharacterStages() {
 
     const cast = Object.values(personalities);
     const rows = [
-        { className: 'stage-row-back', characters: cast.slice(0, 8) },
-        { className: 'stage-row-front', characters: cast.slice(8) }
+        { className: 'stage-row-back', startIndex: 0, characters: cast.slice(0, 5) },
+        { className: 'stage-row-middle', startIndex: 5, characters: cast.slice(5, 11) },
+        { className: 'stage-row-front', startIndex: 11, characters: cast.slice(11) }
     ];
 
-    const stageMarkup = rows.map((row, rowIndex) => `
+    const stageMarkup = rows.map(row => `
         <div class="character-stage-row ${row.className}">
             ${row.characters.map((personality, characterIndex) => {
-                const castIndex = (rowIndex * 8) + characterIndex;
+                const castIndex = row.startIndex + characterIndex;
                 return `
                     <span class="stage-character" style="--cast-index: ${castIndex}; --cast-color: ${personality.color};">
-                        <img src="assets/thumbnails/${personality.code}-128.png?v=${SHARE_ASSET_VERSION}"
+                        <img src="assets/thumbnails/${personality.code}-hd.png?v=20260717-stage4"
                              alt=""
                              draggable="false">
                     </span>
