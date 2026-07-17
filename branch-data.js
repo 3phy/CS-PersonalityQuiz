@@ -1,242 +1,242 @@
 const questions = [
     {
-        kind: "LIKINGS",
-        q: "Kapag pumipili ka ng personal project, alin ang pinaka-gusto mong buuin kahit walang grade?",
+        kind: "INTERESTS",
+        q: "If you could build your first big project with a mentor, which idea sounds most exciting?",
         options: [
-            { text: "A scalable platform na kayang lumaki with thousands of users", branch: "SWEN", related: "CLUD" },
-            { text: "A polished website na mabilis, responsive, at madaling gamitin", branch: "WEB", related: "UIUX" },
-            { text: "A mobile app na useful kahit nasaan ang user", branch: "MOBI", related: "UIUX" },
-            { text: "An immersive game world with its own mechanics and story", branch: "GAME", related: "CGXR" }
+            { text: "A well-organized software system with many features working together", branch: "SWEN", related: "CLUD" },
+            { text: "A website people can open and use in any browser", branch: "WEB", related: "UIUX" },
+            { text: "A phone app that helps with everyday tasks", branch: "MOBI", related: "UIUX" },
+            { text: "A game with characters, rules, and levels", branch: "GAME", related: "CGXR" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Sa mga data task na na-try o napanood mo, alin ang pinaka-na-enjoy mong gawin?",
+        kind: "PREFERENCES",
+        q: "Given a collection of school information, what would you be most curious to do with it?",
         options: [
-            { text: "Train a model that can predict what happens next", branch: "AIML", related: "DATA" },
-            { text: "Find patterns and explain them through visualizations", branch: "DATA", related: "DBEN" },
-            { text: "Design a reliable structure for storing and querying everything", branch: "DBEN", related: "SWEN" },
-            { text: "Create a faster algorithm for processing the data", branch: "ALGO", related: "AIML" }
+            { text: "Teach a computer to make a useful prediction from it", branch: "AIML", related: "DATA" },
+            { text: "Discover trends and explain them with clear charts", branch: "DATA", related: "DBEN" },
+            { text: "Organize it so people can find accurate information quickly", branch: "DBEN", related: "SWEN" },
+            { text: "Find the fastest step-by-step way to solve a related puzzle", branch: "ALGO", related: "AIML" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Kapag may mabagal o sirang online system, anong investigation ang natural mong inuuna?",
+        kind: "INTERESTS",
+        q: "When you use an online service, which behind-the-scenes question interests you most?",
         options: [
-            { text: "Check whether an attacker or suspicious request caused it", branch: "CYBR", related: "NETW" },
-            { text: "Inspect cloud resources and scale the infrastructure", branch: "CLUD", related: "DVOP" },
-            { text: "Trace the deployment pipeline, logs, and monitoring alerts", branch: "DVOP", related: "CLUD" },
-            { text: "Analyze packets, routes, and connection bottlenecks", branch: "NETW", related: "CYBR" }
+            { text: "How are accounts and personal information protected?", branch: "CYBR", related: "NETW" },
+            { text: "How does it stay online when many people use it at once?", branch: "CLUD", related: "DVOP" },
+            { text: "How are updates tested and released without breaking anything?", branch: "DVOP", related: "CLUD" },
+            { text: "How do messages travel between phones, computers, and servers?", branch: "NETW", related: "CYBR" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Sa innovation fair, aling demo ang kusang nakaka-curious sa iyo?",
+        kind: "PREFERENCES",
+        q: "At a technology fair, which demonstration would you visit first?",
         options: [
-            { text: "A prototype with an incredibly intuitive user experience", branch: "UIUX", related: "WEB" },
-            { text: "Smart sensors controlling appliances around a room", branch: "IOT", related: "NETW" },
-            { text: "A robot that can navigate and perform tasks by itself", branch: "ROBO", related: "AIML" },
-            { text: "A realistic AR world with interactive 3D objects", branch: "CGXR", related: "GAME" }
+            { text: "An app that feels simple and enjoyable for anyone to use", branch: "UIUX", related: "WEB" },
+            { text: "Small sensors controlling lights and appliances", branch: "IOT", related: "NETW" },
+            { text: "A robot that can move and complete a task", branch: "ROBO", related: "AIML" },
+            { text: "A virtual or augmented reality world you can explore", branch: "CGXR", related: "GAME" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Kapag may mysterious bug, aling problem-solving style ang madalas mong gamitin?",
+        kind: "INTERESTS",
+        q: "When an app has a problem, which question would you naturally ask first?",
         options: [
-            { text: "Map the whole architecture and isolate the failing component", branch: "SWEN", related: "DVOP" },
-            { text: "Use the logs as training signals to detect the hidden pattern", branch: "AIML", related: "DATA" },
-            { text: "Think like an attacker and test every trust boundary", branch: "CYBR", related: "SWEN" },
-            { text: "Replay the exact user journey and find where the experience breaks", branch: "UIUX", related: "WEB" }
+            { text: "Which part of the system is causing the other parts to fail?", branch: "SWEN", related: "DVOP" },
+            { text: "Could a computer learn to recognize when this problem happens?", branch: "AIML", related: "DATA" },
+            { text: "Could someone be misusing the app or accessing it unfairly?", branch: "CYBR", related: "SWEN" },
+            { text: "At what point does the user become confused or stuck?", branch: "UIUX", related: "WEB" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Kung gagawa ng campus information system, aling part ang pinaka-gusto mong hawakan?",
+        kind: "PREFERENCES",
+        q: "For a smart campus project, which part would you volunteer to explore?",
         options: [
-            { text: "Build the public-facing site and interactive pages", branch: "WEB", related: "UIUX" },
-            { text: "Turn member activity into useful reports and insights", branch: "DATA", related: "DBEN" },
-            { text: "Host it reliably so traffic spikes never take it down", branch: "CLUD", related: "DVOP" },
-            { text: "Connect attendance scanners and smart devices to the system", branch: "IOT", related: "NETW" }
+            { text: "Create the website students would visit", branch: "WEB", related: "UIUX" },
+            { text: "Study student activity and turn it into useful insights", branch: "DATA", related: "DBEN" },
+            { text: "Keep the project available online even during busy hours", branch: "CLUD", related: "DVOP" },
+            { text: "Connect attendance scanners, sensors, or smart devices", branch: "IOT", related: "NETW" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Sa past project mo, aling production task ang pinaka-komportable kang gawin?",
+        kind: "INTERESTS",
+        q: "Which beginner task would feel most satisfying to complete?",
         options: [
-            { text: "Optimize battery, gestures, and performance on phones", branch: "MOBI", related: "UIUX" },
-            { text: "Normalize the records and speed up slow queries", branch: "DBEN", related: "DATA" },
-            { text: "Automate testing, builds, releases, and rollback", branch: "DVOP", related: "SWEN" },
-            { text: "Program the physical mechanism to move accurately", branch: "ROBO", related: "IOT" }
+            { text: "Make a phone app smoother and easier to use", branch: "MOBI", related: "UIUX" },
+            { text: "Arrange a messy list of records into a clear system", branch: "DBEN", related: "DATA" },
+            { text: "Automate repeated steps whenever code is updated", branch: "DVOP", related: "SWEN" },
+            { text: "Program a simple machine to move accurately", branch: "ROBO", related: "IOT" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Sa overnight hackathon, aling challenge ang pipiliin mo dahil genuinely fun ito para sa iyo?",
+        kind: "PREFERENCES",
+        q: "At a coding club activity, which challenge station would you choose?",
         options: [
-            { text: "Create a fun playable level before sunrise", branch: "GAME", related: "CGXR" },
-            { text: "Solve the hardest optimization puzzle on the board", branch: "ALGO", related: "AIML" },
-            { text: "Build a resilient network for devices in different rooms", branch: "NETW", related: "IOT" },
-            { text: "Make a visually impressive real-time 3D experience", branch: "CGXR", related: "GAME" }
+            { text: "Build a small playable game", branch: "GAME", related: "CGXR" },
+            { text: "Solve a difficult logic and strategy puzzle", branch: "ALGO", related: "AIML" },
+            { text: "Connect several devices so they can communicate", branch: "NETW", related: "IOT" },
+            { text: "Create an impressive interactive 3D scene", branch: "CGXR", related: "GAME" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Batay sa strengths na naipakita mo sa school projects, saan ka pinaka-fit sa student portal?",
+        kind: "INTERESTS",
+        q: "Which role would you most like to learn in a student portal project?",
         options: [
-            { text: "Design clean modules that remain maintainable for years", branch: "SWEN", related: "DBEN" },
-            { text: "Study usage trends and discover where students struggle", branch: "DATA", related: "UIUX" },
-            { text: "Create health checks and automatic recovery for every service", branch: "DVOP", related: "CLUD" },
-            { text: "Build an interactive 3D campus map", branch: "CGXR", related: "WEB" }
+            { text: "Plan how all the features and code should fit together", branch: "SWEN", related: "DBEN" },
+            { text: "Study how students use the portal and where they struggle", branch: "DATA", related: "UIUX" },
+            { text: "Watch for errors and help the portal recover quickly", branch: "DVOP", related: "CLUD" },
+            { text: "Create an interactive 3D map of the campus", branch: "CGXR", related: "WEB" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Kapag gumagana locally pero pumapalya remotely, ano ang una mong chine-check?",
+        kind: "PREFERENCES",
+        q: "Which technology mystery sounds most interesting to investigate?",
         options: [
-            { text: "Browser behavior, API calls, and frontend errors", branch: "WEB", related: "SWEN" },
-            { text: "Connection pools, indexes, and database locks", branch: "DBEN", related: "DVOP" },
-            { text: "DNS, routing, ports, and packet flow", branch: "NETW", related: "CYBR" },
-            { text: "Sensor calibration and the machine's control loop", branch: "ROBO", related: "IOT" }
+            { text: "Why a button or page on a website does not work", branch: "WEB", related: "SWEN" },
+            { text: "Why saved information is slow, missing, or duplicated", branch: "DBEN", related: "DVOP" },
+            { text: "Why two devices cannot connect or exchange messages", branch: "NETW", related: "CYBR" },
+            { text: "Why a robot moves in the wrong direction", branch: "ROBO", related: "IOT" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Kung bubuo ka ng digital campus assistant, aling core feature ang pinaka-exciting sa iyo?",
+        kind: "INTERESTS",
+        q: "If you could add one feature to a digital campus assistant, which would you choose?",
         options: [
-            { text: "A smooth mobile experience with useful notifications", branch: "MOBI", related: "UIUX" },
-            { text: "A conversational assistant that learns what users need", branch: "AIML", related: "DATA" },
-            { text: "A backend that automatically scales during enrollment", branch: "CLUD", related: "DVOP" },
-            { text: "A flow so simple that first-time users never get lost", branch: "UIUX", related: "MOBI" }
+            { text: "A helpful mobile app with timely notifications", branch: "MOBI", related: "UIUX" },
+            { text: "An assistant that understands questions and learns what students need", branch: "AIML", related: "DATA" },
+            { text: "A service that stays fast even during enrollment", branch: "CLUD", related: "DVOP" },
+            { text: "A clear design that new students understand immediately", branch: "UIUX", related: "MOBI" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Aling technical challenge ang kaya mong gawin nang matagal dahil nae-enjoy mo ito?",
+        kind: "PREFERENCES",
+        q: "Which topic would you most likely watch a beginner tutorial about?",
         options: [
-            { text: "Balance difficulty, rewards, and player progression", branch: "GAME", related: "DATA" },
-            { text: "Find and exploit a vulnerability before anyone else does", branch: "CYBR", related: "NETW" },
-            { text: "Make tiny devices communicate using limited power", branch: "IOT", related: "NETW" },
-            { text: "Prove why a solution is correct and efficient", branch: "ALGO", related: "SWEN" }
+            { text: "How games create challenges, rewards, and player progress", branch: "GAME", related: "DATA" },
+            { text: "How ethical hackers find weaknesses and protect systems", branch: "CYBR", related: "NETW" },
+            { text: "How tiny devices sense and respond to the real world", branch: "IOT", related: "NETW" },
+            { text: "How to solve a problem using fewer and smarter steps", branch: "ALGO", related: "SWEN" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Sa mga group project mo, anong responsibility ang madalas mong inaako o mahusay mong nagagawa?",
+        kind: "INTERESTS",
+        q: "In a first-year group project, which role would you be most willing to try?",
         options: [
-            { text: "Define the architecture and coding standards", branch: "SWEN", related: "DVOP" },
-            { text: "Own the data model, integrity rules, and backup plan", branch: "DBEN", related: "DATA" },
-            { text: "Prepare secure cloud environments for every stage", branch: "CLUD", related: "CYBR" },
-            { text: "Integrate motors, sensors, and control software", branch: "ROBO", related: "IOT" }
+            { text: "Plan the program's main parts and keep the code organized", branch: "SWEN", related: "DVOP" },
+            { text: "Decide how the project's information should be stored", branch: "DBEN", related: "DATA" },
+            { text: "Help put the project online so teammates can access it", branch: "CLUD", related: "CYBR" },
+            { text: "Connect simple motors, sensors, and controls", branch: "ROBO", related: "IOT" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Sa open-ended innovation contest, anong demo ang gusto mong ipakita?",
+        kind: "PREFERENCES",
+        q: "For a beginner innovation showcase, which project would you most like to present?",
         options: [
-            { text: "A web experience people can instantly try and share", branch: "WEB", related: "UIUX" },
-            { text: "An intelligent tool that adapts to each user", branch: "AIML", related: "DATA" },
-            { text: "A one-click pipeline that safely ships every update", branch: "DVOP", related: "CLUD" },
-            { text: "A virtual environment that feels physically real", branch: "CGXR", related: "GAME" }
+            { text: "A useful web experience anyone can open and share", branch: "WEB", related: "UIUX" },
+            { text: "A smart tool that changes its response for each user", branch: "AIML", related: "DATA" },
+            { text: "A project that can test and publish updates automatically", branch: "DVOP", related: "CLUD" },
+            { text: "A virtual environment that feels exciting to explore", branch: "CGXR", related: "GAME" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Kapag may sensitive information ang app, saan ka karaniwang pinaka-maingat?",
+        kind: "INTERESTS",
+        q: "Imagine your class is creating a simple health app. Which part interests you most?",
         options: [
-            { text: "Secure local storage and permissions on the phone", branch: "MOBI", related: "CYBR" },
-            { text: "Use anonymized information to discover health trends", branch: "DATA", related: "AIML" },
-            { text: "Threat-model every entry point and encrypt the data", branch: "CYBR", related: "DBEN" },
-            { text: "Create reliable, private communication between facilities", branch: "NETW", related: "CYBR" }
+            { text: "Make it useful and reliable on a phone", branch: "MOBI", related: "CYBR" },
+            { text: "Use anonymous information to discover health trends", branch: "DATA", related: "AIML" },
+            { text: "Protect private information from people who should not see it", branch: "CYBR", related: "DBEN" },
+            { text: "Help clinics exchange information through reliable connections", branch: "NETW", related: "CYBR" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Kung libre mong mami-master ang isang difficult elective, ano ang pipiliin mo?",
+        kind: "PREFERENCES",
+        q: "If you could try one introductory elective, which would you choose?",
         options: [
-            { text: "Game engines, physics, and interactive storytelling", branch: "GAME", related: "CGXR" },
-            { text: "Human-computer interaction and product design", branch: "UIUX", related: "WEB" },
-            { text: "Embedded programming and real-time electronics", branch: "IOT", related: "ROBO" },
-            { text: "Advanced algorithms and computational complexity", branch: "ALGO", related: "AIML" }
+            { text: "Game design, game engines, and interactive stories", branch: "GAME", related: "CGXR" },
+            { text: "User research, interface design, and accessibility", branch: "UIUX", related: "WEB" },
+            { text: "Microcontrollers, sensors, and simple electronics", branch: "IOT", related: "ROBO" },
+            { text: "Logic, problem solving, and efficient solutions", branch: "ALGO", related: "AIML" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Aling klase ng prototype problem ang pinaka-confident kang i-troubleshoot?",
+        kind: "INTERESTS",
+        q: "Which type of problem would make you curious instead of frustrated?",
         options: [
-            { text: "A race condition hidden across multiple modules", branch: "SWEN", related: "DVOP" },
-            { text: "An unauthorized device secretly accessing the system", branch: "CYBR", related: "NETW" },
-            { text: "A sensor sending noisy readings at random times", branch: "IOT", related: "ROBO" },
-            { text: "A game mechanic that players keep exploiting", branch: "GAME", related: "DATA" }
+            { text: "Two program features interfere with each other", branch: "SWEN", related: "DVOP" },
+            { text: "A suspicious login appears in a student account", branch: "CYBR", related: "NETW" },
+            { text: "A sensor keeps giving inaccurate readings", branch: "IOT", related: "ROBO" },
+            { text: "Players find an unfair shortcut in a game", branch: "GAME", related: "DATA" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Sa nationwide education project, aling contribution ang pinaka-meaningful para sa iyo?",
+        kind: "PREFERENCES",
+        q: "For a nationwide education project, which contribution sounds most meaningful to you?",
         options: [
-            { text: "Build accessible learning pages for any browser", branch: "WEB", related: "UIUX" },
-            { text: "Design regional cloud infrastructure that stays available", branch: "CLUD", related: "NETW" },
-            { text: "Create assistive robots for hands-on learning", branch: "ROBO", related: "AIML" },
-            { text: "Measure learning outcomes and recommend improvements", branch: "DATA", related: "AIML" }
+            { text: "Build learning pages that work in any browser", branch: "WEB", related: "UIUX" },
+            { text: "Keep online lessons available to students in many regions", branch: "CLUD", related: "NETW" },
+            { text: "Create simple assistive robots for hands-on learning", branch: "ROBO", related: "AIML" },
+            { text: "Study learning results and suggest improvements", branch: "DATA", related: "AIML" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Sa mga repetitive task na naranasan mo, alin ang una mong gustong i-automate?",
+        kind: "INTERESTS",
+        q: "Which repeated activity would you most like a computer to handle for you?",
         options: [
-            { text: "Syncing information and workflows across mobile devices", branch: "MOBI", related: "CLUD" },
-            { text: "Building, testing, and releasing every code change", branch: "DVOP", related: "SWEN" },
-            { text: "Generating and optimizing complex 3D scenes", branch: "CGXR", related: "GAME" },
-            { text: "Finding the fastest solution among millions of possibilities", branch: "ALGO", related: "AIML" }
+            { text: "Keep information updated across several phones", branch: "MOBI", related: "CLUD" },
+            { text: "Check and publish every new code change", branch: "DVOP", related: "SWEN" },
+            { text: "Create and arrange many objects in a 3D scene", branch: "CGXR", related: "GAME" },
+            { text: "Compare many choices and find the best one", branch: "ALGO", related: "AIML" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Kapag nagpapaliwanag ka ng complicated system, aling paraan ang madalas mong gamitin?",
+        kind: "PREFERENCES",
+        q: "Which learning style would help you understand a complicated technology?",
         options: [
-            { text: "Let an intelligent assistant adapt the explanation", branch: "AIML", related: "UIUX" },
-            { text: "Turn it into a clear visual flow with helpful interactions", branch: "UIUX", related: "WEB" },
-            { text: "Show how information is organized and connected", branch: "DBEN", related: "DATA" },
-            { text: "Draw how every device and message travels through the network", branch: "NETW", related: "IOT" }
+            { text: "An intelligent helper that adjusts explanations to my questions", branch: "AIML", related: "UIUX" },
+            { text: "A clear visual guide I can click through step by step", branch: "UIUX", related: "WEB" },
+            { text: "A neatly organized set of topics and examples", branch: "DBEN", related: "DATA" },
+            { text: "A map showing how every device and message is connected", branch: "NETW", related: "IOT" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Aling internship description ang babasahin mo at mapapasabing “gusto ko ito”?",
+        kind: "INTERESTS",
+        q: "Which beginner internship poster would catch your attention first?",
         options: [
-            { text: "Design robust services used by millions of people", branch: "SWEN", related: "CLUD" },
-            { text: "Research users and shape a product they will love", branch: "UIUX", related: "WEB" },
-            { text: "Build and protect high-speed communication systems", branch: "NETW", related: "CYBR" },
-            { text: "Develop models that learn from real-world behavior", branch: "AIML", related: "DATA" }
+            { text: "Learn to build dependable software used by many people", branch: "SWEN", related: "CLUD" },
+            { text: "Learn what users need and design a product for them", branch: "UIUX", related: "WEB" },
+            { text: "Learn how computers connect and communicate securely", branch: "NETW", related: "CYBR" },
+            { text: "Learn how computers recognize patterns and make predictions", branch: "AIML", related: "DATA" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Kapag may free weekend ka, anong topic ang kusa mong pinag-aaralan?",
+        kind: "PREFERENCES",
+        q: "You have a free weekend and a beginner kit. Which would you open first?",
         options: [
-            { text: "A modern web framework and browser APIs", branch: "WEB", related: "SWEN" },
-            { text: "A microcontroller kit with sensors and wireless modules", branch: "IOT", related: "ROBO" },
-            { text: "A course on graph theory and optimization", branch: "ALGO", related: "AIML" },
-            { text: "A capture-the-flag cybersecurity challenge", branch: "CYBR", related: "NETW" }
+            { text: "A guide for building my first interactive website", branch: "WEB", related: "SWEN" },
+            { text: "A small electronics kit with sensors and lights", branch: "IOT", related: "ROBO" },
+            { text: "A book of logic puzzles and problem-solving strategies", branch: "ALGO", related: "AIML" },
+            { text: "A safe ethical-hacking challenge for beginners", branch: "CYBR", related: "NETW" }
         ]
     },
     {
-        kind: "EXPERIENCE",
-        q: "Batay sa skills na na-build mo na, anong community capstone ang kaya mong simulan ngayon?",
+        kind: "INTERESTS",
+        q: "Which beginner-friendly community project would you most like to help create?",
         options: [
-            { text: "A mobile service that works even with weak connectivity", branch: "MOBI", related: "NETW" },
-            { text: "A robot that assists with repetitive physical work", branch: "ROBO", related: "IOT" },
-            { text: "A decision dashboard built from community data", branch: "DATA", related: "DBEN" },
-            { text: "A continuously deployed platform with near-zero downtime", branch: "DVOP", related: "CLUD" }
+            { text: "A mobile guide that works even with a weak signal", branch: "MOBI", related: "NETW" },
+            { text: "A small robot that helps with a repeated physical task", branch: "ROBO", related: "IOT" },
+            { text: "A dashboard that explains community survey results", branch: "DATA", related: "DBEN" },
+            { text: "An online service that stays available and updates safely", branch: "DVOP", related: "CLUD" }
         ]
     },
     {
-        kind: "LIKINGS",
-        q: "Sa mga output na nagawa o nakita mo, alin ang nagbibigay sa iyo ng pinakamalaking satisfaction?",
+        kind: "PREFERENCES",
+        q: "At the end of your first major project, which result would make you proudest?",
         options: [
-            { text: "People are genuinely having fun in a world you created", branch: "GAME", related: "CGXR" },
-            { text: "The visuals and interactions make the impossible feel real", branch: "CGXR", related: "UIUX" },
-            { text: "Every record is accurate, fast, and recoverable", branch: "DBEN", related: "SWEN" },
-            { text: "The service stays fast and available under huge demand", branch: "CLUD", related: "DVOP" }
+            { text: "People have fun playing a world I helped create", branch: "GAME", related: "CGXR" },
+            { text: "People are amazed by an interactive 3D experience", branch: "CGXR", related: "UIUX" },
+            { text: "Everyone can find correct information quickly", branch: "DBEN", related: "SWEN" },
+            { text: "The project stays fast and available when many people use it", branch: "CLUD", related: "DVOP" }
         ]
     }
 ];
@@ -246,7 +246,7 @@ const personalities = {
         code: "SWEN",
         branch: "Software Engineering",
         name: "The System Architect",
-        desc: "Software Engineering • Architecture • Scalable Systems",
+        desc: "Architecture • Scalable Systems • Reliable Software",
         fullDesc: "You naturally see how features, modules, and people fit into one dependable system. You enjoy turning messy requirements into maintainable software that can evolve for years.",
         traits: ["System thinker", "Clean-code builder", "Architecture minded", "Long-term planner"],
         color: "#ff6b35",
@@ -260,7 +260,7 @@ const personalities = {
         code: "WEB",
         branch: "Web Development",
         name: "The Web Weaver",
-        desc: "Web Development • Browser Technology • Interactive Products",
+        desc: "Browser Technology • Responsive Interfaces • Full-Stack Products",
         fullDesc: "You like building experiences people can open, use, and share instantly. From polished interfaces to powerful APIs, you connect design and engineering through the web.",
         traits: ["Fast prototyper", "Browser savvy", "Full-stack curious", "User focused"],
         color: "#4ecdc4",
@@ -274,7 +274,7 @@ const personalities = {
         code: "MOBI",
         branch: "Mobile Development",
         name: "The Pocket App Builder",
-        desc: "Mobile Development • Device APIs • Everyday Experiences",
+        desc: "Device APIs • Mobile Experiences • On-the-Go Products",
         fullDesc: "You want useful technology to travel with the user. You care about smooth gestures, efficient performance, thoughtful notifications, and apps that feel native to real life.",
         traits: ["Device minded", "Experience driven", "Performance aware", "Practical creator"],
         color: "#45b7d1",
@@ -288,7 +288,7 @@ const personalities = {
         code: "AIML",
         branch: "AI and Machine Learning",
         name: "The Machine Whisperer",
-        desc: "AI and Machine Learning • Intelligent Systems • Prediction",
+        desc: "Intelligent Systems • Prediction • Learning Models",
         fullDesc: "You are fascinated by systems that learn instead of following only fixed rules. You enjoy experimenting with models, features, and feedback until machines reveal useful behavior.",
         traits: ["Experimental thinker", "Model builder", "Pattern learner", "Future focused"],
         color: "#96ceb4",
@@ -302,7 +302,7 @@ const personalities = {
         code: "DATA",
         branch: "Data Science",
         name: "The Pattern Seeker",
-        desc: "Data Science • Analytics • Evidence-Based Decisions",
+        desc: "Analytics • Visualization • Evidence-Based Decisions",
         fullDesc: "You turn raw information into stories, explanations, and decisions. You enjoy asking the right questions, testing assumptions, and making hidden patterns understandable.",
         traits: ["Analytical", "Evidence driven", "Insight hunter", "Visual storyteller"],
         color: "#feca57",
@@ -316,7 +316,7 @@ const personalities = {
         code: "CYBR",
         branch: "Cybersecurity",
         name: "The Digital Guardian",
-        desc: "Cybersecurity • Ethical Hacking • Digital Defense",
+        desc: "Ethical Hacking • Threat Defense • Digital Trust",
         fullDesc: "You instinctively ask what could go wrong and how to prevent it. You enjoy thinking like an attacker, protecting trust boundaries, and making systems resilient against real threats.",
         traits: ["Threat hunter", "Trust skeptic", "Detail vigilant", "Defense minded"],
         color: "#ff9ff3",
@@ -330,7 +330,7 @@ const personalities = {
         code: "CLUD",
         branch: "Cloud Computing",
         name: "The Cloud Commander",
-        desc: "Cloud Computing • Distributed Systems • Scalability",
+        desc: "Distributed Systems • Scalability • Cloud Infrastructure",
         fullDesc: "You think beyond one machine. You enjoy designing elastic services, balancing reliability and cost, and keeping systems available even when demand suddenly explodes.",
         traits: ["Scale strategist", "Reliability minded", "Distributed thinker", "Resource optimizer"],
         color: "#54a0ff",
@@ -344,7 +344,7 @@ const personalities = {
         code: "DVOP",
         branch: "DevOps and Site Reliability",
         name: "The Pipeline Master",
-        desc: "DevOps and SRE • Automation • Reliable Delivery",
+        desc: "Automation • Observability • Reliable Delivery",
         fullDesc: "You remove friction between code and production. You enjoy automating repetitive work, observing live systems, and designing recovery paths before failures happen.",
         traits: ["Automation first", "Calm under pressure", "Observability focused", "Continuous improver"],
         color: "#5f27cd",
@@ -358,7 +358,7 @@ const personalities = {
         code: "GAME",
         branch: "Game Development",
         name: "The World Builder",
-        desc: "Game Development • Interactive Systems • Play",
+        desc: "Interactive Systems • Gameplay • Digital Worlds",
         fullDesc: "You combine code, art, rules, and emotion to create experiences people want to explore. You care about responsive mechanics, satisfying feedback, and memorable worlds.",
         traits: ["Playful designer", "Systems creative", "Iteration driven", "Story minded"],
         color: "#00d2d3",
@@ -372,7 +372,7 @@ const personalities = {
         code: "UIUX",
         branch: "UI and UX Design",
         name: "The Experience Designer",
-        desc: "UI/UX Design • Human-Computer Interaction • Product Thinking",
+        desc: "Human-Computer Interaction • Product Design • Accessibility",
         fullDesc: "You notice where people hesitate, get confused, or feel delighted. You translate research and empathy into clear flows, beautiful interfaces, and inclusive digital experiences.",
         traits: ["Empathetic", "Visual communicator", "Flow obsessed", "Accessibility aware"],
         color: "#ff9f43",
@@ -386,7 +386,7 @@ const personalities = {
         code: "DBEN",
         branch: "Database Engineering",
         name: "The Data Keeper",
-        desc: "Database Engineering • Data Integrity • Query Performance",
+        desc: "Data Integrity • Query Performance • Reliable Storage",
         fullDesc: "You like information to be organized, accurate, fast, and recoverable. You think carefully about schemas, constraints, indexes, and the long life of important data.",
         traits: ["Structured thinker", "Integrity guardian", "Query optimizer", "Consistency focused"],
         color: "#ee5a6f",
@@ -400,7 +400,7 @@ const personalities = {
         code: "NETW",
         branch: "Network Engineering",
         name: "The Network Navigator",
-        desc: "Network Engineering • Connectivity • Communication Systems",
+        desc: "Connectivity • Protocols • Communication Systems",
         fullDesc: "You want to understand how every message reaches its destination. You enjoy designing dependable connections, diagnosing invisible bottlenecks, and keeping devices communicating securely.",
         traits: ["Connection mapper", "Protocol fluent", "Diagnostic thinker", "Infrastructure aware"],
         color: "#0abde3",
@@ -414,7 +414,7 @@ const personalities = {
         code: "IOT",
         branch: "IoT and Embedded Systems",
         name: "The Connected Inventor",
-        desc: "IoT and Embedded Systems • Sensors • Edge Computing",
+        desc: "Sensors • Embedded Computing • Connected Devices",
         fullDesc: "You enjoy making software interact with the physical world. Limited memory, power, and connectivity feel like creative constraints rather than obstacles.",
         traits: ["Hands-on builder", "Hardware curious", "Efficiency minded", "Real-world problem solver"],
         color: "#1dd1a1",
@@ -428,7 +428,7 @@ const personalities = {
         code: "ROBO",
         branch: "Robotics",
         name: "The Automation Engineer",
-        desc: "Robotics • Control Systems • Autonomous Machines",
+        desc: "Control Systems • Automation • Autonomous Machines",
         fullDesc: "You want algorithms to move, sense, and act in the real world. You enjoy combining mechanics, electronics, control, and intelligence into machines that accomplish meaningful tasks.",
         traits: ["Multidisciplinary", "Control thinker", "Precision builder", "Automation driven"],
         color: "#ffd32a",
@@ -442,7 +442,7 @@ const personalities = {
         code: "CGXR",
         branch: "Computer Graphics and AR/VR",
         name: "The Reality Shaper",
-        desc: "Computer Graphics and AR/VR • 3D Systems • Immersion",
+        desc: "3D Systems • Immersive Technology • Spatial Computing",
         fullDesc: "You are drawn to the boundary between computation and perception. You enjoy rendering, simulation, spatial interaction, and building digital worlds that feel tangible.",
         traits: ["Spatial thinker", "Visual technologist", "Immersion focused", "Math creative"],
         color: "#ff5252",
@@ -456,7 +456,7 @@ const personalities = {
         code: "ALGO",
         branch: "Algorithms and Research",
         name: "The Algorithm Strategist",
-        desc: "Algorithms and Research • Theory • Computational Problem Solving",
+        desc: "Theory • Optimization • Computational Problem Solving",
         fullDesc: "You enjoy going beneath tools and frameworks to understand why solutions work. Hard puzzles, elegant proofs, and more efficient methods keep you thinking long after class.",
         traits: ["Abstract thinker", "Complexity aware", "Proof driven", "Optimization focused"],
         color: "#7b1fa2",

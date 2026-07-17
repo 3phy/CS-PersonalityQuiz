@@ -224,6 +224,7 @@ const branchOrder = Object.keys(personalities);
 const scores = Object.fromEntries(branchOrder.map(code => [code, 0]));
 let lastRankedTypes = [];
 let autoAdvanceTimer = null;
+let reviewMode = false;
 
 const form = document.getElementById("quiz-form");
 const container = document.getElementById("question-container");
@@ -231,9 +232,13 @@ const nextBtn = document.getElementById("next-btn");
 const backBtn = document.getElementById("back-btn");
 const progress = document.getElementById("progress");
 const progressFill = document.getElementById("progress-fill");
+const introScreen = document.getElementById("intro-screen");
+const outcomePreviewGrid = document.getElementById("outcome-preview-grid");
+const startQuizBtn = document.getElementById("start-quiz-btn");
+const gameStartOverlay = document.getElementById("game-start-overlay");
 
 const CANONICAL_SITE_URL = 'https://comsa-quiz.vercel.app';
-const SHARE_ASSET_VERSION = '20260717-hd2';
+const SHARE_ASSET_VERSION = '20260717-fb3';
 
 function getSiteBaseUrl() {
     const host = window.location.hostname;
@@ -250,6 +255,74 @@ function updateProgress() {
     progressFill.style.width = `${percentage}%`;
 }
 
+function renderOutcomePreviews() {
+    if (!outcomePreviewGrid || outcomePreviewGrid.childElementCount) return;
+
+    outcomePreviewGrid.innerHTML = Object.values(personalities).map(personality => `
+        <article class="outcome-preview-card" onclick="showPersonalityDetails('${personality.code}')">
+            <div class="outcome-preview-character" style="--outcome-color: ${personality.color};">
+                <img src="assets/thumbnails/${personality.code}-128.png?v=${SHARE_ASSET_VERSION}"
+                     alt="${personality.name}"
+                     loading="lazy">
+            </div>
+            <span class="outcome-preview-code">${personality.code}</span>
+            <h3>${personality.name}</h3>
+            <h4>${personality.branch}</h4>
+            <p>${personality.fullDesc}</p>
+            <span class="outcome-preview-link">View details</span>
+        </article>
+    `).join('');
+}
+
+function showIntroScreen() {
+    renderOutcomePreviews();
+    form.style.display = 'none';
+    introScreen.style.display = 'block';
+    gameStartOverlay.classList.remove('is-active');
+    gameStartOverlay.setAttribute('aria-hidden', 'true');
+    startQuizBtn.disabled = false;
+}
+
+function startQuiz() {
+    if (startQuizBtn.disabled) return;
+
+    startQuizBtn.disabled = true;
+    gameStartOverlay.classList.add('is-active');
+    gameStartOverlay.setAttribute('aria-hidden', 'false');
+
+    if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+    }
+
+    const transitionDuration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 250 : 1500;
+
+    setTimeout(() => {
+        currentQuestion = 0;
+        userAnswers.length = 0;
+        Object.keys(scores).forEach(key => scores[key] = 0);
+        lastRankedTypes = [];
+        reviewMode = false;
+
+        introScreen.style.display = 'none';
+        form.style.display = 'block';
+        gameStartOverlay.classList.remove('is-active');
+        gameStartOverlay.setAttribute('aria-hidden', 'true');
+        startQuizBtn.disabled = false;
+
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, '', window.location.pathname);
+        }
+
+        renderQuestion(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, transitionDuration);
+}
+
+if (startQuizBtn) {
+    startQuizBtn.addEventListener('click', startQuiz);
+}
+
 function renderQuestion(index) {
     const q = questions[index];
     
@@ -261,7 +334,7 @@ function renderQuestion(index) {
         const qDiv = document.createElement("div");
         qDiv.className = "question";
         qDiv.innerHTML = `
-            <span class="question-kind">${q.kind || 'LIKINGS & EXPERIENCE'}</span>
+            <span class="question-kind">${q.kind || 'INTERESTS & PREFERENCES'}</span>
             <h3>${index + 1}. ${q.q}</h3>
         `;
 
@@ -348,6 +421,7 @@ function selectOption(value, questionIndex) {
         // Otherwise proceed to the next question as usual.
         if (currentQuestion < questions.length - 1) {
             currentQuestion++;
+            reviewMode = reviewMode && userAnswers[currentQuestion] !== undefined;
             renderQuestion(currentQuestion);
         }
     }, 800);
@@ -355,10 +429,17 @@ function selectOption(value, questionIndex) {
 
 function updateButtons() {
     nextBtn.textContent = (currentQuestion === questions.length - 1) ? "Get My Result 🎯" : "Next →";
+    const canReviewForward = reviewMode && userAnswers[currentQuestion] !== undefined;
+    nextBtn.style.display = canReviewForward ? "inline-flex" : "none";
     backBtn.disabled = (currentQuestion === 0);
 }
 
 nextBtn.addEventListener("click", () => {
+    if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+    }
+
     if (userAnswers[currentQuestion] === undefined) {
         container.style.animation = 'shake 0.5s ease-in-out';
         setTimeout(() => container.style.animation = '', 500);
@@ -367,6 +448,7 @@ nextBtn.addEventListener("click", () => {
 
     if (currentQuestion < questions.length - 1) {
         currentQuestion++;
+        reviewMode = userAnswers[currentQuestion] !== undefined;
         renderQuestion(currentQuestion);
     } else {
         calculateResult();
@@ -374,7 +456,13 @@ nextBtn.addEventListener("click", () => {
 });
 
 backBtn.addEventListener("click", () => {
+    if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+    }
+
     if (currentQuestion > 0) {
+        reviewMode = true;
         currentQuestion--;
         renderQuestion(currentQuestion);
     }
@@ -646,7 +734,7 @@ function updateOGImageAndURL(personalityType) {
     const newURL = `${baseUrl}?result=${personalityType}&v=${timestamp}&r=${randomId}&s=${sessionId}&fb=1`;
 
     // Image URL with cache busting
-    const imageUrl = `${getSiteBaseUrl()}/assets/thumbnails/${personalityType}.png?v=${timestamp}&r=${randomId}&cb=${Date.now()}`;
+    const imageUrl = `${getSiteBaseUrl()}/assets/thumbnails/${personalityType}-facebook.png?v=${SHARE_ASSET_VERSION}`;
     
     const title = `${result.branch}: ${result.name} - COMSA CS Branch Quiz`;
     const description = `${result.desc} - ${result.fullDesc.substring(0, 120)}...`;
@@ -688,7 +776,8 @@ function updateOGImageAndURL(personalityType) {
         
         // Update URL in browser
         if (window.history && window.history.pushState) {
-            window.history.pushState({personalityType}, '', newURL);
+            const historyURL = `${window.location.pathname}${new URL(newURL).search}`;
+            window.history.pushState({personalityType}, '', historyURL);
         }
         
         console.log('✅ OG tags updated successfully');
@@ -917,7 +1006,9 @@ function showResult(personalityType, rankedTypes = []) {
                             return `
                                 <div class="compatible-item-card" onclick="showPersonalityDetails('${comp.type}')">
                                     <div class="compatible-avatar" style="background: linear-gradient(135deg, ${compatiblePersonality.color}, ${compatiblePersonality.color}aa);">
-                                        ${comp.type}
+                                        <img src="assets/thumbnails/${comp.type}-128.png?v=${SHARE_ASSET_VERSION}"
+                                             alt="${compatiblePersonality.name}"
+                                             loading="lazy">
                                     </div>
                                     <div class="compatible-info-card">
                                         <div class="compatible-name">${compatiblePersonality.name}</div>
@@ -988,6 +1079,9 @@ function setupModalButtons(personalityType, result) {
             userAnswers.length = 0;
             Object.keys(scores).forEach(key => scores[key] = 0);
             lastRankedTypes = [];
+            reviewMode = false;
+            introScreen.style.display = 'none';
+            form.style.display = 'block';
             
             // Reset URL and OG tags to default
             const defaultURL = window.location.origin + window.location.pathname;
@@ -1561,19 +1655,25 @@ const updatedStyles = `
     }
     
     .compatible-avatar {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
+        width: 104px;
+        height: 104px;
+        border-radius: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 14px;
-        font-weight: bold;
-        color: white;
         margin-bottom: 1rem;
         flex-shrink: 0;
         border: 3px solid rgba(255,255,255,0.3);
         box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        overflow: hidden;
+        padding: 4px;
+    }
+
+    .compatible-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        filter: drop-shadow(0 5px 8px rgba(0,0,0,0.24));
     }
     
     .compatible-info-card {
@@ -1622,9 +1722,8 @@ const updatedStyles = `
         }
         
         .compatible-avatar {
-            width: 60px;
-            height: 60px;
-            font-size: 12px;
+            width: 88px;
+            height: 88px;
         }
     }
     
@@ -1662,11 +1761,13 @@ document.addEventListener('DOMContentLoaded', function() {
     userAnswers.length = 0;
     Object.keys(scores).forEach(key => scores[key] = 0);
     lastRankedTypes = [];
+    reviewMode = false;
 
     const urlParams = new URLSearchParams(window.location.search);
     const resultParam = urlParams.get('result');
 
     if (resultParam && personalities[resultParam]) {
+        showIntroScreen();
         showResult(resultParam);
     } else {
         const resultModal = document.getElementById('result-modal');
@@ -1676,7 +1777,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.history.replaceState({}, '', window.location.pathname);
         }
 
-        renderQuestion(0);
+        showIntroScreen();
     }
 
     window.scrollTo({ top: 0, behavior: 'instant' });

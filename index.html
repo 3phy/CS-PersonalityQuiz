@@ -24,7 +24,7 @@
 
     <!-- Styles -->
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="quiz.css">
+    <link rel="stylesheet" href="quiz.css?v=20260717-ui10">
 </head>
 
 <body>
@@ -38,8 +38,42 @@
         </div>
         
         <h1>Which Computer Science Branch Fits You?</h1>
-            
-        <form id="quiz-form">
+
+        <section id="intro-screen" class="intro-screen">
+            <div class="intro-hero">
+                <div class="intro-heading">
+                    <span class="intro-eyebrow">Discover Your Direction</span>
+                    <h2>16 Possible Outcomes</h2>
+                    <p>Explore every computer science personality and specialization.</p>
+                </div>
+
+                <div class="intro-play-panel">
+                    <span>24 Questions</span>
+                    <button type="button" id="start-quiz-btn" class="start-quiz-btn" aria-label="Play the quiz">
+                        <span class="play-icon" aria-hidden="true"></span>
+                        <span>Play Quiz</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="system-description">
+                <h3>About This System</h3>
+                <p>This quiz was created to help first-year students and beginners explore the computer science field without requiring previous coding experience. It compares your interests and preferences across 16 specializations, then suggests the branch personality that fits you best along with three close matches.</p>
+                <p>Use the result as a starting point for discovering subjects, projects, and careers you may enjoy—not as a permanent label or final career decision.</p>
+            </div>
+
+            <div id="outcome-preview-grid" class="outcome-preview-grid"></div>
+        </section>
+
+        <div id="game-start-overlay" class="game-start-overlay" aria-hidden="true">
+            <div class="game-start-content">
+                <div class="game-ready-text">Ready?</div>
+                <div class="game-loading-track"><span></span></div>
+                <div class="game-go-text">Start!</div>
+            </div>
+        </div>
+
+        <form id="quiz-form" style="display: none;">
             <div class="progress-container">
                 <div class="progress-text" id="progress">Question 1 of 24</div>
                 <div class="progress-bar">
@@ -52,7 +86,7 @@
                 
                 <div class="navigation">
                     <button type="button" id="back-btn" class="nav-btn">← Back</button>
-                    <button type="button" id="next-btn" class="nav-btn">Next →</button>
+                    <button type="button" id="next-btn" class="nav-btn" style="display: none;">Next →</button>
                 </div>
             </div>
         </form>
@@ -64,8 +98,8 @@
             </div>
         </div>
     </div>
-    <script src="branch-data.js"></script>
-    <script src="quiz.js"></script>
+    <script src="branch-data.js?v=20260717-ui10"></script>
+    <script src="quiz.js?v=20260717-ui10"></script>
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
