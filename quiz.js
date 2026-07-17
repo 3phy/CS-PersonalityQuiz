@@ -1032,8 +1032,8 @@ function showResult(personalityType, rankedTypes = []) {
                 <button id="facebook-btn" class="result-btn">
                     📘 Share on Facebook
                 </button>
-                <button id="other-personality-btn" class="result-btn">
-                    🔄 Explore Other CS Branches
+                <button id="home-btn" class="result-btn">
+                    ⌂ Back to Home
                 </button>
             </div>
             
@@ -1063,7 +1063,7 @@ function setupModalButtons(personalityType, result) {
     const restartBtn = document.getElementById('restart-btn');
     const downloadBtn = document.getElementById('download-btn');
     const facebookBtn = document.getElementById('facebook-btn');
-    const otherPersonalityBtn = document.getElementById('other-personality-btn');
+    const homeBtn = document.getElementById('home-btn');
     const compatibilityBtn = document.getElementById('compatibility-btn');
 
     if (closeModalBtn) {
@@ -1187,10 +1187,29 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Other personalities functionality
-    if (otherPersonalityBtn) {
-        otherPersonalityBtn.onclick = () => {
-            showPersonalityGallery();
+    // Return to the outcome cover page.
+    if (homeBtn) {
+        homeBtn.onclick = () => {
+            if (autoAdvanceTimer) {
+                clearTimeout(autoAdvanceTimer);
+                autoAdvanceTimer = null;
+            }
+
+            resultModal.style.display = 'none';
+            currentQuestion = 0;
+            userAnswers.length = 0;
+            Object.keys(scores).forEach(key => scores[key] = 0);
+            lastRankedTypes = [];
+            reviewMode = false;
+
+            showIntroScreen();
+
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState({}, '', window.location.pathname);
+            }
+
+            document.title = 'COMSA Computer Science Branch Quiz';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
     }
 
