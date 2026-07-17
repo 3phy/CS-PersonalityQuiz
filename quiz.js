@@ -236,6 +236,8 @@ const introScreen = document.getElementById("intro-screen");
 const outcomePreviewGrid = document.getElementById("outcome-preview-grid");
 const startQuizBtn = document.getElementById("start-quiz-btn");
 const gameStartOverlay = document.getElementById("game-start-overlay");
+const introCharacterStage = document.getElementById("intro-character-stage");
+const loadingCharacterStage = document.getElementById("loading-character-stage");
 
 const CANONICAL_SITE_URL = 'https://comsa-quiz.vercel.app';
 const SHARE_ASSET_VERSION = '20260717-fb3';
@@ -274,7 +276,38 @@ function renderOutcomePreviews() {
     `).join('');
 }
 
+function renderCharacterStages() {
+    const stages = [introCharacterStage, loadingCharacterStage].filter(Boolean);
+    if (!stages.length || stages.every(stage => stage.childElementCount)) return;
+
+    const cast = Object.values(personalities);
+    const rows = [
+        { className: 'stage-row-back', characters: cast.slice(0, 8) },
+        { className: 'stage-row-front', characters: cast.slice(8) }
+    ];
+
+    const stageMarkup = rows.map((row, rowIndex) => `
+        <div class="character-stage-row ${row.className}">
+            ${row.characters.map((personality, characterIndex) => {
+                const castIndex = (rowIndex * 8) + characterIndex;
+                return `
+                    <span class="stage-character" style="--cast-index: ${castIndex}; --cast-color: ${personality.color};">
+                        <img src="assets/thumbnails/${personality.code}-128.png?v=${SHARE_ASSET_VERSION}"
+                             alt=""
+                             draggable="false">
+                    </span>
+                `;
+            }).join('')}
+        </div>
+    `).join('');
+
+    stages.forEach(stage => {
+        if (!stage.childElementCount) stage.innerHTML = stageMarkup;
+    });
+}
+
 function showIntroScreen() {
+    renderCharacterStages();
     renderOutcomePreviews();
     form.style.display = 'none';
     introScreen.style.display = 'block';
@@ -295,7 +328,7 @@ function startQuiz() {
         autoAdvanceTimer = null;
     }
 
-    const transitionDuration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 250 : 1500;
+    const transitionDuration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 250 : 1900;
 
     setTimeout(() => {
         currentQuestion = 0;

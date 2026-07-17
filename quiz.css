@@ -954,16 +954,43 @@ h1 {
 }
 
 .intro-hero {
+    position: relative;
+    isolation: isolate;
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
     align-items: center;
     gap: 2rem;
+    min-height: 520px;
     margin-bottom: 1.25rem;
     padding: 2rem;
+    overflow: hidden;
     background: linear-gradient(135deg, rgba(9, 39, 31, 0.76), rgba(27, 86, 67, 0.55));
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 22px;
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.2);
+}
+
+.intro-hero::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(3, 20, 15, 0.62), rgba(3, 20, 15, 0.24) 50%, rgba(3, 20, 15, 0.58)),
+        linear-gradient(0deg, rgba(3, 20, 15, 0.16), rgba(3, 20, 15, 0.48));
+    pointer-events: none;
+}
+
+.intro-heading,
+.intro-play-panel {
+    position: relative;
+    z-index: 2;
+    padding: 1.35rem;
+    background: rgba(4, 24, 18, 0.58);
+    border: 1px solid rgba(127, 255, 194, 0.16);
+    border-radius: 16px;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(5px);
 }
 
 .intro-eyebrow {
@@ -996,9 +1023,93 @@ h1 {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding-left: 2rem;
-    border-left: 1px solid rgba(127, 255, 194, 0.24);
     text-align: center;
+}
+
+.character-stage {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+}
+
+.character-stage-row {
+    position: absolute;
+    left: 50%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: min(1120px, 112%);
+    transform: translateX(-50%);
+}
+
+.stage-row-back {
+    bottom: 118px;
+    z-index: 0;
+}
+
+.stage-row-front {
+    bottom: -18px;
+    z-index: 1;
+}
+
+.stage-character {
+    position: relative;
+    display: grid;
+    flex: 0 0 clamp(92px, 12vw, 145px);
+    place-items: end center;
+    margin-inline: clamp(-22px, -1.8vw, -10px);
+    transform-origin: center bottom;
+}
+
+.stage-character::before {
+    content: "";
+    position: absolute;
+    inset: 20% 6% 0;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 65%, color-mix(in srgb, var(--cast-color) 55%, transparent), transparent 68%);
+    filter: blur(10px);
+}
+
+.stage-character img {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 12px 8px rgba(0, 0, 0, 0.58));
+}
+
+.stage-character:nth-child(2n) {
+    transform: translateY(12px) rotate(1.5deg);
+}
+
+.stage-character:nth-child(3n) {
+    transform: translateY(-10px) rotate(-1.5deg);
+}
+
+.cover-character-stage {
+    z-index: 0;
+}
+
+.cover-character-stage .stage-row-back {
+    opacity: 0.66;
+}
+
+.cover-character-stage .stage-row-front {
+    opacity: 0.9;
+}
+
+.cover-character-stage .stage-character {
+    animation: coverCastEntrance 0.75s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+    animation-delay: calc(var(--cast-index) * 32ms);
+}
+
+@keyframes coverCastEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(90px) scale(0.82);
+    }
 }
 
 .intro-play-panel > span {
@@ -1207,6 +1318,7 @@ h1 {
 .game-start-overlay::before {
     content: "";
     position: absolute;
+    z-index: 0;
     inset: 0;
     background:
         linear-gradient(90deg, rgba(75, 200, 139, 0.05) 1px, transparent 1px),
@@ -1223,10 +1335,60 @@ h1 {
 
 .game-start-content {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     width: min(560px, 86vw);
     min-height: 220px;
     text-align: center;
+}
+
+.loading-character-stage {
+    z-index: 1;
+}
+
+.loading-character-stage::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(4, 19, 15, 0.22), rgba(4, 19, 15, 0.62) 72%);
+}
+
+.loading-character-stage .character-stage-row {
+    width: min(1320px, 118%);
+}
+
+.loading-character-stage .stage-row-back {
+    bottom: 31vh;
+    opacity: 0.62;
+}
+
+.loading-character-stage .stage-row-front {
+    bottom: 1vh;
+}
+
+.loading-character-stage .stage-character {
+    flex-basis: clamp(105px, 14vw, 190px);
+    opacity: 0;
+}
+
+.game-start-overlay.is-active .loading-character-stage .stage-character {
+    animation: loadingCastEntrance 1.8s cubic-bezier(0.16, 0.78, 0.22, 1) both;
+    animation-delay: calc(var(--cast-index) * 38ms);
+}
+
+@keyframes loadingCastEntrance {
+    0% {
+        opacity: 0;
+        transform: translateY(55vh) scale(0.7);
+    }
+    35%, 82% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-18px) scale(1.04);
+    }
 }
 
 .game-ready-text,
@@ -1246,11 +1408,11 @@ h1 {
 }
 
 .game-start-overlay.is-active .game-ready-text {
-    animation: gameReady 1.5s ease both;
+    animation: gameReady 1.9s ease both;
 }
 
 .game-start-overlay.is-active .game-go-text {
-    animation: gameGo 1.5s ease both;
+    animation: gameGo 1.9s ease both;
 }
 
 .game-loading-track {
@@ -1273,7 +1435,7 @@ h1 {
 }
 
 .game-start-overlay.is-active .game-loading-track span {
-    animation: gameLoad 1.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: gameLoad 1.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes gameReady {
@@ -1297,15 +1459,38 @@ h1 {
 @media (max-width: 600px) {
     .intro-hero {
         grid-template-columns: 1fr;
+        min-height: 610px;
         padding: 1.4rem;
         text-align: center;
     }
 
     .intro-play-panel {
-        padding-top: 1.25rem;
-        padding-left: 0;
-        border-top: 1px solid rgba(127, 255, 194, 0.24);
-        border-left: 0;
+        padding: 1.25rem;
+    }
+
+    .character-stage-row {
+        width: 138%;
+    }
+
+    .stage-row-back {
+        bottom: 120px;
+    }
+
+    .stage-character {
+        flex-basis: clamp(68px, 22vw, 100px);
+        margin-inline: -16px;
+    }
+
+    .loading-character-stage .character-stage-row {
+        width: 150%;
+    }
+
+    .loading-character-stage .stage-row-back {
+        bottom: 28vh;
+    }
+
+    .loading-character-stage .stage-character {
+        flex-basis: clamp(78px, 24vw, 120px);
     }
 
     .outcome-preview-grid {
@@ -1319,6 +1504,8 @@ h1 {
 
 @media (prefers-reduced-motion: reduce) {
     .start-quiz-btn,
+    .cover-character-stage .stage-character,
+    .game-start-overlay.is-active .loading-character-stage .stage-character,
     .game-start-overlay.is-active .game-ready-text,
     .game-start-overlay.is-active .game-go-text,
     .game-start-overlay.is-active .game-loading-track span {
@@ -1328,6 +1515,10 @@ h1 {
     .game-start-overlay.is-active .game-go-text {
         opacity: 1;
         transform: none;
+    }
+
+    .game-start-overlay.is-active .loading-character-stage .stage-character {
+        opacity: 1;
     }
 
     .game-start-overlay.is-active .game-loading-track span {
