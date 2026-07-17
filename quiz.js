@@ -834,8 +834,8 @@ function showUnderConstructionModal() {
 }
 
 function shareToFacebook(personalityType) {
-    const baseUrl = getSiteBaseUrl();
-    const sharePageUrl = `${baseUrl}/share/${encodeURIComponent(personalityType)}.html`;
+    // Always share the production URL so Facebook can scrape OG tags/thumbnail
+    const sharePageUrl = `${CANONICAL_SITE_URL}/share/${encodeURIComponent(personalityType)}.html`;
     const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(sharePageUrl)}`;
 
     window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=600,height=700');
