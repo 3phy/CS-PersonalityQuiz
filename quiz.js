@@ -1,4 +1,3 @@
-// Show detailed view of a specific personality
 function showPersonalityDetails(personalityCode) {
     const personality = personalities[personalityCode];
     if (!personality) return;
@@ -180,8 +179,7 @@ function showPersonalityDetails(personalityCode) {
     `;
     
     document.body.appendChild(modal);
-    
-    // Auto-remove after clicking outside
+
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.remove();
@@ -190,10 +188,6 @@ function showPersonalityDetails(personalityCode) {
 }
 
 // COMPLETE FACEBOOK SHARING SOLUTION
-// Replace your existing JavaScript with this enhanced version
-
-// Quiz questions and branch profiles are defined in branch-data.js.
-
 let currentQuestion = 0;
 const userAnswers = [];
 const branchOrder = Object.keys(personalities);
@@ -220,7 +214,7 @@ const SHARE_ASSET_VERSION = '20260717-fb3';
 
 function getSiteBaseUrl() {
     const host = window.location.hostname;
-    // Facebook cannot scrape localhost/private LAN URLs
+
     if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.local')) {
         return CANONICAL_SITE_URL;
     }
@@ -380,7 +374,6 @@ function renderQuestion(index) {
         qDiv.appendChild(choicesContainer);
         container.appendChild(qDiv);
 
-        // Show previously selected answer
         if (userAnswers[index] !== undefined) {
             const selectedRadio = container.querySelector(`input[value="${userAnswers[index]}"]`);
             if (selectedRadio) {
@@ -404,12 +397,10 @@ function allQuestionsAnswered() {
 }
 
 function selectOption(value, questionIndex) {
-    // Remove previous selection styling
     container.querySelectorAll('.branch-choice').forEach(opt => {
         opt.classList.remove('selected');
     });
     
-    // Add selection styling
     const selectedOption = container.querySelector(`input[value="${value}"]`).parentElement;
     selectedOption.classList.add('selected');
     
@@ -420,17 +411,14 @@ function selectOption(value, questionIndex) {
         autoAdvanceTimer = null;
     }
 
-    // Auto-advance / auto-finish after a short delay
     autoAdvanceTimer = setTimeout(() => {
         autoAdvanceTimer = null;
 
-        // If user has already answered everything, immediately show result.
         if (allQuestionsAnswered()) {
             calculateResult();
             return;
         }
 
-        // Otherwise proceed to the next question as usual.
         if (currentQuestion < questions.length - 1) {
             currentQuestion++;
             reviewMode = reviewMode && userAnswers[currentQuestion] !== undefined;
@@ -499,8 +487,6 @@ function calculateResult() {
         }
     });
 
-    // Stable ordering makes ties deterministic: total score, primary choices,
-    // then the published branch order.
     lastRankedTypes = [...branchOrder].sort((a, b) =>
         scores[b] - scores[a] ||
         primaryCounts[b] - primaryCounts[a] ||
@@ -662,7 +648,6 @@ function showUnderConstructionModal() {
     
     document.body.appendChild(modal);
     
-    // Auto-remove after clicking outside
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             modal.remove();
@@ -670,7 +655,6 @@ function showUnderConstructionModal() {
         }
     });
     
-    // Remove styles when modal is removed
     setTimeout(() => {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -694,7 +678,6 @@ function shareToFacebook(personalityType) {
     window.open(fbShareUrl, '_blank', 'noopener,noreferrer,width=600,height=700');
 }
 
-// Remove all dynamic meta tags
 function removeAllMetaTags() {
     const selectors = [
         'meta[property^="og:"]',
@@ -712,7 +695,6 @@ function removeAllMetaTags() {
     });
 }
 
-// Add meta tag with priority placement
 function addMetaTag(property, content, attributeType = 'property') {
     if (!content) return;
     
@@ -721,8 +703,7 @@ function addMetaTag(property, content, attributeType = 'property') {
     meta.content = content;
     meta.setAttribute('data-dynamic', 'true');
     meta.setAttribute('data-timestamp', Date.now().toString());
-    
-    // Insert at the very beginning of head
+
     const firstChild = document.head.firstChild;
     if (firstChild) {
         document.head.insertBefore(meta, firstChild);
@@ -731,21 +712,17 @@ function addMetaTag(property, content, attributeType = 'property') {
     }
 }
 
-// MAIN FUNCTION: Update OG tags and URL
 function updateOGImageAndURL(personalityType) {
     const result = personalities[personalityType];
     if (!result) return;
 
-    // Create unique URL with aggressive cache busting
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substr(2, 9);
     const sessionId = Math.random().toString(36).substr(2, 5);
     const baseUrl = getSiteBaseUrl() + window.location.pathname;
-    
-    // Multiple parameters to force Facebook to treat as new content
+
     const newURL = `${baseUrl}?result=${personalityType}&v=${timestamp}&r=${randomId}&s=${sessionId}&fb=1`;
 
-    // Image URL with cache busting
     const imageUrl = `${getSiteBaseUrl()}/assets/thumbnails/${personalityType}-facebook.png?v=${SHARE_ASSET_VERSION}`;
     
     const title = `${result.branch}: ${result.name} - COMSA CS Branch Quiz`;
@@ -755,10 +732,8 @@ function updateOGImageAndURL(personalityType) {
     console.log(`📸 Image URL: ${imageUrl}`);
     console.log(`🔗 Share URL: ${newURL}`);
 
-    // Step 1: Remove all existing OG tags
     removeAllMetaTags();
-    
-    // Step 2: Wait for cleanup then add new tags
+
     setTimeout(() => {
         // Essential OG tags for Facebook
         addMetaTag('og:title', title);
@@ -1118,28 +1093,23 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Download functionality with improved error handling
     if (downloadBtn) {
         downloadBtn.onclick = async () => {
             try {
-                // Show loading state
                 downloadBtn.disabled = true;
                 downloadBtn.textContent = '📷 Generating...';
                 
                 await createAndDownloadResult(personalityType, result);
-                
-                // Reset button state
+            
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = '📱 Download Result';
                 
             } catch (error) {
                 console.error('Download failed:', error);
                 
-                // Reset button state
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = '📱 Download Result';
                 
-                // Show fallback option
                 const fallbackModal = document.createElement('div');
                 fallbackModal.innerHTML = `
                     <div style="
@@ -1203,7 +1173,6 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Return to the outcome cover page.
     if (homeBtn) {
         homeBtn.onclick = () => {
             if (autoAdvanceTimer) {
@@ -1229,7 +1198,6 @@ function setupModalButtons(personalityType, result) {
         };
     }
 
-    // Compatibility functionality
     if (compatibilityBtn) {
         compatibilityBtn.onclick = () => {
             showPersonalityDetails(personalityType);
@@ -1241,10 +1209,9 @@ function setupModalButtons(personalityType, result) {
 // ENHANCED DOWNLOAD FUNCTIONALITY WITH HTML2CANVAS FALLBACK
 // ================================
 
-// Function to load html2canvas library dynamically
 function loadHtml2Canvas() {
     return new Promise((resolve, reject) => {
-        // Check if html2canvas is already loaded
+      
         if (window.html2canvas) {
             resolve(window.html2canvas);
             return;
@@ -1266,7 +1233,6 @@ function loadHtml2Canvas() {
 
 async function createAndDownloadResult(personalityType, result) {
     try {
-        // Load html2canvas library
         const html2canvas = await loadHtml2Canvas();
         
         const personalityCode = result.code;
@@ -1467,7 +1433,6 @@ async function createAndDownloadResult(personalityType, result) {
         document.body.appendChild(downloadContainer);
         
         try {
-            // Wait for fonts and images to load
             await new Promise(resolve => setTimeout(resolve, 1000));
             
             const canvas = await html2canvas(downloadContainer.firstElementChild, {
@@ -1479,7 +1444,6 @@ async function createAndDownloadResult(personalityType, result) {
                 width: 800,
                 height: downloadContainer.firstElementChild.offsetHeight,
                 onclone: (clonedDoc) => {
-                    // Ensure all styles are preserved in the cloned document
                     const clonedElement = clonedDoc.querySelector('div');
                     if (clonedElement) {
                         clonedElement.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
@@ -1491,7 +1455,6 @@ async function createAndDownloadResult(personalityType, result) {
             link.download = `COMSA-${personalityCode}-CS-Branch-${Date.now()}.png`;
             link.href = canvas.toDataURL('image/png', 1.0);
             
-            // Create a temporary click event
             const clickEvent = new MouseEvent('click', {
                 view: window,
                 bubbles: true,
@@ -1508,7 +1471,7 @@ async function createAndDownloadResult(personalityType, result) {
         
     } catch (error) {
         console.error('Download failed:', error);
-        throw error; // Re-throw to be handled by the calling function
+        throw error; 
     }
 }
 
@@ -1516,14 +1479,12 @@ async function createAndDownloadResult(personalityType, result) {
 // INITIALIZATION AND EVENT HANDLERS
 // ================================
 
-// Initialize default OG tags
 function initializeDefaultOGTags() {
     document.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(tag => {
         tag.setAttribute('data-original', 'true');
     });
 }
 
-// Check URL parameters on page load
 function checkURLParameters() {
     const urlParams = new URLSearchParams(window.location.search);
     const resultParam = urlParams.get('result');
@@ -1536,7 +1497,6 @@ function checkURLParameters() {
     return false;
 }
 
-// Handle browser back/forward buttons
 window.addEventListener('popstate', function(event) {
     if (event.state && event.state.personalityType) {
         showResult(event.state.personalityType);
@@ -1650,7 +1610,6 @@ document.head.appendChild(shakeStyle);
 // UPDATED CSS FOR 3-COLUMN LAYOUT
 // ================================
 
-// Updated CSS for 3-column compatible personalities layout
 const updatedStyles = `
     /* Compatible Personalities 3-Column Grid Styles */
     .compatible-section {
@@ -1774,7 +1733,6 @@ const updatedStyles = `
     }
 `;
 
-// Add the updated styles to the existing style element or create a new one
 const existingStyle = document.querySelector('style');
 if (existingStyle) {
     existingStyle.textContent += '\n' + updatedStyles;
@@ -1784,11 +1742,8 @@ if (existingStyle) {
     document.head.appendChild(newStyle);
 }
 
-// Add the updated styles to the existing style element
 shakeStyle.textContent += '\n' + updatedStyles;
 
-// Initialize the quiz exactly once. Shared result URLs take precedence;
-// otherwise the visitor starts with a clean quiz state.
 document.addEventListener('DOMContentLoaded', function() {
     initializeDefaultOGTags();
 
